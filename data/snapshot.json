@@ -1,0 +1,3323 @@
+{
+ "season": "2026/27",
+ "competitionId": "2014",
+ "seasonYear": "2027",
+ "updatedAt": "2026-10-07T20:00:00Z",
+ "asOf": "Nach Spieltag 4 (104/156 Spiele beendet)",
+ "dataSource": "snapshot",
+ "source": [
+  "https://www.uefa.com/uefanationsleague/news/02a2-1fea18abbcbc-456e846509e7-1000--2026-27-uefa-nations-league-all-the-league-phase-fixtures-a/",
+  "https://www.uefa.com/uefanationsleague/news/02a2-1fea7079900a-801b2c5f6c9e-1000--2026-27-uefa-nations-league-league-phase-fixtures-and-resul/",
+  "https://www.uefa.com/uefanationsleague/news/02aa-21bfd72342bb-2092e5a5aba6-1000--uefa-nations-league-matchday-4-highlights-france-and-italy-r/",
+  "https://www.skysports.com/uefa-nations-league-table",
+  "https://onefootball.com/en/competition/uefa-nations-league-2349/table",
+  "https://www.nbcsports.com/soccer/news/uefa-nations-league-2026-27-nations-league-format-schedule-standings-scores",
+  "https://editorial.uefa.com/resources/02a9-21985b7e3370-3f0fda209606-1000/promotion_and_relegation_unl_website.pdf"
+ ],
+ "calendar": {
+  "leaguePhase": {
+   "from": "2026-09-24",
+   "to": "2026-11-17"
+  },
+  "matchdays": {
+   "1": [
+    "2026-09-24",
+    "2026-09-26"
+   ],
+   "2": [
+    "2026-09-27",
+    "2026-09-29"
+   ],
+   "3": [
+    "2026-10-01",
+    "2026-10-03"
+   ],
+   "4": [
+    "2026-10-04",
+    "2026-10-06"
+   ],
+   "5": [
+    "2026-11-12",
+    "2026-11-14"
+   ],
+   "6": [
+    "2026-11-15",
+    "2026-11-17"
+   ]
+  },
+  "quarterFinals": "März 2027 (Hin- und Rückspiel)",
+  "playoffs": "März 2027 (Hin- und Rückspiel, höherklassiges Team hat Heimrecht im Rückspiel)",
+  "finals": "Juni 2027 (Final Four)"
+ },
+ "rules": {
+  "A": {
+   "1": {
+    "zone": "ko",
+    "label": "Viertelfinale (K.-o.-Phase)"
+   },
+   "2": {
+    "zone": "ko",
+    "label": "Viertelfinale (K.-o.-Phase)"
+   },
+   "3": {
+    "zone": "split",
+    "best2": {
+     "zone": "safe",
+     "label": "Verbleib in Liga A"
+    },
+    "worst2": {
+     "zone": "playoff-down",
+     "label": "Relegation A/B (gegen Gruppenzweite Liga B)"
+    }
+   },
+   "4": {
+    "zone": "split",
+    "best2": {
+     "zone": "playoff-down",
+     "label": "Relegation A/B (gegen Gruppenzweite Liga B)"
+    },
+    "worst2": {
+     "zone": "relegation",
+     "label": "Abstieg in Liga B"
+    }
+   }
+  },
+  "B": {
+   "1": {
+    "zone": "promotion",
+    "label": "Aufstieg in Liga A"
+   },
+   "2": {
+    "zone": "playoff-up",
+    "label": "Relegation A/B (Aufstiegschance)"
+   },
+   "3": {
+    "zone": "safe",
+    "label": "Verbleib in Liga B"
+   },
+   "4": {
+    "zone": "playoff-down",
+    "label": "Relegation B/C (gegen Gruppenzweite Liga C)"
+   }
+  },
+  "C": {
+   "1": {
+    "zone": "promotion",
+    "label": "Aufstieg in Liga B"
+   },
+   "2": {
+    "zone": "playoff-up",
+    "label": "Relegation B/C (Aufstiegschance)"
+   },
+   "3": {
+    "zone": "safe",
+    "label": "Verbleib in Liga C"
+   },
+   "4": {
+    "zone": "safe",
+    "label": "Verbleib in Liga C (kein Abstieg, Liga D wird abgeschafft)"
+   }
+  },
+  "D": {
+   "1": {
+    "zone": "promotion",
+    "label": "Aufstieg in Liga C (Liga D wird ab 2028/29 aufgelöst)"
+   },
+   "2": {
+    "zone": "promotion",
+    "label": "Aufstieg in Liga C (Liga D wird ab 2028/29 aufgelöst)"
+   },
+   "3": {
+    "zone": "promotion",
+    "label": "Aufstieg in Liga C (Liga D wird ab 2028/29 aufgelöst)"
+   }
+  },
+  "note": "Übergangsformat 2026/27: Ab 2028/29 drei Ligen mit je 18 Teams. Liga A: Gruppensieger und -zweite ins Viertelfinale; die zwei schlechtesten Dritten und die zwei besten Vierten in die Relegation A/B gegen die vier Gruppenzweiten der Liga B; die zwei schlechtesten Vierten steigen direkt ab. Liga B: Gruppensieger steigen auf, Vierte in die Relegation gegen die Zweiten der Liga C. Liga C: Gruppensieger steigen auf, keine Absteiger. Liga D: letzte Austragung, alle Teams ab 2028/29 in Liga C. Tabellenkriterien: Punkte, direkter Vergleich (Punkte, Tordifferenz, Tore), Tordifferenz, Tore, Siege. Gruppenübergreifende Rangfolge (für Dritte/Vierte in Liga A) laut UEFA-Reglement; hier vereinfacht nach Punkten, Tordifferenz, Toren."
+ },
+ "verification": {
+  "verified": "Alle Ergebnisse der Spieltage 1-4 wurden mit berechneten Tabellen gegen gemeldete Tabellen (Sky Sports, OneFootball, Fox Sports, Medienberichte) abgeglichen; Punkte stimmen in allen Gruppen überein.",
+  "unverified": [
+   "uefa.com, Wikipedia und die meisten Sportseiten waren direkt nicht abrufbar; Daten stammen aus Websuche-Auszügen (UEFA-Spielplanseite, Sky Sports, ESPN, Flashscore, nationale Verbände, Nachrichtenagenturen).",
+   "A1 Italien 0-2 Belgien nur aus einer Quelle (11v11), aber konsistent mit gemeldeten Tabellen.",
+   "B1 Spieltag 4 (Schottland 1-2 Slowenien, Schweiz 3-0 Nordmazedonien) nur aus einer Quelle (Tempo), konsistent mit gemeldeten Punkten.",
+   "A3 England 3-0 Tschechien nur aus einer Quelle, konsistent mit Sky-Sports-Tabelle.",
+   "Anstoßzeiten und Heimrecht aller Spiele aus dem UEFA-Spielplan-Feed (Stand 05.10.2026) übernommen; Austragungsorte nur teilweise bekannt.",
+   "FIFA-Weltranglistenplätze nicht verifiziert (null). Trainer nur für einige Teams bestätigt.",
+   "Liga-A-Ranking der Dritten/Vierten über Gruppen hinweg ist vereinfacht."
+  ],
+  "kickoffSource": "match.uefa.com/v5/matches?competitionId=2014&seasonYear=2027 (Archiv DavidZenz/xGelo, 05.10.2026), alle 86 dort enthaltenen Ergebnisse identisch"
+ },
+ "leagues": [
+  {
+   "id": "A",
+   "name": "Liga A",
+   "groups": [
+    {
+     "id": "A1",
+     "teams": [
+      {
+       "code": "FRA",
+       "name": "Frankreich",
+       "nameEn": "France",
+       "flag": "fr",
+       "fifaRank": null,
+       "coach": "Zinedine Zidane",
+       "uefaId": "43"
+      },
+      {
+       "code": "BEL",
+       "name": "Belgien",
+       "nameEn": "Belgium",
+       "flag": "be",
+       "fifaRank": null,
+       "coach": "Mark van Bommel",
+       "uefaId": "13"
+      },
+      {
+       "code": "ITA",
+       "name": "Italien",
+       "nameEn": "Italy",
+       "flag": "it",
+       "fifaRank": null,
+       "coach": "Roberto Mancini",
+       "uefaId": "66"
+      },
+      {
+       "code": "TUR",
+       "name": "Türkei",
+       "nameEn": "Türkiye",
+       "flag": "tr",
+       "fifaRank": null,
+       "coach": null,
+       "uefaId": "135"
+      }
+     ],
+     "matches": [
+      {
+       "id": "2048010",
+       "md": 1,
+       "date": "2026-09-25",
+       "kickoff": "2026-09-25T18:45:00Z",
+       "status": "FINISHED",
+       "home": "ITA",
+       "away": "BEL",
+       "hs": 0,
+       "as": 2,
+       "venue": "Stadio Olimpico, Rom"
+      },
+      {
+       "id": "2048011",
+       "md": 1,
+       "date": "2026-09-25",
+       "kickoff": "2026-09-25T18:45:00Z",
+       "status": "FINISHED",
+       "home": "TUR",
+       "away": "FRA",
+       "hs": 0,
+       "as": 1,
+       "venue": "Kocaeli"
+      },
+      {
+       "id": "2047989",
+       "md": 2,
+       "date": "2026-09-28",
+       "kickoff": "2026-09-28T18:45:00Z",
+       "status": "FINISHED",
+       "home": "BEL",
+       "away": "FRA",
+       "hs": 0,
+       "as": 1,
+       "venue": "König-Baudouin-Stadion, Brüssel"
+      },
+      {
+       "id": "2047990",
+       "md": 2,
+       "date": "2026-09-28",
+       "kickoff": "2026-09-28T18:45:00Z",
+       "status": "FINISHED",
+       "home": "TUR",
+       "away": "ITA",
+       "hs": 1,
+       "as": 4,
+       "venue": null
+      },
+      {
+       "id": "2047961",
+       "md": 3,
+       "date": "2026-10-02",
+       "kickoff": "2026-10-02T18:45:00Z",
+       "status": "FINISHED",
+       "home": "BEL",
+       "away": "TUR",
+       "hs": 3,
+       "as": 0,
+       "venue": null
+      },
+      {
+       "id": "2047960",
+       "md": 3,
+       "date": "2026-10-02",
+       "kickoff": "2026-10-02T18:45:00Z",
+       "status": "FINISHED",
+       "home": "FRA",
+       "away": "ITA",
+       "hs": 1,
+       "as": 1,
+       "venue": "Stade de France, Saint-Denis"
+      },
+      {
+       "id": "2047937",
+       "md": 4,
+       "date": "2026-10-05",
+       "kickoff": "2026-10-05T18:45:00Z",
+       "status": "FINISHED",
+       "home": "FRA",
+       "away": "BEL",
+       "hs": 4,
+       "as": 1,
+       "venue": null
+      },
+      {
+       "id": "2047938",
+       "md": 4,
+       "date": "2026-10-05",
+       "kickoff": "2026-10-05T18:45:00Z",
+       "status": "FINISHED",
+       "home": "ITA",
+       "away": "TUR",
+       "hs": 3,
+       "as": 1,
+       "venue": "Stadio Renato Dall'Ara, Bologna"
+      },
+      {
+       "id": "2047878",
+       "md": 5,
+       "date": "2026-11-12",
+       "kickoff": "2026-11-12T19:45:00Z",
+       "status": "UPCOMING",
+       "home": "ITA",
+       "away": "FRA",
+       "hs": null,
+       "as": null,
+       "venue": "San Siro, Mailand"
+      },
+      {
+       "id": "2047873",
+       "md": 5,
+       "date": "2026-11-12",
+       "kickoff": "2026-11-12T17:00:00Z",
+       "status": "UPCOMING",
+       "home": "TUR",
+       "away": "BEL",
+       "hs": null,
+       "as": null,
+       "venue": null
+      },
+      {
+       "id": "2047900",
+       "md": 6,
+       "date": "2026-11-15",
+       "kickoff": "2026-11-15T19:45:00Z",
+       "status": "UPCOMING",
+       "home": "BEL",
+       "away": "ITA",
+       "hs": null,
+       "as": null,
+       "venue": "König-Baudouin-Stadion, Brüssel"
+      },
+      {
+       "id": "2047898",
+       "md": 6,
+       "date": "2026-11-15",
+       "kickoff": "2026-11-15T19:45:00Z",
+       "status": "UPCOMING",
+       "home": "FRA",
+       "away": "TUR",
+       "hs": null,
+       "as": null,
+       "venue": null
+      }
+     ],
+     "table": [
+      {
+       "pos": 1,
+       "code": "FRA",
+       "p": 4,
+       "w": 3,
+       "d": 1,
+       "l": 0,
+       "gf": 7,
+       "ga": 2,
+       "gd": 5,
+       "pts": 10
+      },
+      {
+       "pos": 2,
+       "code": "ITA",
+       "p": 4,
+       "w": 2,
+       "d": 1,
+       "l": 1,
+       "gf": 8,
+       "ga": 5,
+       "gd": 3,
+       "pts": 7
+      },
+      {
+       "pos": 3,
+       "code": "BEL",
+       "p": 4,
+       "w": 2,
+       "d": 0,
+       "l": 2,
+       "gf": 6,
+       "ga": 5,
+       "gd": 1,
+       "pts": 6
+      },
+      {
+       "pos": 4,
+       "code": "TUR",
+       "p": 4,
+       "w": 0,
+       "d": 0,
+       "l": 4,
+       "gf": 2,
+       "ga": 11,
+       "gd": -9,
+       "pts": 0
+      }
+     ],
+     "uefaId": "2014191"
+    },
+    {
+     "id": "A2",
+     "teams": [
+      {
+       "code": "NED",
+       "name": "Niederlande",
+       "nameEn": "Netherlands",
+       "flag": "nl",
+       "fifaRank": null,
+       "coach": "Xavi Hernández",
+       "uefaId": "95"
+      },
+      {
+       "code": "GER",
+       "name": "Deutschland",
+       "nameEn": "Germany",
+       "flag": "de",
+       "fifaRank": null,
+       "coach": "Jürgen Klopp",
+       "uefaId": "47"
+      },
+      {
+       "code": "SRB",
+       "name": "Serbien",
+       "nameEn": "Serbia",
+       "flag": "rs",
+       "fifaRank": null,
+       "coach": null,
+       "uefaId": "147"
+      },
+      {
+       "code": "GRE",
+       "name": "Griechenland",
+       "nameEn": "Greece",
+       "flag": "gr",
+       "fifaRank": null,
+       "coach": null,
+       "uefaId": "49"
+      }
+     ],
+     "matches": [
+      {
+       "id": "2048003",
+       "md": 1,
+       "date": "2026-09-24",
+       "kickoff": "2026-09-24T18:45:00Z",
+       "status": "FINISHED",
+       "home": "NED",
+       "away": "GER",
+       "hs": 1,
+       "as": 1,
+       "venue": null
+      },
+      {
+       "id": "2048004",
+       "md": 1,
+       "date": "2026-09-24",
+       "kickoff": "2026-09-24T18:45:00Z",
+       "status": "FINISHED",
+       "home": "SRB",
+       "away": "GRE",
+       "hs": 1,
+       "as": 2,
+       "venue": null
+      },
+      {
+       "id": "2047976",
+       "md": 2,
+       "date": "2026-09-27",
+       "kickoff": "2026-09-27T18:45:00Z",
+       "status": "FINISHED",
+       "home": "GER",
+       "away": "GRE",
+       "hs": 0,
+       "as": 1,
+       "venue": "WWK Arena, Augsburg"
+      },
+      {
+       "id": "2047981",
+       "md": 2,
+       "date": "2026-09-27",
+       "kickoff": "2026-09-27T16:00:00Z",
+       "status": "FINISHED",
+       "home": "SRB",
+       "away": "NED",
+       "hs": 1,
+       "as": 2,
+       "venue": "Stadion Rajko Mitić, Belgrad"
+      },
+      {
+       "id": "2047951",
+       "md": 3,
+       "date": "2026-10-01",
+       "kickoff": "2026-10-01T18:45:00Z",
+       "status": "FINISHED",
+       "home": "GRE",
+       "away": "NED",
+       "hs": 2,
+       "as": 2,
+       "venue": "Toumba-Stadion, Thessaloniki"
+      },
+      {
+       "id": "2047954",
+       "md": 3,
+       "date": "2026-10-01",
+       "kickoff": "2026-10-01T18:45:00Z",
+       "status": "FINISHED",
+       "home": "GER",
+       "away": "SRB",
+       "hs": 2,
+       "as": 0,
+       "venue": "Allianz Arena, München"
+      },
+      {
+       "id": "2047926",
+       "md": 4,
+       "date": "2026-10-04",
+       "kickoff": "2026-10-04T18:45:00Z",
+       "status": "FINISHED",
+       "home": "GRE",
+       "away": "GER",
+       "hs": 0,
+       "as": 0,
+       "venue": "Thessaloniki"
+      },
+      {
+       "id": "2047925",
+       "md": 4,
+       "date": "2026-10-04",
+       "kickoff": "2026-10-04T18:45:00Z",
+       "status": "FINISHED",
+       "home": "NED",
+       "away": "SRB",
+       "hs": 2,
+       "as": 1,
+       "venue": "Philips Stadion, Eindhoven"
+      },
+      {
+       "id": "2047887",
+       "md": 5,
+       "date": "2026-11-13",
+       "kickoff": "2026-11-13T19:45:00Z",
+       "status": "UPCOMING",
+       "home": "SRB",
+       "away": "GER",
+       "hs": null,
+       "as": null,
+       "venue": "Belgrad"
+      },
+      {
+       "id": "2047886",
+       "md": 5,
+       "date": "2026-11-13",
+       "kickoff": "2026-11-13T19:45:00Z",
+       "status": "UPCOMING",
+       "home": "NED",
+       "away": "GRE",
+       "hs": null,
+       "as": null,
+       "venue": null
+      },
+      {
+       "id": "2047909",
+       "md": 6,
+       "date": "2026-11-16",
+       "kickoff": "2026-11-16T19:45:00Z",
+       "status": "UPCOMING",
+       "home": "GER",
+       "away": "NED",
+       "hs": null,
+       "as": null,
+       "venue": "Olympiastadion, Berlin"
+      },
+      {
+       "id": "2047912",
+       "md": 6,
+       "date": "2026-11-16",
+       "kickoff": "2026-11-16T19:45:00Z",
+       "status": "UPCOMING",
+       "home": "GRE",
+       "away": "SRB",
+       "hs": null,
+       "as": null,
+       "venue": null
+      }
+     ],
+     "table": [
+      {
+       "pos": 1,
+       "code": "NED",
+       "p": 4,
+       "w": 2,
+       "d": 2,
+       "l": 0,
+       "gf": 7,
+       "ga": 5,
+       "gd": 2,
+       "pts": 8
+      },
+      {
+       "pos": 2,
+       "code": "GRE",
+       "p": 4,
+       "w": 2,
+       "d": 2,
+       "l": 0,
+       "gf": 5,
+       "ga": 3,
+       "gd": 2,
+       "pts": 8
+      },
+      {
+       "pos": 3,
+       "code": "GER",
+       "p": 4,
+       "w": 1,
+       "d": 2,
+       "l": 1,
+       "gf": 3,
+       "ga": 2,
+       "gd": 1,
+       "pts": 5
+      },
+      {
+       "pos": 4,
+       "code": "SRB",
+       "p": 4,
+       "w": 0,
+       "d": 0,
+       "l": 4,
+       "gf": 3,
+       "ga": 8,
+       "gd": -5,
+       "pts": 0
+      }
+     ],
+     "uefaId": "2014192"
+    },
+    {
+     "id": "A3",
+     "teams": [
+      {
+       "code": "ESP",
+       "name": "Spanien",
+       "nameEn": "Spain",
+       "flag": "es",
+       "fifaRank": null,
+       "coach": "Luis de la Fuente",
+       "uefaId": "122"
+      },
+      {
+       "code": "CRO",
+       "name": "Kroatien",
+       "nameEn": "Croatia",
+       "flag": "hr",
+       "fifaRank": null,
+       "coach": "Slaven Bilić",
+       "uefaId": "56370"
+      },
+      {
+       "code": "ENG",
+       "name": "England",
+       "nameEn": "England",
+       "flag": "gb-eng",
+       "fifaRank": null,
+       "coach": "Thomas Tuchel",
+       "uefaId": "39"
+      },
+      {
+       "code": "CZE",
+       "name": "Tschechien",
+       "nameEn": "Czechia",
+       "flag": "cz",
+       "fifaRank": null,
+       "coach": null,
+       "uefaId": "58837"
+      }
+     ],
+     "matches": [
+      {
+       "id": "2048018",
+       "md": 1,
+       "date": "2026-09-26",
+       "kickoff": "2026-09-26T18:45:00Z",
+       "status": "FINISHED",
+       "home": "ENG",
+       "away": "ESP",
+       "hs": 2,
+       "as": 3,
+       "venue": "Wembley-Stadion, London"
+      },
+      {
+       "id": "2048023",
+       "md": 1,
+       "date": "2026-09-26",
+       "kickoff": "2026-09-26T18:45:00Z",
+       "status": "FINISHED",
+       "home": "CZE",
+       "away": "CRO",
+       "hs": 1,
+       "as": 2,
+       "venue": "Fortuna Arena, Prag"
+      },
+      {
+       "id": "2048000",
+       "md": 2,
+       "date": "2026-09-29",
+       "kickoff": "2026-09-29T18:45:00Z",
+       "status": "FINISHED",
+       "home": "CZE",
+       "away": "ENG",
+       "hs": 0,
+       "as": 2,
+       "venue": "Prag"
+      },
+      {
+       "id": "2047999",
+       "md": 2,
+       "date": "2026-09-29",
+       "kickoff": "2026-09-29T18:45:00Z",
+       "status": "FINISHED",
+       "home": "ESP",
+       "away": "CRO",
+       "hs": 4,
+       "as": 1,
+       "venue": "Sevilla"
+      },
+      {
+       "id": "2047968",
+       "md": 3,
+       "date": "2026-10-03",
+       "kickoff": "2026-10-03T16:00:00Z",
+       "status": "FINISHED",
+       "home": "CRO",
+       "away": "ENG",
+       "hs": 0,
+       "as": 7,
+       "venue": null,
+       "note": "Unter Ausschluss der Öffentlichkeit (UEFA-Sanktion)"
+      },
+      {
+       "id": "2047971",
+       "md": 3,
+       "date": "2026-10-03",
+       "kickoff": "2026-10-03T18:45:00Z",
+       "status": "FINISHED",
+       "home": "ESP",
+       "away": "CZE",
+       "hs": 3,
+       "as": 1,
+       "venue": null
+      },
+      {
+       "id": "2047947",
+       "md": 4,
+       "date": "2026-10-06",
+       "kickoff": "2026-10-06T18:45:00Z",
+       "status": "FINISHED",
+       "home": "ENG",
+       "away": "CZE",
+       "hs": 3,
+       "as": 0,
+       "venue": "Wembley-Stadion, London"
+      },
+      {
+       "id": "2047946",
+       "md": 4,
+       "date": "2026-10-06",
+       "kickoff": "2026-10-06T18:45:00Z",
+       "status": "FINISHED",
+       "home": "CRO",
+       "away": "ESP",
+       "hs": 1,
+       "as": 2,
+       "venue": null
+      },
+      {
+       "id": "2047879",
+       "md": 5,
+       "date": "2026-11-12",
+       "kickoff": "2026-11-12T19:45:00Z",
+       "status": "UPCOMING",
+       "home": "ENG",
+       "away": "CRO",
+       "hs": null,
+       "as": null,
+       "venue": "Wembley-Stadion, London"
+      },
+      {
+       "id": "2047872",
+       "md": 5,
+       "date": "2026-11-12",
+       "kickoff": "2026-11-12T19:45:00Z",
+       "status": "UPCOMING",
+       "home": "CZE",
+       "away": "ESP",
+       "hs": null,
+       "as": null,
+       "venue": null
+      },
+      {
+       "id": "2047904",
+       "md": 6,
+       "date": "2026-11-15",
+       "kickoff": "2026-11-15T19:45:00Z",
+       "status": "UPCOMING",
+       "home": "ESP",
+       "away": "ENG",
+       "hs": null,
+       "as": null,
+       "venue": null
+      },
+      {
+       "id": "2047902",
+       "md": 6,
+       "date": "2026-11-15",
+       "kickoff": "2026-11-15T19:45:00Z",
+       "status": "UPCOMING",
+       "home": "CRO",
+       "away": "CZE",
+       "hs": null,
+       "as": null,
+       "venue": null
+      }
+     ],
+     "table": [
+      {
+       "pos": 1,
+       "code": "ESP",
+       "p": 4,
+       "w": 4,
+       "d": 0,
+       "l": 0,
+       "gf": 12,
+       "ga": 5,
+       "gd": 7,
+       "pts": 12
+      },
+      {
+       "pos": 2,
+       "code": "ENG",
+       "p": 4,
+       "w": 3,
+       "d": 0,
+       "l": 1,
+       "gf": 14,
+       "ga": 3,
+       "gd": 11,
+       "pts": 9
+      },
+      {
+       "pos": 3,
+       "code": "CRO",
+       "p": 4,
+       "w": 1,
+       "d": 0,
+       "l": 3,
+       "gf": 4,
+       "ga": 14,
+       "gd": -10,
+       "pts": 3
+      },
+      {
+       "pos": 4,
+       "code": "CZE",
+       "p": 4,
+       "w": 0,
+       "d": 0,
+       "l": 4,
+       "gf": 2,
+       "ga": 10,
+       "gd": -8,
+       "pts": 0
+      }
+     ],
+     "uefaId": "2014193"
+    },
+    {
+     "id": "A4",
+     "teams": [
+      {
+       "code": "NOR",
+       "name": "Norwegen",
+       "nameEn": "Norway",
+       "flag": "no",
+       "fifaRank": null,
+       "coach": null,
+       "uefaId": "101"
+      },
+      {
+       "code": "POR",
+       "name": "Portugal",
+       "nameEn": "Portugal",
+       "flag": "pt",
+       "fifaRank": null,
+       "coach": "Jorge Jesus",
+       "uefaId": "110"
+      },
+      {
+       "code": "DEN",
+       "name": "Dänemark",
+       "nameEn": "Denmark",
+       "flag": "dk",
+       "fifaRank": null,
+       "coach": null,
+       "uefaId": "35"
+      },
+      {
+       "code": "WAL",
+       "name": "Wales",
+       "nameEn": "Wales",
+       "flag": "gb-wls",
+       "fifaRank": null,
+       "coach": null,
+       "uefaId": "144"
+      }
+     ],
+     "matches": [
+      {
+       "id": "2048002",
+       "md": 1,
+       "date": "2026-09-24",
+       "kickoff": "2026-09-24T18:45:00Z",
+       "status": "FINISHED",
+       "home": "POR",
+       "away": "WAL",
+       "hs": 1,
+       "as": 0,
+       "venue": null
+      },
+      {
+       "id": "2048005",
+       "md": 1,
+       "date": "2026-09-24",
+       "kickoff": "2026-09-24T18:45:00Z",
+       "status": "FINISHED",
+       "home": "NOR",
+       "away": "DEN",
+       "hs": 3,
+       "as": 2,
+       "venue": null
+      },
+      {
+       "id": "2047977",
+       "md": 2,
+       "date": "2026-09-27",
+       "kickoff": "2026-09-27T16:00:00Z",
+       "status": "FINISHED",
+       "home": "DEN",
+       "away": "WAL",
+       "hs": 2,
+       "as": 0,
+       "venue": null
+      },
+      {
+       "id": "2047978",
+       "md": 2,
+       "date": "2026-09-27",
+       "kickoff": "2026-09-27T18:45:00Z",
+       "status": "FINISHED",
+       "home": "NOR",
+       "away": "POR",
+       "hs": 1,
+       "as": 2,
+       "venue": null
+      },
+      {
+       "id": "2047957",
+       "md": 3,
+       "date": "2026-10-01",
+       "kickoff": "2026-10-01T18:45:00Z",
+       "status": "FINISHED",
+       "home": "DEN",
+       "away": "POR",
+       "hs": 2,
+       "as": 4,
+       "venue": null
+      },
+      {
+       "id": "2047950",
+       "md": 3,
+       "date": "2026-10-01",
+       "kickoff": "2026-10-01T18:45:00Z",
+       "status": "FINISHED",
+       "home": "WAL",
+       "away": "NOR",
+       "hs": 2,
+       "as": 1,
+       "venue": null
+      },
+      {
+       "id": "2047924",
+       "md": 4,
+       "date": "2026-10-04",
+       "kickoff": "2026-10-04T18:45:00Z",
+       "status": "FINISHED",
+       "home": "POR",
+       "away": "NOR",
+       "hs": 2,
+       "as": 1,
+       "venue": null
+      },
+      {
+       "id": "2047930",
+       "md": 4,
+       "date": "2026-10-04",
+       "kickoff": "2026-10-04T18:45:00Z",
+       "status": "FINISHED",
+       "home": "WAL",
+       "away": "DEN",
+       "hs": 0,
+       "as": 1,
+       "venue": null
+      },
+      {
+       "id": "2047893",
+       "md": 5,
+       "date": "2026-11-14",
+       "kickoff": "2026-11-14T17:00:00Z",
+       "status": "UPCOMING",
+       "home": "NOR",
+       "away": "WAL",
+       "hs": null,
+       "as": null,
+       "venue": "Ullevaal Stadion, Oslo"
+      },
+      {
+       "id": "2047892",
+       "md": 5,
+       "date": "2026-11-14",
+       "kickoff": "2026-11-14T19:45:00Z",
+       "status": "UPCOMING",
+       "home": "POR",
+       "away": "DEN",
+       "hs": null,
+       "as": null,
+       "venue": null
+      },
+      {
+       "id": "2047919",
+       "md": 6,
+       "date": "2026-11-17",
+       "kickoff": "2026-11-17T19:45:00Z",
+       "status": "UPCOMING",
+       "home": "DEN",
+       "away": "NOR",
+       "hs": null,
+       "as": null,
+       "venue": null
+      },
+      {
+       "id": "2047920",
+       "md": 6,
+       "date": "2026-11-17",
+       "kickoff": "2026-11-17T19:45:00Z",
+       "status": "UPCOMING",
+       "home": "WAL",
+       "away": "POR",
+       "hs": null,
+       "as": null,
+       "venue": null
+      }
+     ],
+     "table": [
+      {
+       "pos": 1,
+       "code": "POR",
+       "p": 4,
+       "w": 4,
+       "d": 0,
+       "l": 0,
+       "gf": 9,
+       "ga": 4,
+       "gd": 5,
+       "pts": 12
+      },
+      {
+       "pos": 2,
+       "code": "DEN",
+       "p": 4,
+       "w": 2,
+       "d": 0,
+       "l": 2,
+       "gf": 7,
+       "ga": 7,
+       "gd": 0,
+       "pts": 6
+      },
+      {
+       "pos": 3,
+       "code": "WAL",
+       "p": 4,
+       "w": 1,
+       "d": 0,
+       "l": 3,
+       "gf": 2,
+       "ga": 5,
+       "gd": -3,
+       "pts": 3
+      },
+      {
+       "pos": 4,
+       "code": "NOR",
+       "p": 4,
+       "w": 1,
+       "d": 0,
+       "l": 3,
+       "gf": 6,
+       "ga": 8,
+       "gd": -2,
+       "pts": 3
+      }
+     ],
+     "uefaId": "2014194"
+    }
+   ]
+  },
+  {
+   "id": "B",
+   "name": "Liga B",
+   "groups": [
+    {
+     "id": "B1",
+     "teams": [
+      {
+       "code": "SCO",
+       "name": "Schottland",
+       "nameEn": "Scotland",
+       "flag": "gb-sct",
+       "fifaRank": null,
+       "coach": "Sébastien Pocognoli",
+       "uefaId": "117"
+      },
+      {
+       "code": "SUI",
+       "name": "Schweiz",
+       "nameEn": "Switzerland",
+       "flag": "ch",
+       "fifaRank": null,
+       "coach": null,
+       "uefaId": "128"
+      },
+      {
+       "code": "SVN",
+       "name": "Slowenien",
+       "nameEn": "Slovenia",
+       "flag": "si",
+       "fifaRank": null,
+       "coach": null,
+       "uefaId": "57163"
+      },
+      {
+       "code": "MKD",
+       "name": "Nordmazedonien",
+       "nameEn": "North Macedonia",
+       "flag": "mk",
+       "fifaRank": null,
+       "coach": null,
+       "uefaId": "59205"
+      }
+     ],
+     "matches": [
+      {
+       "id": "2048027",
+       "md": 1,
+       "date": "2026-09-26",
+       "kickoff": "2026-09-26T13:00:00Z",
+       "status": "FINISHED",
+       "home": "SVN",
+       "away": "SCO",
+       "hs": 0,
+       "as": 0,
+       "venue": "Stadion Stožice, Ljubljana"
+      },
+      {
+       "id": "2048022",
+       "md": 1,
+       "date": "2026-09-26",
+       "kickoff": "2026-09-26T18:45:00Z",
+       "status": "FINISHED",
+       "home": "MKD",
+       "away": "SUI",
+       "hs": 0,
+       "as": 3,
+       "venue": "Toše-Proeski-Arena, Skopje"
+      },
+      {
+       "id": "2048001",
+       "md": 2,
+       "date": "2026-09-29",
+       "kickoff": "2026-09-29T18:45:00Z",
+       "status": "FINISHED",
+       "home": "SCO",
+       "away": "SUI",
+       "hs": 0,
+       "as": 3,
+       "venue": "Hampden Park, Glasgow"
+      },
+      {
+       "id": "2047992",
+       "md": 2,
+       "date": "2026-09-29",
+       "kickoff": "2026-09-29T18:45:00Z",
+       "status": "FINISHED",
+       "home": "SVN",
+       "away": "MKD",
+       "hs": 2,
+       "as": 0,
+       "venue": null
+      },
+      {
+       "id": "2047975",
+       "md": 3,
+       "date": "2026-10-03",
+       "kickoff": "2026-10-03T18:45:00Z",
+       "status": "FINISHED",
+       "home": "MKD",
+       "away": "SCO",
+       "hs": 0,
+       "as": 2,
+       "venue": "Skopje"
+      },
+      {
+       "id": "2047972",
+       "md": 3,
+       "date": "2026-10-03",
+       "kickoff": "2026-10-03T18:45:00Z",
+       "status": "FINISHED",
+       "home": "SUI",
+       "away": "SVN",
+       "hs": 2,
+       "as": 1,
+       "venue": "swissporarena, Luzern"
+      },
+      {
+       "id": "2047948",
+       "md": 4,
+       "date": "2026-10-06",
+       "kickoff": "2026-10-06T18:45:00Z",
+       "status": "FINISHED",
+       "home": "SCO",
+       "away": "SVN",
+       "hs": 1,
+       "as": 2,
+       "venue": "Hampden Park, Glasgow"
+      },
+      {
+       "id": "2047940",
+       "md": 4,
+       "date": "2026-10-06",
+       "kickoff": "2026-10-06T18:45:00Z",
+       "status": "FINISHED",
+       "home": "SUI",
+       "away": "MKD",
+       "hs": 3,
+       "as": 0,
+       "venue": "swissporarena, Luzern"
+      },
+      {
+       "id": "2047888",
+       "md": 5,
+       "date": "2026-11-13",
+       "kickoff": "2026-11-13T19:45:00Z",
+       "status": "UPCOMING",
+       "home": "SCO",
+       "away": "MKD",
+       "hs": null,
+       "as": null,
+       "venue": "Hampden Park, Glasgow"
+      },
+      {
+       "id": "2047889",
+       "md": 5,
+       "date": "2026-11-13",
+       "kickoff": "2026-11-13T19:45:00Z",
+       "status": "UPCOMING",
+       "home": "SVN",
+       "away": "SUI",
+       "hs": null,
+       "as": null,
+       "venue": null
+      },
+      {
+       "id": "2047914",
+       "md": 6,
+       "date": "2026-11-16",
+       "kickoff": "2026-11-16T19:45:00Z",
+       "status": "UPCOMING",
+       "home": "SUI",
+       "away": "SCO",
+       "hs": null,
+       "as": null,
+       "venue": "St. Gallen"
+      },
+      {
+       "id": "2047915",
+       "md": 6,
+       "date": "2026-11-16",
+       "kickoff": "2026-11-16T19:45:00Z",
+       "status": "UPCOMING",
+       "home": "MKD",
+       "away": "SVN",
+       "hs": null,
+       "as": null,
+       "venue": null
+      }
+     ],
+     "table": [
+      {
+       "pos": 1,
+       "code": "SUI",
+       "p": 4,
+       "w": 4,
+       "d": 0,
+       "l": 0,
+       "gf": 11,
+       "ga": 1,
+       "gd": 10,
+       "pts": 12
+      },
+      {
+       "pos": 2,
+       "code": "SVN",
+       "p": 4,
+       "w": 2,
+       "d": 1,
+       "l": 1,
+       "gf": 5,
+       "ga": 3,
+       "gd": 2,
+       "pts": 7
+      },
+      {
+       "pos": 3,
+       "code": "SCO",
+       "p": 4,
+       "w": 1,
+       "d": 1,
+       "l": 2,
+       "gf": 3,
+       "ga": 5,
+       "gd": -2,
+       "pts": 4
+      },
+      {
+       "pos": 4,
+       "code": "MKD",
+       "p": 4,
+       "w": 0,
+       "d": 0,
+       "l": 4,
+       "gf": 0,
+       "ga": 10,
+       "gd": -10,
+       "pts": 0
+      }
+     ],
+     "uefaId": "2014195"
+    },
+    {
+     "id": "B2",
+     "teams": [
+      {
+       "code": "HUN",
+       "name": "Ungarn",
+       "nameEn": "Hungary",
+       "flag": "hu",
+       "fifaRank": null,
+       "coach": null,
+       "uefaId": "57"
+      },
+      {
+       "code": "UKR",
+       "name": "Ukraine",
+       "nameEn": "Ukraine",
+       "flag": "ua",
+       "fifaRank": null,
+       "coach": null,
+       "uefaId": "57166"
+      },
+      {
+       "code": "GEO",
+       "name": "Georgien",
+       "nameEn": "Georgia",
+       "flag": "ge",
+       "fifaRank": null,
+       "coach": null,
+       "uefaId": "57157"
+      },
+      {
+       "code": "NIR",
+       "name": "Nordirland",
+       "nameEn": "Northern Ireland",
+       "flag": "gb-nir",
+       "fifaRank": null,
+       "coach": null,
+       "uefaId": "63"
+      }
+     ],
+     "matches": [
+      {
+       "id": "2048014",
+       "md": 1,
+       "date": "2026-09-25",
+       "kickoff": "2026-09-25T16:00:00Z",
+       "status": "FINISHED",
+       "home": "GEO",
+       "away": "NIR",
+       "hs": 0,
+       "as": 1,
+       "venue": null
+      },
+      {
+       "id": "2048012",
+       "md": 1,
+       "date": "2026-09-25",
+       "kickoff": "2026-09-25T18:45:00Z",
+       "status": "FINISHED",
+       "home": "HUN",
+       "away": "UKR",
+       "hs": 0,
+       "as": 1,
+       "venue": null
+      },
+      {
+       "id": "2047991",
+       "md": 2,
+       "date": "2026-09-28",
+       "kickoff": "2026-09-28T16:00:00Z",
+       "status": "FINISHED",
+       "home": "GEO",
+       "away": "UKR",
+       "hs": 0,
+       "as": 0,
+       "venue": null
+      },
+      {
+       "id": "2047986",
+       "md": 2,
+       "date": "2026-09-28",
+       "kickoff": "2026-09-28T18:45:00Z",
+       "status": "FINISHED",
+       "home": "NIR",
+       "away": "HUN",
+       "hs": 0,
+       "as": 0,
+       "venue": null
+      },
+      {
+       "id": "2047962",
+       "md": 3,
+       "date": "2026-10-02",
+       "kickoff": "2026-10-02T18:45:00Z",
+       "status": "FINISHED",
+       "home": "HUN",
+       "away": "GEO",
+       "hs": 1,
+       "as": 0,
+       "venue": null
+      },
+      {
+       "id": "2047959",
+       "md": 3,
+       "date": "2026-10-02",
+       "kickoff": "2026-10-02T18:45:00Z",
+       "status": "FINISHED",
+       "home": "UKR",
+       "away": "NIR",
+       "hs": 0,
+       "as": 3,
+       "venue": null
+      },
+      {
+       "id": "2047934",
+       "md": 4,
+       "date": "2026-10-05",
+       "kickoff": "2026-10-05T18:45:00Z",
+       "status": "FINISHED",
+       "home": "NIR",
+       "away": "GEO",
+       "hs": 0,
+       "as": 0,
+       "venue": null
+      },
+      {
+       "id": "2047932",
+       "md": 4,
+       "date": "2026-10-05",
+       "kickoff": "2026-10-05T18:45:00Z",
+       "status": "FINISHED",
+       "home": "UKR",
+       "away": "HUN",
+       "hs": 1,
+       "as": 2,
+       "venue": null
+      },
+      {
+       "id": "2047895",
+       "md": 5,
+       "date": "2026-11-14",
+       "kickoff": "2026-11-14T17:00:00Z",
+       "status": "UPCOMING",
+       "home": "GEO",
+       "away": "HUN",
+       "hs": null,
+       "as": null,
+       "venue": null
+      },
+      {
+       "id": "2047897",
+       "md": 5,
+       "date": "2026-11-14",
+       "kickoff": "2026-11-14T19:45:00Z",
+       "status": "UPCOMING",
+       "home": "NIR",
+       "away": "UKR",
+       "hs": null,
+       "as": null,
+       "venue": null
+      },
+      {
+       "id": "2047921",
+       "md": 6,
+       "date": "2026-11-17",
+       "kickoff": "2026-11-17T19:45:00Z",
+       "status": "UPCOMING",
+       "home": "HUN",
+       "away": "NIR",
+       "hs": null,
+       "as": null,
+       "venue": null
+      },
+      {
+       "id": "2047918",
+       "md": 6,
+       "date": "2026-11-17",
+       "kickoff": "2026-11-17T19:45:00Z",
+       "status": "UPCOMING",
+       "home": "UKR",
+       "away": "GEO",
+       "hs": null,
+       "as": null,
+       "venue": null
+      }
+     ],
+     "table": [
+      {
+       "pos": 1,
+       "code": "NIR",
+       "p": 4,
+       "w": 2,
+       "d": 2,
+       "l": 0,
+       "gf": 4,
+       "ga": 0,
+       "gd": 4,
+       "pts": 8
+      },
+      {
+       "pos": 2,
+       "code": "HUN",
+       "p": 4,
+       "w": 2,
+       "d": 1,
+       "l": 1,
+       "gf": 3,
+       "ga": 2,
+       "gd": 1,
+       "pts": 7
+      },
+      {
+       "pos": 3,
+       "code": "UKR",
+       "p": 4,
+       "w": 1,
+       "d": 1,
+       "l": 2,
+       "gf": 2,
+       "ga": 5,
+       "gd": -3,
+       "pts": 4
+      },
+      {
+       "pos": 4,
+       "code": "GEO",
+       "p": 4,
+       "w": 0,
+       "d": 2,
+       "l": 2,
+       "gf": 0,
+       "ga": 2,
+       "gd": -2,
+       "pts": 2
+      }
+     ],
+     "uefaId": "2014196"
+    },
+    {
+     "id": "B3",
+     "teams": [
+      {
+       "code": "ISR",
+       "name": "Israel",
+       "nameEn": "Israel",
+       "flag": "il",
+       "fifaRank": null,
+       "coach": null,
+       "uefaId": "65"
+      },
+      {
+       "code": "AUT",
+       "name": "Österreich",
+       "nameEn": "Austria",
+       "flag": "at",
+       "fifaRank": null,
+       "coach": null,
+       "uefaId": "8"
+      },
+      {
+       "code": "IRL",
+       "name": "Irland",
+       "nameEn": "Republic of Ireland",
+       "flag": "ie",
+       "fifaRank": null,
+       "coach": null,
+       "uefaId": "64"
+      },
+      {
+       "code": "KOS",
+       "name": "Kosovo",
+       "nameEn": "Kosovo",
+       "flag": "xk",
+       "fifaRank": null,
+       "coach": null,
+       "uefaId": "2608110"
+      }
+     ],
+     "matches": [
+      {
+       "id": "2048006",
+       "md": 1,
+       "date": "2026-09-24",
+       "kickoff": "2026-09-24T18:45:00Z",
+       "status": "FINISHED",
+       "home": "AUT",
+       "away": "ISR",
+       "hs": 3,
+       "as": 1,
+       "venue": null
+      },
+      {
+       "id": "2048007",
+       "md": 1,
+       "date": "2026-09-24",
+       "kickoff": "2026-09-24T18:45:00Z",
+       "status": "FINISHED",
+       "home": "KOS",
+       "away": "IRL",
+       "hs": 1,
+       "as": 0,
+       "venue": null
+      },
+      {
+       "id": "2047979",
+       "md": 2,
+       "date": "2026-09-27",
+       "kickoff": "2026-09-27T16:00:00Z",
+       "status": "FINISHED",
+       "home": "AUT",
+       "away": "KOS",
+       "hs": 3,
+       "as": 1,
+       "venue": null
+      },
+      {
+       "id": "2047982",
+       "md": 2,
+       "date": "2026-09-27",
+       "kickoff": "2026-09-27T18:45:00Z",
+       "status": "FINISHED",
+       "home": "ISR",
+       "away": "IRL",
+       "hs": 0,
+       "as": 3,
+       "venue": null
+      },
+      {
+       "id": "2047953",
+       "md": 3,
+       "date": "2026-10-01",
+       "kickoff": "2026-10-01T18:45:00Z",
+       "status": "FINISHED",
+       "home": "IRL",
+       "away": "AUT",
+       "hs": 2,
+       "as": 2,
+       "venue": null
+      },
+      {
+       "id": "2047952",
+       "md": 3,
+       "date": "2026-10-01",
+       "kickoff": "2026-10-01T18:45:00Z",
+       "status": "FINISHED",
+       "home": "ISR",
+       "away": "KOS",
+       "hs": 0,
+       "as": 0,
+       "venue": null
+      },
+      {
+       "id": "2047927",
+       "md": 4,
+       "date": "2026-10-04",
+       "kickoff": "2026-10-04T16:00:00Z",
+       "status": "FINISHED",
+       "home": "KOS",
+       "away": "AUT",
+       "hs": 1,
+       "as": 1,
+       "venue": "Pristina"
+      },
+      {
+       "id": "2047929",
+       "md": 4,
+       "date": "2026-10-04",
+       "kickoff": "2026-10-04T18:45:00Z",
+       "status": "FINISHED",
+       "home": "IRL",
+       "away": "ISR",
+       "hs": 1,
+       "as": 1,
+       "venue": null
+      },
+      {
+       "id": "2047896",
+       "md": 5,
+       "date": "2026-11-14",
+       "kickoff": "2026-11-14T14:00:00Z",
+       "status": "UPCOMING",
+       "home": "KOS",
+       "away": "ISR",
+       "hs": null,
+       "as": null,
+       "venue": null
+      },
+      {
+       "id": "2047894",
+       "md": 5,
+       "date": "2026-11-14",
+       "kickoff": "2026-11-14T19:45:00Z",
+       "status": "UPCOMING",
+       "home": "AUT",
+       "away": "IRL",
+       "hs": null,
+       "as": null,
+       "venue": null
+      },
+      {
+       "id": "2047923",
+       "md": 6,
+       "date": "2026-11-17",
+       "kickoff": "2026-11-17T19:45:00Z",
+       "status": "UPCOMING",
+       "home": "IRL",
+       "away": "KOS",
+       "hs": null,
+       "as": null,
+       "venue": null
+      },
+      {
+       "id": "2047916",
+       "md": 6,
+       "date": "2026-11-17",
+       "kickoff": "2026-11-17T19:45:00Z",
+       "status": "UPCOMING",
+       "home": "ISR",
+       "away": "AUT",
+       "hs": null,
+       "as": null,
+       "venue": null
+      }
+     ],
+     "table": [
+      {
+       "pos": 1,
+       "code": "AUT",
+       "p": 4,
+       "w": 2,
+       "d": 2,
+       "l": 0,
+       "gf": 9,
+       "ga": 5,
+       "gd": 4,
+       "pts": 8
+      },
+      {
+       "pos": 2,
+       "code": "KOS",
+       "p": 4,
+       "w": 1,
+       "d": 2,
+       "l": 1,
+       "gf": 3,
+       "ga": 4,
+       "gd": -1,
+       "pts": 5
+      },
+      {
+       "pos": 3,
+       "code": "IRL",
+       "p": 4,
+       "w": 1,
+       "d": 2,
+       "l": 1,
+       "gf": 6,
+       "ga": 4,
+       "gd": 2,
+       "pts": 5
+      },
+      {
+       "pos": 4,
+       "code": "ISR",
+       "p": 4,
+       "w": 0,
+       "d": 2,
+       "l": 2,
+       "gf": 2,
+       "ga": 7,
+       "gd": -5,
+       "pts": 2
+      }
+     ],
+     "uefaId": "2014197"
+    },
+    {
+     "id": "B4",
+     "teams": [
+      {
+       "code": "POL",
+       "name": "Polen",
+       "nameEn": "Poland",
+       "flag": "pl",
+       "fifaRank": null,
+       "coach": null,
+       "uefaId": "109"
+      },
+      {
+       "code": "BIH",
+       "name": "Bosnien und Herzegowina",
+       "nameEn": "Bosnia and Herzegovina",
+       "flag": "ba",
+       "fifaRank": null,
+       "coach": null,
+       "uefaId": "60094"
+      },
+      {
+       "code": "ROU",
+       "name": "Rumänien",
+       "nameEn": "Romania",
+       "flag": "ro",
+       "fifaRank": null,
+       "coach": null,
+       "uefaId": "113"
+      },
+      {
+       "code": "SWE",
+       "name": "Schweden",
+       "nameEn": "Sweden",
+       "flag": "se",
+       "fifaRank": null,
+       "coach": null,
+       "uefaId": "127"
+      }
+     ],
+     "matches": [
+      {
+       "id": "2048013",
+       "md": 1,
+       "date": "2026-09-25",
+       "kickoff": "2026-09-25T18:45:00Z",
+       "status": "FINISHED",
+       "home": "POL",
+       "away": "BIH",
+       "hs": 0,
+       "as": 0,
+       "venue": null
+      },
+      {
+       "id": "2048015",
+       "md": 1,
+       "date": "2026-09-25",
+       "kickoff": "2026-09-25T18:45:00Z",
+       "status": "FINISHED",
+       "home": "SWE",
+       "away": "ROU",
+       "hs": 2,
+       "as": 1,
+       "venue": null
+      },
+      {
+       "id": "2047984",
+       "md": 2,
+       "date": "2026-09-28",
+       "kickoff": "2026-09-28T18:45:00Z",
+       "status": "FINISHED",
+       "home": "ROU",
+       "away": "BIH",
+       "hs": 2,
+       "as": 4,
+       "venue": null
+      },
+      {
+       "id": "2047985",
+       "md": 2,
+       "date": "2026-09-28",
+       "kickoff": "2026-09-28T18:45:00Z",
+       "status": "FINISHED",
+       "home": "SWE",
+       "away": "POL",
+       "hs": 3,
+       "as": 1,
+       "venue": null
+      },
+      {
+       "id": "2047964",
+       "md": 3,
+       "date": "2026-10-02",
+       "kickoff": "2026-10-02T18:45:00Z",
+       "status": "FINISHED",
+       "home": "BIH",
+       "away": "SWE",
+       "hs": 1,
+       "as": 1,
+       "venue": null
+      },
+      {
+       "id": "2047963",
+       "md": 3,
+       "date": "2026-10-02",
+       "kickoff": "2026-10-02T18:45:00Z",
+       "status": "FINISHED",
+       "home": "POL",
+       "away": "ROU",
+       "hs": 6,
+       "as": 0,
+       "venue": null
+      },
+      {
+       "id": "2047939",
+       "md": 4,
+       "date": "2026-10-05",
+       "kickoff": "2026-10-05T18:45:00Z",
+       "status": "FINISHED",
+       "home": "BIH",
+       "away": "POL",
+       "hs": 1,
+       "as": 0,
+       "venue": null
+      },
+      {
+       "id": "2047933",
+       "md": 4,
+       "date": "2026-10-05",
+       "kickoff": "2026-10-05T18:45:00Z",
+       "status": "FINISHED",
+       "home": "ROU",
+       "away": "SWE",
+       "hs": 0,
+       "as": 1,
+       "venue": null
+      },
+      {
+       "id": "2047891",
+       "md": 5,
+       "date": "2026-11-14",
+       "kickoff": "2026-11-14T19:45:00Z",
+       "status": "UPCOMING",
+       "home": "ROU",
+       "away": "POL",
+       "hs": null,
+       "as": null,
+       "venue": null
+      },
+      {
+       "id": "2047890",
+       "md": 5,
+       "date": "2026-11-14",
+       "kickoff": "2026-11-14T19:45:00Z",
+       "status": "UPCOMING",
+       "home": "SWE",
+       "away": "BIH",
+       "hs": null,
+       "as": null,
+       "venue": null
+      },
+      {
+       "id": "2047917",
+       "md": 6,
+       "date": "2026-11-17",
+       "kickoff": "2026-11-17T19:45:00Z",
+       "status": "UPCOMING",
+       "home": "BIH",
+       "away": "ROU",
+       "hs": null,
+       "as": null,
+       "venue": null
+      },
+      {
+       "id": "2047922",
+       "md": 6,
+       "date": "2026-11-17",
+       "kickoff": "2026-11-17T19:45:00Z",
+       "status": "UPCOMING",
+       "home": "POL",
+       "away": "SWE",
+       "hs": null,
+       "as": null,
+       "venue": null
+      }
+     ],
+     "table": [
+      {
+       "pos": 1,
+       "code": "SWE",
+       "p": 4,
+       "w": 3,
+       "d": 1,
+       "l": 0,
+       "gf": 7,
+       "ga": 3,
+       "gd": 4,
+       "pts": 10
+      },
+      {
+       "pos": 2,
+       "code": "BIH",
+       "p": 4,
+       "w": 2,
+       "d": 2,
+       "l": 0,
+       "gf": 6,
+       "ga": 3,
+       "gd": 3,
+       "pts": 8
+      },
+      {
+       "pos": 3,
+       "code": "POL",
+       "p": 4,
+       "w": 1,
+       "d": 1,
+       "l": 2,
+       "gf": 7,
+       "ga": 4,
+       "gd": 3,
+       "pts": 4
+      },
+      {
+       "pos": 4,
+       "code": "ROU",
+       "p": 4,
+       "w": 0,
+       "d": 0,
+       "l": 4,
+       "gf": 3,
+       "ga": 13,
+       "gd": -10,
+       "pts": 0
+      }
+     ],
+     "uefaId": "2014198"
+    }
+   ]
+  },
+  {
+   "id": "C",
+   "name": "Liga C",
+   "groups": [
+    {
+     "id": "C1",
+     "teams": [
+      {
+       "code": "ALB",
+       "name": "Albanien",
+       "nameEn": "Albania",
+       "flag": "al",
+       "fifaRank": null,
+       "coach": null,
+       "uefaId": "2"
+      },
+      {
+       "code": "FIN",
+       "name": "Finnland",
+       "nameEn": "Finland",
+       "flag": "fi",
+       "fifaRank": null,
+       "coach": null,
+       "uefaId": "42"
+      },
+      {
+       "code": "BLR",
+       "name": "Belarus",
+       "nameEn": "Belarus",
+       "flag": "by",
+       "fifaRank": null,
+       "coach": null,
+       "uefaId": "57155"
+      },
+      {
+       "code": "SMR",
+       "name": "San Marino",
+       "nameEn": "San Marino",
+       "flag": "sm",
+       "fifaRank": null,
+       "coach": null,
+       "uefaId": "50168"
+      }
+     ],
+     "matches": [
+      {
+       "id": "2048020",
+       "md": 1,
+       "date": "2026-09-26",
+       "kickoff": "2026-09-26T18:45:00Z",
+       "status": "FINISHED",
+       "home": "ALB",
+       "away": "BLR",
+       "hs": 2,
+       "as": 0,
+       "venue": null
+      },
+      {
+       "id": "2048025",
+       "md": 1,
+       "date": "2026-09-26",
+       "kickoff": "2026-09-26T16:00:00Z",
+       "status": "FINISHED",
+       "home": "SMR",
+       "away": "FIN",
+       "hs": 0,
+       "as": 7,
+       "venue": null
+      },
+      {
+       "id": "2047995",
+       "md": 2,
+       "date": "2026-09-29",
+       "kickoff": "2026-09-29T18:45:00Z",
+       "status": "FINISHED",
+       "home": "SMR",
+       "away": "ALB",
+       "hs": 0,
+       "as": 3,
+       "venue": null
+      },
+      {
+       "id": "2047993",
+       "md": 2,
+       "date": "2026-09-29",
+       "kickoff": "2026-09-29T16:00:00Z",
+       "status": "FINISHED",
+       "home": "FIN",
+       "away": "BLR",
+       "hs": 0,
+       "as": 0,
+       "venue": null
+      },
+      {
+       "id": "2047970",
+       "md": 3,
+       "date": "2026-10-03",
+       "kickoff": "2026-10-03T13:00:00Z",
+       "status": "FINISHED",
+       "home": "FIN",
+       "away": "ALB",
+       "hs": 2,
+       "as": 1,
+       "venue": null
+      },
+      {
+       "id": "2047973",
+       "md": 3,
+       "date": "2026-10-03",
+       "kickoff": "2026-10-03T16:00:00Z",
+       "status": "FINISHED",
+       "home": "BLR",
+       "away": "SMR",
+       "hs": 4,
+       "as": 0,
+       "venue": null
+      },
+      {
+       "id": "2047941",
+       "md": 4,
+       "date": "2026-10-06",
+       "kickoff": "2026-10-06T18:45:00Z",
+       "status": "FINISHED",
+       "home": "ALB",
+       "away": "SMR",
+       "hs": 2,
+       "as": 1,
+       "venue": "Air Albania Stadium, Tirana"
+      },
+      {
+       "id": "2047942",
+       "md": 4,
+       "date": "2026-10-06",
+       "kickoff": "2026-10-06T18:45:00Z",
+       "status": "FINISHED",
+       "home": "BLR",
+       "away": "FIN",
+       "hs": 1,
+       "as": 0,
+       "venue": null
+      },
+      {
+       "id": "2047874",
+       "md": 5,
+       "date": "2026-11-12",
+       "kickoff": "2026-11-12T19:45:00Z",
+       "status": "UPCOMING",
+       "home": "ALB",
+       "away": "FIN",
+       "hs": null,
+       "as": null,
+       "venue": null
+      },
+      {
+       "id": "2047877",
+       "md": 5,
+       "date": "2026-11-12",
+       "kickoff": "2026-11-12T19:45:00Z",
+       "status": "UPCOMING",
+       "home": "SMR",
+       "away": "BLR",
+       "hs": null,
+       "as": null,
+       "venue": null
+      },
+      {
+       "id": "2047905",
+       "md": 6,
+       "date": "2026-11-15",
+       "kickoff": "2026-11-15T17:00:00Z",
+       "status": "UPCOMING",
+       "home": "BLR",
+       "away": "ALB",
+       "hs": null,
+       "as": null,
+       "venue": null
+      },
+      {
+       "id": "2047901",
+       "md": 6,
+       "date": "2026-11-15",
+       "kickoff": "2026-11-15T17:00:00Z",
+       "status": "UPCOMING",
+       "home": "FIN",
+       "away": "SMR",
+       "hs": null,
+       "as": null,
+       "venue": null
+      }
+     ],
+     "table": [
+      {
+       "pos": 1,
+       "code": "ALB",
+       "p": 4,
+       "w": 3,
+       "d": 0,
+       "l": 1,
+       "gf": 8,
+       "ga": 3,
+       "gd": 5,
+       "pts": 9
+      },
+      {
+       "pos": 2,
+       "code": "BLR",
+       "p": 4,
+       "w": 2,
+       "d": 1,
+       "l": 1,
+       "gf": 5,
+       "ga": 2,
+       "gd": 3,
+       "pts": 7
+      },
+      {
+       "pos": 3,
+       "code": "FIN",
+       "p": 4,
+       "w": 2,
+       "d": 1,
+       "l": 1,
+       "gf": 9,
+       "ga": 2,
+       "gd": 7,
+       "pts": 7
+      },
+      {
+       "pos": 4,
+       "code": "SMR",
+       "p": 4,
+       "w": 0,
+       "d": 0,
+       "l": 4,
+       "gf": 1,
+       "ga": 16,
+       "gd": -15,
+       "pts": 0
+      }
+     ],
+     "uefaId": "2014199"
+    },
+    {
+     "id": "C2",
+     "teams": [
+      {
+       "code": "MNE",
+       "name": "Montenegro",
+       "nameEn": "Montenegro",
+       "flag": "me",
+       "fifaRank": null,
+       "coach": null,
+       "uefaId": "92853"
+      },
+      {
+       "code": "ARM",
+       "name": "Armenien",
+       "nameEn": "Armenia",
+       "flag": "am",
+       "fifaRank": null,
+       "coach": null,
+       "uefaId": "57419"
+      },
+      {
+       "code": "CYP",
+       "name": "Zypern",
+       "nameEn": "Cyprus",
+       "flag": "cy",
+       "fifaRank": null,
+       "coach": null,
+       "uefaId": "33"
+      },
+      {
+       "code": "LVA",
+       "name": "Lettland",
+       "nameEn": "Latvia",
+       "flag": "lv",
+       "fifaRank": null,
+       "coach": null,
+       "uefaId": "56558"
+      }
+     ],
+     "matches": [
+      {
+       "id": "2048017",
+       "md": 1,
+       "date": "2026-09-25",
+       "kickoff": "2026-09-25T16:00:00Z",
+       "status": "FINISHED",
+       "home": "ARM",
+       "away": "LVA",
+       "hs": 2,
+       "as": 0,
+       "venue": "Jerewan"
+      },
+      {
+       "id": "2048016",
+       "md": 1,
+       "date": "2026-09-25",
+       "kickoff": "2026-09-25T18:45:00Z",
+       "status": "FINISHED",
+       "home": "MNE",
+       "away": "CYP",
+       "hs": 2,
+       "as": 1,
+       "venue": "Podgorica"
+      },
+      {
+       "id": "2047987",
+       "md": 2,
+       "date": "2026-09-28",
+       "kickoff": "2026-09-28T16:00:00Z",
+       "status": "FINISHED",
+       "home": "ARM",
+       "away": "MNE",
+       "hs": 2,
+       "as": 3,
+       "venue": "Jerewan"
+      },
+      {
+       "id": "2047988",
+       "md": 2,
+       "date": "2026-09-28",
+       "kickoff": "2026-09-28T16:00:00Z",
+       "status": "FINISHED",
+       "home": "LVA",
+       "away": "CYP",
+       "hs": 0,
+       "as": 0,
+       "venue": "Riga"
+      },
+      {
+       "id": "2047966",
+       "md": 3,
+       "date": "2026-10-02",
+       "kickoff": "2026-10-02T16:00:00Z",
+       "status": "FINISHED",
+       "home": "CYP",
+       "away": "ARM",
+       "hs": 2,
+       "as": 0,
+       "venue": null
+      },
+      {
+       "id": "2047958",
+       "md": 3,
+       "date": "2026-10-02",
+       "kickoff": "2026-10-02T16:00:00Z",
+       "status": "FINISHED",
+       "home": "LVA",
+       "away": "MNE",
+       "hs": 1,
+       "as": 2,
+       "venue": null
+      },
+      {
+       "id": "2047936",
+       "md": 4,
+       "date": "2026-10-05",
+       "kickoff": "2026-10-05T16:00:00Z",
+       "status": "FINISHED",
+       "home": "CYP",
+       "away": "LVA",
+       "hs": 2,
+       "as": 1,
+       "venue": null
+      },
+      {
+       "id": "2047935",
+       "md": 4,
+       "date": "2026-10-05",
+       "kickoff": "2026-10-05T18:45:00Z",
+       "status": "FINISHED",
+       "home": "MNE",
+       "away": "ARM",
+       "hs": 0,
+       "as": 0,
+       "venue": "Podgorica"
+      },
+      {
+       "id": "2047876",
+       "md": 5,
+       "date": "2026-11-12",
+       "kickoff": "2026-11-12T17:00:00Z",
+       "status": "UPCOMING",
+       "home": "ARM",
+       "away": "CYP",
+       "hs": null,
+       "as": null,
+       "venue": null
+      },
+      {
+       "id": "2047875",
+       "md": 5,
+       "date": "2026-11-12",
+       "kickoff": "2026-11-12T19:45:00Z",
+       "status": "UPCOMING",
+       "home": "MNE",
+       "away": "LVA",
+       "hs": null,
+       "as": null,
+       "venue": null
+      },
+      {
+       "id": "2047903",
+       "md": 6,
+       "date": "2026-11-15",
+       "kickoff": "2026-11-15T14:00:00Z",
+       "status": "UPCOMING",
+       "home": "CYP",
+       "away": "MNE",
+       "hs": null,
+       "as": null,
+       "venue": null
+      },
+      {
+       "id": "2047899",
+       "md": 6,
+       "date": "2026-11-15",
+       "kickoff": "2026-11-15T14:00:00Z",
+       "status": "UPCOMING",
+       "home": "LVA",
+       "away": "ARM",
+       "hs": null,
+       "as": null,
+       "venue": null
+      }
+     ],
+     "table": [
+      {
+       "pos": 1,
+       "code": "MNE",
+       "p": 4,
+       "w": 3,
+       "d": 1,
+       "l": 0,
+       "gf": 7,
+       "ga": 4,
+       "gd": 3,
+       "pts": 10
+      },
+      {
+       "pos": 2,
+       "code": "CYP",
+       "p": 4,
+       "w": 2,
+       "d": 1,
+       "l": 1,
+       "gf": 5,
+       "ga": 3,
+       "gd": 2,
+       "pts": 7
+      },
+      {
+       "pos": 3,
+       "code": "ARM",
+       "p": 4,
+       "w": 1,
+       "d": 1,
+       "l": 2,
+       "gf": 4,
+       "ga": 5,
+       "gd": -1,
+       "pts": 4
+      },
+      {
+       "pos": 4,
+       "code": "LVA",
+       "p": 4,
+       "w": 0,
+       "d": 1,
+       "l": 3,
+       "gf": 2,
+       "ga": 6,
+       "gd": -4,
+       "pts": 1
+      }
+     ],
+     "uefaId": "2014200"
+    },
+    {
+     "id": "C3",
+     "teams": [
+      {
+       "code": "KAZ",
+       "name": "Kasachstan",
+       "nameEn": "Kazakhstan",
+       "flag": "kz",
+       "fifaRank": null,
+       "coach": null,
+       "uefaId": "65146"
+      },
+      {
+       "code": "SVK",
+       "name": "Slowakei",
+       "nameEn": "Slovakia",
+       "flag": "sk",
+       "fifaRank": null,
+       "coach": null,
+       "uefaId": "58836"
+      },
+      {
+       "code": "FRO",
+       "name": "Färöer",
+       "nameEn": "Faroe Islands",
+       "flag": "fo",
+       "fifaRank": null,
+       "coach": null,
+       "uefaId": "51218"
+      },
+      {
+       "code": "MDA",
+       "name": "Moldau",
+       "nameEn": "Moldova",
+       "flag": "md",
+       "fifaRank": null,
+       "coach": null,
+       "uefaId": "57160"
+      }
+     ],
+     "matches": [
+      {
+       "id": "2048024",
+       "md": 1,
+       "date": "2026-09-26",
+       "kickoff": "2026-09-26T16:00:00Z",
+       "status": "FINISHED",
+       "home": "FRO",
+       "away": "KAZ",
+       "hs": 1,
+       "as": 1,
+       "venue": null
+      },
+      {
+       "id": "2048021",
+       "md": 1,
+       "date": "2026-09-26",
+       "kickoff": "2026-09-26T18:45:00Z",
+       "status": "FINISHED",
+       "home": "SVK",
+       "away": "MDA",
+       "hs": 2,
+       "as": 0,
+       "venue": null
+      },
+      {
+       "id": "2047994",
+       "md": 2,
+       "date": "2026-09-29",
+       "kickoff": "2026-09-29T16:00:00Z",
+       "status": "FINISHED",
+       "home": "MDA",
+       "away": "FRO",
+       "hs": 1,
+       "as": 1,
+       "venue": null
+      },
+      {
+       "id": "2047996",
+       "md": 2,
+       "date": "2026-09-29",
+       "kickoff": "2026-09-29T18:45:00Z",
+       "status": "FINISHED",
+       "home": "SVK",
+       "away": "KAZ",
+       "hs": 2,
+       "as": 1,
+       "venue": null
+      },
+      {
+       "id": "2047965",
+       "md": 3,
+       "date": "2026-10-02",
+       "kickoff": "2026-10-02T18:45:00Z",
+       "status": "FINISHED",
+       "home": "FRO",
+       "away": "SVK",
+       "hs": 1,
+       "as": 1,
+       "venue": null
+      },
+      {
+       "id": "2047967",
+       "md": 3,
+       "date": "2026-10-02",
+       "kickoff": "2026-10-02T14:00:00Z",
+       "status": "FINISHED",
+       "home": "KAZ",
+       "away": "MDA",
+       "hs": 1,
+       "as": 2,
+       "venue": null
+      },
+      {
+       "id": "2047949",
+       "md": 4,
+       "date": "2026-10-06",
+       "kickoff": "2026-10-06T14:00:00Z",
+       "status": "FINISHED",
+       "home": "KAZ",
+       "away": "FRO",
+       "hs": 2,
+       "as": 2,
+       "venue": null
+      },
+      {
+       "id": "2047944",
+       "md": 4,
+       "date": "2026-10-06",
+       "kickoff": "2026-10-06T18:45:00Z",
+       "status": "FINISHED",
+       "home": "MDA",
+       "away": "SVK",
+       "hs": 0,
+       "as": 4,
+       "venue": null
+      },
+      {
+       "id": "2047883",
+       "md": 5,
+       "date": "2026-11-13",
+       "kickoff": "2026-11-13T17:00:00Z",
+       "status": "UPCOMING",
+       "home": "MDA",
+       "away": "KAZ",
+       "hs": null,
+       "as": null,
+       "venue": null
+      },
+      {
+       "id": "2047880",
+       "md": 5,
+       "date": "2026-11-13",
+       "kickoff": "2026-11-13T19:45:00Z",
+       "status": "UPCOMING",
+       "home": "SVK",
+       "away": "FRO",
+       "hs": null,
+       "as": null,
+       "venue": null
+      },
+      {
+       "id": "2047910",
+       "md": 6,
+       "date": "2026-11-16",
+       "kickoff": "2026-11-16T15:00:00Z",
+       "status": "UPCOMING",
+       "home": "FRO",
+       "away": "MDA",
+       "hs": null,
+       "as": null,
+       "venue": null
+      },
+      {
+       "id": "2047913",
+       "md": 6,
+       "date": "2026-11-16",
+       "kickoff": "2026-11-16T15:00:00Z",
+       "status": "UPCOMING",
+       "home": "KAZ",
+       "away": "SVK",
+       "hs": null,
+       "as": null,
+       "venue": null
+      }
+     ],
+     "table": [
+      {
+       "pos": 1,
+       "code": "SVK",
+       "p": 4,
+       "w": 3,
+       "d": 1,
+       "l": 0,
+       "gf": 9,
+       "ga": 2,
+       "gd": 7,
+       "pts": 10
+      },
+      {
+       "pos": 2,
+       "code": "FRO",
+       "p": 4,
+       "w": 0,
+       "d": 4,
+       "l": 0,
+       "gf": 5,
+       "ga": 5,
+       "gd": 0,
+       "pts": 4
+      },
+      {
+       "pos": 3,
+       "code": "MDA",
+       "p": 4,
+       "w": 1,
+       "d": 1,
+       "l": 2,
+       "gf": 3,
+       "ga": 8,
+       "gd": -5,
+       "pts": 4
+      },
+      {
+       "pos": 4,
+       "code": "KAZ",
+       "p": 4,
+       "w": 0,
+       "d": 2,
+       "l": 2,
+       "gf": 5,
+       "ga": 7,
+       "gd": -2,
+       "pts": 2
+      }
+     ],
+     "uefaId": "2014201"
+    },
+    {
+     "id": "C4",
+     "teams": [
+      {
+       "code": "ISL",
+       "name": "Island",
+       "nameEn": "Iceland",
+       "flag": "is",
+       "fifaRank": null,
+       "coach": null,
+       "uefaId": "58"
+      },
+      {
+       "code": "BUL",
+       "name": "Bulgarien",
+       "nameEn": "Bulgaria",
+       "flag": "bg",
+       "fifaRank": null,
+       "coach": null,
+       "uefaId": "20"
+      },
+      {
+       "code": "EST",
+       "name": "Estland",
+       "nameEn": "Estonia",
+       "flag": "ee",
+       "fifaRank": null,
+       "coach": null,
+       "uefaId": "56556"
+      },
+      {
+       "code": "LUX",
+       "name": "Luxemburg",
+       "nameEn": "Luxembourg",
+       "flag": "lu",
+       "fifaRank": null,
+       "coach": null,
+       "uefaId": "82"
+      }
+     ],
+     "matches": [
+      {
+       "id": "2048026",
+       "md": 1,
+       "date": "2026-09-26",
+       "kickoff": "2026-09-26T16:00:00Z",
+       "status": "FINISHED",
+       "home": "BUL",
+       "away": "LUX",
+       "hs": 1,
+       "as": 2,
+       "venue": null
+      },
+      {
+       "id": "2048019",
+       "md": 1,
+       "date": "2026-09-26",
+       "kickoff": "2026-09-26T16:00:00Z",
+       "status": "FINISHED",
+       "home": "ISL",
+       "away": "EST",
+       "hs": 1,
+       "as": 1,
+       "venue": "Laugardalsvöllur, Reykjavík"
+      },
+      {
+       "id": "2047997",
+       "md": 2,
+       "date": "2026-09-29",
+       "kickoff": "2026-09-29T18:45:00Z",
+       "status": "FINISHED",
+       "home": "BUL",
+       "away": "EST",
+       "hs": 0,
+       "as": 0,
+       "venue": null
+      },
+      {
+       "id": "2047998",
+       "md": 2,
+       "date": "2026-09-29",
+       "kickoff": "2026-09-29T18:45:00Z",
+       "status": "FINISHED",
+       "home": "LUX",
+       "away": "ISL",
+       "hs": 0,
+       "as": 3,
+       "venue": null
+      },
+      {
+       "id": "2047974",
+       "md": 3,
+       "date": "2026-10-03",
+       "kickoff": "2026-10-03T16:00:00Z",
+       "status": "FINISHED",
+       "home": "EST",
+       "away": "LUX",
+       "hs": 1,
+       "as": 0,
+       "venue": null
+      },
+      {
+       "id": "2047969",
+       "md": 3,
+       "date": "2026-10-03",
+       "kickoff": "2026-10-03T16:00:00Z",
+       "status": "FINISHED",
+       "home": "ISL",
+       "away": "BUL",
+       "hs": 3,
+       "as": 0,
+       "venue": null
+      },
+      {
+       "id": "2047945",
+       "md": 4,
+       "date": "2026-10-06",
+       "kickoff": "2026-10-06T18:45:00Z",
+       "status": "FINISHED",
+       "home": "EST",
+       "away": "ISL",
+       "hs": 0,
+       "as": 0,
+       "venue": "A. Le Coq Arena, Tallinn"
+      },
+      {
+       "id": "2047943",
+       "md": 4,
+       "date": "2026-10-06",
+       "kickoff": "2026-10-06T18:45:00Z",
+       "status": "FINISHED",
+       "home": "LUX",
+       "away": "BUL",
+       "hs": 0,
+       "as": 2,
+       "venue": null
+      },
+      {
+       "id": "2047882",
+       "md": 5,
+       "date": "2026-11-13",
+       "kickoff": "2026-11-13T19:45:00Z",
+       "status": "UPCOMING",
+       "home": "BUL",
+       "away": "ISL",
+       "hs": null,
+       "as": null,
+       "venue": null
+      },
+      {
+       "id": "2047881",
+       "md": 5,
+       "date": "2026-11-13",
+       "kickoff": "2026-11-13T19:45:00Z",
+       "status": "UPCOMING",
+       "home": "LUX",
+       "away": "EST",
+       "hs": null,
+       "as": null,
+       "venue": null
+      },
+      {
+       "id": "2047907",
+       "md": 6,
+       "date": "2026-11-16",
+       "kickoff": "2026-11-16T17:00:00Z",
+       "status": "UPCOMING",
+       "home": "EST",
+       "away": "BUL",
+       "hs": null,
+       "as": null,
+       "venue": null
+      },
+      {
+       "id": "2047906",
+       "md": 6,
+       "date": "2026-11-16",
+       "kickoff": "2026-11-16T17:00:00Z",
+       "status": "UPCOMING",
+       "home": "ISL",
+       "away": "LUX",
+       "hs": null,
+       "as": null,
+       "venue": null
+      }
+     ],
+     "table": [
+      {
+       "pos": 1,
+       "code": "ISL",
+       "p": 4,
+       "w": 2,
+       "d": 2,
+       "l": 0,
+       "gf": 7,
+       "ga": 1,
+       "gd": 6,
+       "pts": 8
+      },
+      {
+       "pos": 2,
+       "code": "EST",
+       "p": 4,
+       "w": 1,
+       "d": 3,
+       "l": 0,
+       "gf": 2,
+       "ga": 1,
+       "gd": 1,
+       "pts": 6
+      },
+      {
+       "pos": 3,
+       "code": "BUL",
+       "p": 4,
+       "w": 1,
+       "d": 1,
+       "l": 2,
+       "gf": 3,
+       "ga": 5,
+       "gd": -2,
+       "pts": 4
+      },
+      {
+       "pos": 4,
+       "code": "LUX",
+       "p": 4,
+       "w": 1,
+       "d": 0,
+       "l": 3,
+       "gf": 2,
+       "ga": 7,
+       "gd": -5,
+       "pts": 3
+      }
+     ],
+     "uefaId": "2014202"
+    }
+   ]
+  },
+  {
+   "id": "D",
+   "name": "Liga D",
+   "groups": [
+    {
+     "id": "D1",
+     "teams": [
+      {
+       "code": "AND",
+       "name": "Andorra",
+       "nameEn": "Andorra",
+       "flag": "ad",
+       "fifaRank": null,
+       "coach": null,
+       "uefaId": "60618"
+      },
+      {
+       "code": "MLT",
+       "name": "Malta",
+       "nameEn": "Malta",
+       "flag": "mt",
+       "fifaRank": null,
+       "coach": null,
+       "uefaId": "88"
+      },
+      {
+       "code": "GIB",
+       "name": "Gibraltar",
+       "nameEn": "Gibraltar",
+       "flag": "gi",
+       "fifaRank": null,
+       "coach": null,
+       "uefaId": "94080"
+      }
+     ],
+     "matches": [
+      {
+       "id": "2048009",
+       "md": 1,
+       "date": "2026-09-24",
+       "kickoff": "2026-09-24T16:00:00Z",
+       "status": "FINISHED",
+       "home": "AND",
+       "away": "MLT",
+       "hs": 1,
+       "as": 2,
+       "venue": null
+      },
+      {
+       "id": "2047980",
+       "md": 2,
+       "date": "2026-09-27",
+       "kickoff": "2026-09-27T16:00:00Z",
+       "status": "FINISHED",
+       "home": "GIB",
+       "away": "AND",
+       "hs": 0,
+       "as": 0,
+       "venue": "Europa Point Stadium, Gibraltar"
+      },
+      {
+       "id": "2047956",
+       "md": 3,
+       "date": "2026-10-01",
+       "kickoff": "2026-10-01T18:45:00Z",
+       "status": "FINISHED",
+       "home": "MLT",
+       "away": "GIB",
+       "hs": 1,
+       "as": 1,
+       "venue": null
+      },
+      {
+       "id": "2047928",
+       "md": 4,
+       "date": "2026-10-04",
+       "kickoff": "2026-10-04T16:00:00Z",
+       "status": "FINISHED",
+       "home": "MLT",
+       "away": "AND",
+       "hs": 1,
+       "as": 0,
+       "venue": null
+      },
+      {
+       "id": "2047884",
+       "md": 5,
+       "date": "2026-11-13",
+       "kickoff": "2026-11-13T19:45:00Z",
+       "status": "UPCOMING",
+       "home": "AND",
+       "away": "GIB",
+       "hs": null,
+       "as": null,
+       "venue": null
+      },
+      {
+       "id": "2047908",
+       "md": 6,
+       "date": "2026-11-16",
+       "kickoff": "2026-11-16T19:45:00Z",
+       "status": "UPCOMING",
+       "home": "GIB",
+       "away": "MLT",
+       "hs": null,
+       "as": null,
+       "venue": null
+      }
+     ],
+     "table": [
+      {
+       "pos": 1,
+       "code": "MLT",
+       "p": 3,
+       "w": 2,
+       "d": 1,
+       "l": 0,
+       "gf": 4,
+       "ga": 2,
+       "gd": 2,
+       "pts": 7
+      },
+      {
+       "pos": 2,
+       "code": "GIB",
+       "p": 2,
+       "w": 0,
+       "d": 2,
+       "l": 0,
+       "gf": 1,
+       "ga": 1,
+       "gd": 0,
+       "pts": 2
+      },
+      {
+       "pos": 3,
+       "code": "AND",
+       "p": 3,
+       "w": 0,
+       "d": 1,
+       "l": 2,
+       "gf": 1,
+       "ga": 3,
+       "gd": -2,
+       "pts": 1
+      }
+     ],
+     "uefaId": "2014203"
+    },
+    {
+     "id": "D2",
+     "teams": [
+      {
+       "code": "LTU",
+       "name": "Litauen",
+       "nameEn": "Lithuania",
+       "flag": "lt",
+       "fifaRank": null,
+       "coach": null,
+       "uefaId": "56557"
+      },
+      {
+       "code": "AZE",
+       "name": "Aserbaidschan",
+       "nameEn": "Azerbaijan",
+       "flag": "az",
+       "fifaRank": null,
+       "coach": null,
+       "uefaId": "57154"
+      },
+      {
+       "code": "LIE",
+       "name": "Liechtenstein",
+       "nameEn": "Liechtenstein",
+       "flag": "li",
+       "fifaRank": null,
+       "coach": null,
+       "uefaId": "81"
+      }
+     ],
+     "matches": [
+      {
+       "id": "2048008",
+       "md": 1,
+       "date": "2026-09-24",
+       "kickoff": "2026-09-24T18:45:00Z",
+       "status": "FINISHED",
+       "home": "LIE",
+       "away": "LTU",
+       "hs": 0,
+       "as": 2,
+       "venue": null
+      },
+      {
+       "id": "2047983",
+       "md": 2,
+       "date": "2026-09-27",
+       "kickoff": "2026-09-27T13:00:00Z",
+       "status": "FINISHED",
+       "home": "LTU",
+       "away": "AZE",
+       "hs": 1,
+       "as": 1,
+       "venue": null
+      },
+      {
+       "id": "2047955",
+       "md": 3,
+       "date": "2026-10-01",
+       "kickoff": "2026-10-01T16:00:00Z",
+       "status": "FINISHED",
+       "home": "AZE",
+       "away": "LIE",
+       "hs": 0,
+       "as": 0,
+       "venue": null
+      },
+      {
+       "id": "2047931",
+       "md": 4,
+       "date": "2026-10-04",
+       "kickoff": "2026-10-04T13:00:00Z",
+       "status": "FINISHED",
+       "home": "AZE",
+       "away": "LTU",
+       "hs": 1,
+       "as": 0,
+       "venue": "Baku"
+      },
+      {
+       "id": "2047885",
+       "md": 5,
+       "date": "2026-11-13",
+       "kickoff": "2026-11-13T19:45:00Z",
+       "status": "UPCOMING",
+       "home": "LIE",
+       "away": "AZE",
+       "hs": null,
+       "as": null,
+       "venue": null
+      },
+      {
+       "id": "2047911",
+       "md": 6,
+       "date": "2026-11-16",
+       "kickoff": "2026-11-16T17:00:00Z",
+       "status": "UPCOMING",
+       "home": "LTU",
+       "away": "LIE",
+       "hs": null,
+       "as": null,
+       "venue": null
+      }
+     ],
+     "table": [
+      {
+       "pos": 1,
+       "code": "AZE",
+       "p": 3,
+       "w": 1,
+       "d": 2,
+       "l": 0,
+       "gf": 2,
+       "ga": 1,
+       "gd": 1,
+       "pts": 5
+      },
+      {
+       "pos": 2,
+       "code": "LTU",
+       "p": 3,
+       "w": 1,
+       "d": 1,
+       "l": 1,
+       "gf": 3,
+       "ga": 2,
+       "gd": 1,
+       "pts": 4
+      },
+      {
+       "pos": 3,
+       "code": "LIE",
+       "p": 2,
+       "w": 0,
+       "d": 1,
+       "l": 1,
+       "gf": 0,
+       "ga": 2,
+       "gd": -2,
+       "pts": 1
+      }
+     ],
+     "uefaId": "2014204"
+    }
+   ]
+  }
+ ]
+}

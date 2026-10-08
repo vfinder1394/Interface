@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Nations League Monitor 2026/27</title>
+  <meta name="description" content="Alle Ligen, Gruppen, Tabellen und Spiele der UEFA Nations League 2026/27 – mit Auf- und Abstiegszonen, Play-offs und Viertelfinale auf einen Blick.">
+  <meta name="theme-color" content="#050a1a">
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preconnect" href="https://flagcdn.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,500..900&family=Inter:wght@400..700&display=swap">
+  <link rel="stylesheet" href="css/styles.css">
+  <script>
+    // Theme vor dem ersten Paint setzen (kein Aufblitzen): gespeicherte Wahl, sonst Systemeinstellung
+    (function () {
+      var t = null;
+      try { t = localStorage.getItem('nl-theme'); } catch (e) {}
+      if (t !== 'light' && t !== 'dark') t = window.matchMedia && matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
+      document.documentElement.dataset.theme = t;
+      var m = document.querySelector('meta[name="theme-color"]');
+      if (m) m.setAttribute('content', t === 'light' ? '#f3f5fb' : '#050a1a');
+    })();
+  </script>
+  <link rel="modulepreload" href="js/app.js">
+</head>
+<body>
+  <a class="skip-link" href="#main">Zum Inhalt springen</a>
+
+  <header class="site-header" id="site-header">
+    <div class="header-inner">
+      <a class="brand" href="#/tabellen" aria-label="Nations League Monitor – Startseite">
+        <svg class="brand-mark" viewBox="0 0 40 40" aria-hidden="true">
+          <defs>
+            <linearGradient id="bm" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0" stop-color="var(--brand-1)"/>
+              <stop offset=".6" stop-color="var(--brand-2)"/>
+              <stop offset="1" stop-color="var(--brand-3)"/>
+            </linearGradient>
+          </defs>
+          <path d="M20 2.8l14.6 5.1v10.6c0 9.3-6.2 15.9-14.6 18.7C11.6 34.4 5.4 27.8 5.4 18.5V7.9z" fill="url(#bm)" opacity=".16"/>
+          <path d="M20 2.8l14.6 5.1v10.6c0 9.3-6.2 15.9-14.6 18.7C11.6 34.4 5.4 27.8 5.4 18.5V7.9z" fill="none" stroke="url(#bm)" stroke-width="2.2" stroke-linejoin="round"/>
+          <rect x="11.5" y="11" width="17" height="3.6" rx="1.8" fill="url(#bm)"/>
+          <rect x="13.5" y="16.6" width="13" height="3.6" rx="1.8" fill="url(#bm)"/>
+          <rect x="15.5" y="22.2" width="9" height="3.6" rx="1.8" fill="url(#bm)"/>
+          <rect x="17.6" y="27.8" width="4.8" height="3.6" rx="1.8" fill="url(#bm)"/>
+        </svg>
+        <span class="brand-text">
+          <strong>Nations League</strong>
+          <span>Tabellen &amp; Zonen</span>
+        </span>
+      </a>
+
+      <nav class="main-nav" aria-label="Hauptnavigation">
+        <a href="#/tabellen" data-nav="tabellen">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16" /></svg>
+          <span>Tabellen</span>
+        </a>
+        <a href="#/spieltage" data-nav="spieltage">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="5" width="16" height="15" rx="2.5"/><path d="M4 10h16M9 3v4M15 3v4"/></svg>
+          <span>Spieltage</span>
+        </a>
+        <a href="#/ko" data-nav="ko">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3.5 5.5H8a2 2 0 0 1 2 2v2.5a2 2 0 0 0 2 2M3.5 18.5H8a2 2 0 0 0 2-2V14a2 2 0 0 1 2-2M12 12h4.5M19.5 9v6"/></svg>
+          <span class="lbl-long">K.-o. &amp; Play-offs</span><span class="lbl-short" aria-hidden="true">K.-o.</span>
+        </a>
+      </nav>
+
+      <div class="header-tools">
+        <div class="data-status" id="data-status" role="status" aria-live="polite">
+          <span class="data-status__dot" aria-hidden="true"></span>
+          <span class="data-status__text">Lädt …</span>
+        </div>
+        <button class="icon-btn theme-toggle" id="theme-toggle" type="button" aria-label="Helles Design" aria-pressed="false">
+          <svg class="i-sun" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4.2"/><path d="M12 2.5v2.2M12 19.3v2.2M4.6 4.6l1.6 1.6M17.8 17.8l1.6 1.6M2.5 12h2.2M19.3 12h2.2M4.6 19.4l1.6-1.6M17.8 6.2l1.6-1.6"/></svg>
+          <svg class="i-moon" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 14.5A8 8 0 1 1 9.5 4a6.5 6.5 0 0 0 10.5 10.5z"/></svg>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main id="main" tabindex="-1">
+    <section class="hero" id="hero" aria-labelledby="hero-title"></section>
+    <div class="view" id="view" aria-live="polite">
+      <div class="skeleton-grid" aria-hidden="true">
+        <div class="skeleton"></div><div class="skeleton"></div><div class="skeleton"></div><div class="skeleton"></div>
+      </div>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="footer-inner">
+      <p><strong>Nations League Monitor</strong> – inoffizielle Fan-Übersicht, nicht mit der UEFA verbunden.</p>
+      <p id="footer-source">Daten: UEFA (über automatisierten Abgleich), Live-Abgleich: ESPN. Flaggen: flag-icons (MIT).</p>
+      <p class="footer-note" id="footer-note"></p>
+    </div>
+  </footer>
+
+  <div class="scrim" id="scrim" hidden></div>
+  <aside class="team-panel" id="team-panel" role="dialog" aria-modal="true" aria-labelledby="team-panel-title" hidden tabindex="-1"></aside>
+  <div class="tooltip" id="tooltip" role="tooltip" hidden></div>
+
+  <noscript><p class="noscript">Diese Seite benötigt JavaScript, um die Tabellen anzuzeigen.</p></noscript>
+  <script type="module" src="js/app.js"></script>
+</body>
+</html>
