@@ -1,71 +1,107 @@
-// Topspiele und Entscheidungsspiele je Gruppe und Spieltag
+// Topspiele und mögliche Entscheidungen je Gruppe und Spieltag
 import { positionRanges, isFinished } from './standings.js';
-import { placeZones, ZONE_ORDER } from './zones.js';
-
-const OUTCOMES = [[1, 0], [0, 0], [0, 1]];
-const GOAL = { ko: 'das Viertelfinale', promotion: 'den Aufstieg', 'playoff-up': 'das Play-off um den Aufstieg', safe: 'den Klassenerhalt' };
-const FATE = { 'playoff-down': 'das Play-off um den Klassenerhalt', relegation: 'den Abstieg' };
-
-/** Zonen, die mit den Plätzen best…worst noch erreichbar sind (Liga A, Platz 3/4: beide Vergleichszonen). */
-function reachable(league, range) {
-  const zones = new Set();
-  for (let p = range.best; p <= range.worst; p++) for (const z of placeZones(league, p)) zones.add(z);
-  return zones;
-}
-
-const bestOf = (zones) => ZONE_ORDER.find((z) => zones.has(z));
-const worstOf = (zones) => [...ZONE_ORDER].reverse().find((z) => zones.has(z));
 
 /**
- * Was ein offenes Spiel entscheiden kann: Für jedes Ergebnis dieses Spiels (kombiniert mit den übrigen
- * offenen Spielen der Gruppe am selben Spieltag) wird geprüft, ob sich die erreichbaren Zonen eines der
- * beiden Teams schon nach dem Spieltag rechnerisch festlegen. Gleichstände zählen konservativ (nur Punkte).
- * @returns {{team: string, text: string}[]} leer, wenn das Spiel noch nichts entscheiden kann
+ * Tabellengrenzen, an denen sich je Liga die Folge ändert (Plätze ≤ cut gegenüber > cut),
+ * mit neutraler Formulierung für „rechnerisch geschafft“ (yes) und „rechnerisch verpasst“ (no).
+ * Liga A, Platz 3/4: Ob Klassenerhalt, Play-off oder Abstieg folgt, entscheidet erst der Vergleich
+ * der Gruppen – innerhalb der Gruppe steht nur fest, ob ein Team Letzter wird.
+ * Liga D: Alle Teams steigen auf – nichts zu entscheiden.
  */
-function stakesOf(group, m) {
-  if (group.league === 'D' || !group.ranges) return [];
-  const sameDay = group.matches.filter((x) => x.md === m.md && !isFinished(x));
-  const others = sameDay.filter((x) => x !== m);
-  const later = group.matches.filter((x) => x.md > m.md && !isFinished(x));
-  if (later.length > 8) return []; // zu früh in der Ligaphase – nichts kann feststehen
+const CUTS = {
+  A: [{ cut: 2, yes: 'Viertelfinale sicher', no: 'Viertelfinale verpasst' },
+    { cut: 3, yes: 'Platz 4 abgewendet', no: 'Platz 4 steht fest', low: true }],
+  B: [{ cut: 1, yes: 'Aufstieg sicher', no: 'Direkter Aufstieg verpasst' },
+    { cut: 2, yes: 'Mindestens Play-off A/B sicher', no: 'Play-off A/B verpasst' },
+    { cut: 3, yes: 'Klassenerhalt sicher', no: 'Play-off B/C steht fest', low: true }],
+  C: [{ cut: 1, yes: 'Aufstieg sicher', no: 'Direkter Aufstieg verpasst' },
+    { cut: 2, yes: 'Mindestens Play-off B/C sicher', no: 'Play-off B/C verpasst' }],
+};
 
-  const out = [];
-  for (const code of [m.home, m.away]) {
-    const now = reachable(group.league, group.ranges[code]);
-    if (now.size < 2) continue; // steht bereits fest
-    const finals = [];
-    for (const [hs, as] of OUTCOMES) {
-      const walk = (i, fixed) => {
-        if (i < others.length) {
-          for (const [h, a] of OUTCOMES) walk(i + 1, [...fixed, { ...others[i], hs: h, as: a, status: 'FINISHED' }]);
-          return;
-        }
-        const hyp = group.matches.map((x) => fixed.find((f) => f.home === x.home && f.away === x.away) || x);
-        const ranges = positionRanges(group.teams, hyp);
-        if (ranges) finals.push(reachable(group.league, ranges[code]));
-      };
-      walk(0, [{ ...m, hs, as, status: 'FINISHED' }]);
+// Ergebnis aus Sicht des Heimteams: Sieg, Remis, Niederlage
+const RESULTS = [['W', 1, 0], ['D', 0, 0], ['L', 0, 1]];
+const flip = { W: 'L', D: 'D', L: 'W' };
+const clear = (m) => ({ ...m, hs: null, as: null, status: 'UPCOMING' });
+
+/**
+ * Analysiert eine Gruppe für einen Spieltag – immer mit dem Stand vor dem Spieltag, damit Stern und
+ * Hinweise auch während und nach den Spielen gleich bleiben. Alle Ergebniskombinationen der Spiele
+ * dieses Spieltags werden durchgespielt; für jede Kombination liefert positionRanges die noch
+ * möglichen Plätze bis zum Ende der Ligaphase (Gleichstände vorsichtig, nur Punkte).
+ * @returns {Map<object, object[]>} je Spiel die möglichen Entscheidungen
+ */
+function analyzeGroup(group, md) {
+  const out = new Map();
+  const cuts = CUTS[group.league];
+  const day = group.matches.filter((m) => m.md === md);
+  if (!cuts || !day.length) return out;
+  const base = group.matches.map((m) => (m.md >= md ? clear(m) : m));
+  // Erst wenn höchstens noch zwei Spiele je Team offen sind, kann etwas feststehen (spart Rechenzeit)
+  const remaining = base.filter((m) => m.md !== md && !isFinished(m));
+  if (remaining.length > 4) return out;
+  const before = positionRanges(group.teams, base);
+  if (!before) return out;
+
+  // Alle Kombinationen der Spieltagsergebnisse → mögliche Plätze je Team
+  const combos = [];
+  const walk = (i, res) => {
+    if (i === day.length) {
+      const hyp = base.map((m) => {
+        const k = day.indexOf(day.find((d) => d.home === m.home && d.away === m.away));
+        if (k < 0) return m;
+        const [, hs, as] = RESULTS.find((r) => r[0] === res[k]);
+        return { ...m, hs, as, status: 'FINISHED' };
+      });
+      combos.push({ res: [...res], ranges: positionRanges(group.teams, hyp) });
+      return;
     }
-    const best = bestOf(now), worst = worstOf(now);
-    // Bestes Ziel rechnerisch sichern (nur noch eine Zone möglich, und zwar die beste)
-    if (GOAL[best] && finals.some((z) => z.size === 1 && z.has(best))) out.push({ team: code, kind: 'goal', text: `kann ${GOAL[best]} sichern` });
-    // Schlechtestes Szenario kann feststehen
-    else if (FATE[worst] && finals.some((z) => z.size === 1 && z.has(worst))) out.push({ team: code, kind: 'fate', text: `droht ${FATE[worst]}` });
-    // Oder ein Team kann den Platz, den es gerade belegt, endgültig verlieren
-    else if (GOAL[best] && group.table.find((r) => r.code === code)?.zone === best && finals.some((z) => !z.has(best))) out.push({ team: code, kind: 'miss', text: `kann ${GOAL[best]} verpassen` });
-  }
+    for (const [r] of RESULTS) walk(i + 1, [...res, r]);
+  };
+  walk(0, []);
+
+  day.forEach((m, k) => {
+    const found = [];
+    for (const [code, home] of [[m.home, true], [m.away, false]]) {
+      const now = before[code];
+      const pos = group.table.find((r) => r.code === code)?.pos ?? 99;
+      // Ergebnis aus Sicht dieses Teams; wichtigste Grenze zuerst, je Team höchstens eine Aussage
+      const own = (c) => (home ? c.res[k] : flip[c.res[k]]);
+      let best = null;
+      for (const { cut, yes, no, low } of cuts) {
+        if (now.best > cut || now.worst <= cut) continue; // an dieser Grenze schon entschieden
+        // „verpasst / steht fest“ nur, wenn ein Team den Platz verliert, den es gerade hält,
+        // oder wenn sich die untere Zone bestätigt – nicht für jedes Team, das nur noch hofft
+        const checks = [['yes', yes, (r) => r.worst <= cut, ['D', 'W']]]; // schwächstes ausreichendes Ergebnis zuerst
+        if (pos <= cut || low) checks.push(['no', no, (r) => r.best > cut, ['D', 'L']]);
+        for (const [kind, text, ok, order] of checks) {
+          for (const result of order) {
+            const cs = combos.filter((c) => own(c) === result);
+            // Nur Aussagen, die dieses Ergebnis allein entscheidet – unabhängig vom Parallelspiel
+            if (!cs.length || !cs.every((c) => c.ranges && ok(c.ranges[code]))) continue;
+            if (!best || (kind === 'yes' && best.kind === 'no')) best = { team: code, kind, text, result, cut };
+            break;
+          }
+        }
+        if (best) break;
+      }
+      if (best) found.push(best);
+    }
+    out.set(m, found);
+  });
   return out;
 }
 
-/** Gewicht der Tabellenlage: Punkte beider Teams, Duell der Spitzenplätze, enges Punkteduell. */
-function weight(model, m, decisive) {
+/** Gewicht der Tabellenlage; Spiele, in denen für beide Teams nichts mehr offen ist, zählen kaum. */
+function weight(model, m, stakes, group) {
   const h = model.teams[m.home]?.row, a = model.teams[m.away]?.row;
   if (!h || !a) return 0;
-  return h.pts + a.pts + (h.pos <= 2 && a.pos <= 2 ? 6 : 0) - Math.abs(h.pts - a.pts) + (decisive ? 4 : 0);
+  const settled = (r) => group.ranges?.[r.code] && group.ranges[r.code].best === group.ranges[r.code].worst;
+  if (settled(h) && settled(a)) return -100;
+  return h.pts + a.pts + (h.pos <= 2 && a.pos <= 2 ? 6 : 0) - Math.abs(h.pts - a.pts) + 8 * stakes.length;
 }
 
 /**
- * Für alle offenen Spiele der Liste: Entscheidungsgehalt und je Gruppe ein Topspiel.
+ * Für alle Spiele der Liste: mögliche Entscheidungen und je Gruppe ein Topspiel (★).
  * @returns {Map<object, {stakes: object[], top: boolean}>}
  */
 export function analyzeMatches(model, list) {
@@ -73,17 +109,25 @@ export function analyzeMatches(model, list) {
   const groups = new Map(model.leagues.flatMap((l) => l.groups.map((g) => [g.id, g])));
   const byGroup = new Map();
   for (const m of list) {
-    if (isFinished(m) || m.status === 'LIVE') continue;
-    const g = groups.get(m.group);
-    if (!g) continue;
-    info.set(m, { stakes: stakesOf(g, m), top: false });
-    if (!byGroup.has(g)) byGroup.set(g, []);
-    byGroup.get(g).push(m);
+    const key = `${m.group}|${m.md}`;
+    if (!byGroup.has(key)) byGroup.set(key, { g: groups.get(m.group), md: m.md, ms: [] });
+    byGroup.get(key).ms.push(m);
   }
-  for (const [g, ms] of byGroup) {
-    if (!g.mdPlayed || ms.length < 2) continue; // vor dem 1. Spieltag oder nur ein Spiel: kein Vergleich
-    const top = [...ms].sort((a, b) => weight(model, b, info.get(b).stakes.length) - weight(model, a, info.get(a).stakes.length))[0];
-    info.get(top).top = true;
+  for (const { g, md, ms } of byGroup.values()) {
+    if (!g) continue;
+    const stakes = analyzeGroup(g, md);
+    for (const m of ms) info.set(m, { stakes: stakes.get(g.matches.find((x) => x.home === m.home && x.away === m.away)) || [], top: false });
+    // Topspiel nur mit Tabellenstand (ab Spieltag 2) und wenn die Gruppe mehrere Spiele am Spieltag hat
+    const playedBefore = g.matches.some((x) => x.md < md && isFinished(x));
+    if (!playedBefore || ms.length < 2) continue;
+    const scored = ms.map((m) => ({ m, w: weight(model, m, info.get(m).stakes, g) }));
+    scored.sort((a, b) => b.w - a.w || info.get(b.m).stakes.length - info.get(a.m).stakes.length);
+    if (scored[0].w > -100) info.get(scored[0].m).top = true;
   }
   return info;
+}
+
+/** Ergebnis, das für eine Aussage reicht – aus Sicht des genannten Teams. */
+export function conditionText(s) {
+  return s.kind === 'yes' ? (s.result === 'D' ? 'Remis reicht' : 'mit Sieg') : (s.result === 'D' ? 'schon bei Remis' : 'bei Niederlage');
 }

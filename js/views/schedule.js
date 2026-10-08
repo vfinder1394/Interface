@@ -1,10 +1,12 @@
 import { esc, flag, scoreCell, fmtDay, fmtDayShort, fmtRange, fmtTime, fmtShort, fmtWeekShort, teamName } from '../ui.js';
 import { todayBerlin } from '../data.js';
-import { analyzeMatches } from '../stakes.js';
+import { analyzeMatches, conditionText } from '../stakes.js';
 
 const LEAGUE_FILTERS = [['alle', 'Alle'], ['A', 'Liga A'], ['B', 'Liga B'], ['C', 'Liga C'], ['D', 'Liga D']];
 const CHECK = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5.5 12.5l4 4 9-9"/></svg>';
 const STAR = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3.8l2.5 5.1 5.6.8-4 3.9 1 5.6-5.1-2.7-5.1 2.7 1-5.6-4-3.9 5.6-.8z"/></svg>';
+const INFO_SM = '<svg class="kpi__info" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 11v5.5M12 7.6v.1"/></svg>';
+const STAKE_TIP = 'Das Ergebnis dieses Spiels legt allein – unabhängig vom Parallelspiel der Gruppe – rechnerisch etwas fest: Viertelfinale, Aufstieg, Play-off, Klassenerhalt oder Platz 4. Grundlage ist der Stand vor dem Spieltag; Gleichstände werden vorsichtig gewertet (nur Punkte).';
 const BOLT = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M13 3L5 13.5h6L10 21l8-10.5h-6z"/></svg>';
 const PIN = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s-6.5-5.6-6.5-11a6.5 6.5 0 0 1 13 0c0 5.4-6.5 11-6.5 11z"/><circle cx="12" cy="10" r="2.3"/></svg>';
 const INFO = '<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 11v5.5M12 7.6v.1"/></svg>';
@@ -64,7 +66,7 @@ export function renderSchedule(model, md, leagueFilter) {
 
     ${summary(model, list, scope, info)}
 
-    ${highlights(model, list, info)}
+    ${highlights(model, list, info, md)}
 
     ${list.length ? [...byDate.entries()].sort((a, b) => a[0].localeCompare(b[0])).map(([date, ms], di, dayList) => {
       const allDone = ms.every((m) => m.status === 'FINISHED');
@@ -105,7 +107,7 @@ function summary(model, list, scope, info) {
     const at = (m) => `<span class="nowrap">${fmtWeekShort(m.date)} ${fmtShort(m.date)}</span>${m.kickoff ? `<span class="md-summary__sep" aria-hidden="true"> · </span><span class="nowrap">${fmtTime(m.kickoff)}</span>` : ''}`;
     return `<div class="md-summary md-summary--preview md-summary--3">
       <div class="md-summary__cell"><b class="md-summary__val">${list.length}</b><span class="md-summary__cap">${scope ? `Spiele${scope}` : `Spiele in ${leagues} ${leagues === 1 ? 'Liga' : 'Ligen'}`}</span></div>
-      <div class="md-summary__cell"><b class="md-summary__val">${decisive}</b><span class="md-summary__cap" title="Spiele, deren Ergebnis schon an diesem Spieltag Viertelfinale, Aufstieg, Play-off oder Abstieg rechnerisch festlegen kann">${decisive === 1 ? 'Entscheidungsspiel' : 'Entscheidungsspiele'}</span></div>
+      ${decisiveCell(decisive, 'können entscheiden', 'kann entscheiden')}
       <div class="md-summary__cell"><b class="md-summary__val md-summary__when">${at(first)}</b><span class="md-summary__cap">Erster Anpfiff${when ? `<span class="md-summary__pill">${when}</span>` : ''}</span></div>
     </div>`;
   }
@@ -113,41 +115,56 @@ function summary(model, list, scope, info) {
   const n = done.length + live.length;
   // „beendet“ nur, wenn es etwas Neues sagt (nicht alle Spiele gespielt); mobil eine Zeile
   const partial = done.length !== list.length;
+  const openDecisive = [...info].filter(([m, x]) => m.status !== 'FINISHED' && x.stakes.length).length;
   return `<div class="md-summary md-summary--stats${partial ? '' : ' md-summary--3'}">
     <div class="md-summary__cell"><b class="md-summary__val">${list.length}</b><span class="md-summary__cap">Spiele${scope}</span></div>
     ${partial ? `<div class="md-summary__cell"><b class="md-summary__val">${done.length}</b><span class="md-summary__cap">beendet</span></div>` : ''}
     <div class="md-summary__cell"><b class="md-summary__val">${goals}</b><span class="md-summary__cap">Tore</span></div>
     <div class="md-summary__cell"><b class="md-summary__val">${n ? (goals / n).toLocaleString('de-DE', { maximumFractionDigits: 2, minimumFractionDigits: 1 }) : '–'}</b><span class="md-summary__cap">pro Spiel</span></div>
+    ${openDecisive ? decisiveCell(openDecisive, 'können noch entscheiden', 'kann noch entscheiden') : ''}
   </div>`;
 }
 
-/** Topspiel je Gruppe (nach Tabellenlage) – mit Hinweis, was das Spiel entscheiden kann. */
-function highlights(model, list, info) {
+/** Kennzahl „können entscheiden“ – Erklärung per Tooltip, der auch auf Touch und mit Tastatur öffnet. */
+function decisiveCell(n, plural, singular) {
+  return `<div class="md-summary__cell kpi--info" tabindex="0" data-tip-title="Kann entscheiden" data-tip="${esc(STAKE_TIP)}"><b class="md-summary__val">${n}</b><span class="md-summary__cap">${n === 1 ? singular : plural}${INFO_SM}</span></div>`;
+}
+
+/** Topspiel je Gruppe (nach Tabellenlage) – aufklappbar, auf schmalen Bildschirmen zunächst zu. */
+function highlights(model, list, info, md) {
   const tops = list.filter((m) => info.get(m)?.top).sort((a, b) => a.group.localeCompare(b.group));
-  if (!tops.length) return '';
-  return `<section class="tops" aria-labelledby="tops-title">
-    <h3 id="tops-title" class="tops__title">${STAR}Topspiele je Gruppe<span class="tops__hint">nach Tabellenlage · <span class="tops__key">${BOLT}Entscheidungsspiel</span></span></h3>
+  // Beendeter Spieltag: keine Vorschau mehr (der Stern an den Spielen bleibt)
+  if (!tops.length || list.every((m) => m.status === 'FINISHED')) return '';
+  const wide = typeof matchMedia === 'function' && matchMedia('(min-width: 721px)').matches;
+  const decisive = tops.filter((m) => info.get(m).stakes.length).length;
+  const pos = (t) => `<small><span class="sr-only">, Tabellenplatz </span>${t.row.pos}.</small>`;
+  return `<details class="tops"${wide ? ' open' : ''}>
+    <summary class="tops__title"><span class="tops__title-main">${STAR}<span>Topspiele je Gruppe</span></span><span class="tops__count">${tops.length} Spiele${decisive ? ` · ${decisive} ${decisive === 1 ? 'kann' : 'können'} entscheiden` : ''}</span><svg class="tops__chev" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></summary>
+    <p class="tops__legend"><span class="tops__key tops__key--star">${STAR}Topspiel: das Spiel jeder Gruppe mit der spannendsten Tabellenlage</span><span class="tops__key">${BOLT}Kann entscheiden: das Ergebnis allein legt etwas fest</span>${md > currentMd(model) ? `<span class="tops__asof">Stand vor Spieltag ${md} – frühere offene Spiele können noch etwas ändern.</span>` : ''}</p>
     <ul class="tops__list">
       ${tops.map((m) => {
         const h = model.teams[m.home], a = model.teams[m.away];
         const st = info.get(m).stakes;
-        return `<li class="top${st.length ? ' top--decisive' : ''}">
+        return `<li class="top">
           <a class="match__group match__group--${m.league}" href="#/tabellen/${m.league}/${m.group}" aria-label="Tabelle Gruppe ${m.group}"><span>${m.group[0]}</span>${m.group.slice(1)}</a>
           <span class="top__pair">
-            <button type="button" class="top__team" data-team="${esc(h.code)}">${flag(h)}<b>${esc(h.name)}</b><small>${h.row.pos}.</small></button>
+            <button type="button" class="top__team" data-team="${esc(h.code)}">${flag(h)}${teamName(h)}${pos(h)}</button>
             <span class="top__vs" aria-hidden="true">–</span>
-            <button type="button" class="top__team" data-team="${esc(a.code)}">${flag(a)}<b>${esc(a.name)}</b><small>${a.row.pos}.</small></button>
+            <button type="button" class="top__team" data-team="${esc(a.code)}">${flag(a)}${teamName(a)}${pos(a)}</button>
           </span>
           <span class="top__when">${fmtWeekShort(m.date)} ${fmtShort(m.date)}${m.kickoff ? ` · ${fmtTime(m.kickoff)}` : ''}</span>
-          ${st.length ? `<span class="top__stake">${BOLT}<span><span class="sr-only">Entscheidungsspiel: </span>${stakeText(model, st)}</span></span>` : ''}
+          ${st.length ? `<span class="top__stake">${stakeList(model, st)}</span>` : ''}
         </li>`;
       }).join('')}
     </ul>
-  </section>`;
+  </details>`;
 }
 
-function stakeText(model, stakes) {
-  return stakes.map((x) => `${esc(model.teams[x.team].name)} ${esc(x.text)}`).join(' · ');
+const currentMd = (model) => defaultMatchday(model);
+
+/** Aussagen als Liste: „Frankreich: Viertelfinale sicher – Remis reicht“. Team zuerst, damit Artikel und Plural nie stören. */
+function stakeList(model, stakes) {
+  return stakes.map((x) => `<span class="stake">${BOLT}<span><b>${esc(model.teams[x.team].name)}:</b> ${esc(x.text)} – ${esc(conditionText(x))}</span></span>`).join('');
 }
 
 function emptyState(model, md, leagueFilter) {
@@ -176,14 +193,15 @@ export function matchRow(model, m, { showGroup = true, venue = false, info = nul
   const venueHtml = m.venue
     ? `<span class="match__venue" title="${esc(m.venue)}">${PIN}<span class="match__venue-text">${stadium ? `<span class="match__venue-stadium">${esc(stadium)}</span>` : ''}${stadium && city ? '<span class="match__venue-comma">,&nbsp;</span>' : ''}${city ? `<span class="match__venue-city">${esc(city)}</span>` : ''}</span></span>`
     : '<span class="match__venue" aria-hidden="true"></span>';
-  const stakes = info?.stakes || [];
+  // Hinweise nur, solange das Spiel nicht beendet ist (live bleiben sie stehen)
+  const stakes = done ? [] : info?.stakes || [];
   return `<li class="match${live ? ' is-live' : ''}${done ? ' is-done' : ' is-open'}${m.note || stakes.length ? ' has-note' : ''}${info?.top ? ' is-top' : ''}">
     <span class="match__meta">
-      ${info?.top ? `<span class="match__top" title="Topspiel der Gruppe nach Tabellenlage">${STAR}<span class="sr-only">Topspiel</span></span>` : ''}
       ${showGroup ? `<a class="match__group match__group--${m.league}" href="#/tabellen/${m.league}/${m.group}" aria-label="Tabelle Gruppe ${m.group}"><span>${m.group[0]}</span>${m.group.slice(1)}</a>` : ''}
       ${live ? '<span class="match__time is-live"><span class="live-dot"></span>Live</span>'
         : done && m.kickoff ? `<span class="match__time"><span class="match__sep" aria-hidden="true">·</span>${fmtTime(m.kickoff)}<span class="sr-only">&nbsp;Uhr Anstoß</span></span>`
         : `<span class="match__time match__time--day"><span class="match__sep" aria-hidden="true">·</span>${fmtWeekShort(m.date)}</span>`}
+      ${info?.top ? `<span class="match__top" title="Topspiel der Gruppe">${STAR}<span class="sr-only">Topspiel der Gruppe</span></span>` : ''}
       ${venue && m.venue ? `<span class="match__meta-venue"><span class="match__sep" aria-hidden="true">·</span>${esc(city || stadium)}</span>` : ''}
     </span>
     <button type="button" class="match__team match__team--h${res('h')}" data-team="${esc(h.code)}">
@@ -194,7 +212,7 @@ export function matchRow(model, m, { showGroup = true, venue = false, info = nul
       ${flag(a)}${teamName(a)}
     </button>
     ${venue ? venueHtml : ''}
-    ${stakes.length ? `<span class="match__note match__stake">${BOLT}<span><b>Entscheidungsspiel:</b> ${stakeText(model, stakes)}</span></span>`
+    ${stakes.length ? `<span class="match__note match__stake"><span class="sr-only">Kann entscheiden: </span>${stakeList(model, stakes)}</span>`
       : m.note ? `<span class="match__note">${INFO}${esc(m.note)}</span>` : ''}
   </li>`;
 }

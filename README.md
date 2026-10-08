@@ -20,14 +20,14 @@ Die Zonen werden bei jedem neuen Ergebnis neu berechnet. Sie folgen den Regeln d
 |---|---|
 | `#/tabellen/A` … `#/tabellen/D` | Liga-Umschalter, Legende, Regeln, Gruppenkarten mit Tabelle, nächsten Spielen und allen Ergebnissen. Liga A hat zusätzlich den Vergleich der Dritten und Vierten. |
 | `#/tabellen/B/B3` | springt direkt zu einer Gruppe |
-| `#/spieltage/5/A` | Spieltage 1–6, nach Liga filterbar, Spiele nach Datum gruppiert. Für kommende Spiele: Topspiel je Gruppe und Entscheidungsspiele (siehe unten) |
+| `#/spieltage/5/A` | Spieltage 1–6, nach Liga filterbar, Spiele nach Datum gruppiert. Topspiel je Gruppe und „kann entscheiden“-Hinweise (siehe unten) |
 | `#/ko` | Prognose nach dem aktuellen Stand: Viertelfinale, Play-off A/B und B/C, direkte Auf- und Abstiege, Vergleich der Dritten und Vierten in Liga A |
 | `#/team/GER` | öffnet direkt die Teamdetails |
 
-**Topspiel und Entscheidungsspiel** (`js/stakes.js`):
+**Topspiel und „kann entscheiden“** (`js/stakes.js`) – berechnet immer mit dem Stand vor dem Spieltag, damit Stern und Hinweise auch während und nach den Spielen gleich bleiben:
 
-- *Topspiel* (★): je Gruppe das offene Spiel des Spieltags mit der höchsten Gewichtung aus den Punkten beider Teams, einem Bonus für das Duell zweier Teams auf Platz 1–2 und einem Abzug für großen Punkteabstand. Gruppen mit nur einem Spiel pro Spieltag (Liga D) haben kein Topspiel.
-- *Entscheidungsspiel* (⚡): Alle Ergebnisse des Spiels und der übrigen Spiele der Gruppe am selben Spieltag werden durchgespielt. Kann danach für eines der beiden Teams rechnerisch feststehen, dass es Viertelfinale, Aufstieg, Play-off oder Klassenerhalt sicher hat, dass ihm das Play-off um den Klassenerhalt droht oder dass es seinen aktuellen Platz verliert, wird das Spiel markiert. Gleichstände werden vorsichtig gewertet (nur Punkte). In Liga A hängen Platz 3 und 4 vom Vergleich der Gruppen ab, deshalb wird dort nur das Viertelfinale ausgewiesen.
+- *Topspiel* (★): je Gruppe das Spiel des Spieltags mit der spannendsten Tabellenlage: Punkte beider Teams, Bonus für das Duell zweier Teams auf Platz 1–2, Abzug für großen Punkteabstand, Bonus je möglicher Entscheidung. Spiele, in denen für beide Teams nichts mehr offen ist, werden nie Topspiel. Liga D (ein Spiel pro Gruppe und Spieltag) hat kein Topspiel.
+- *Kann entscheiden* (⚡): Alle Ergebniskombinationen des Spieltags in der Gruppe werden durchgespielt. Ein Hinweis erscheint nur, wenn das Ergebnis dieses Spiels **allein** – unabhängig vom Parallelspiel – etwas rechnerisch festlegt, z. B. „Frankreich: Viertelfinale sicher – Remis reicht“ oder „Türkei: Platz 4 steht fest – schon bei Remis“. Geprüft werden die Tabellengrenzen jeder Liga (A: Platz 2 und 3, B: Platz 1–3, C: Platz 1–2). „Verpasst“ wird nur angezeigt, wenn ein Team einen Platz verliert, den es gerade hält. Gleichstände werden vorsichtig gewertet (nur Punkte). In Liga A entscheidet über Platz 3 und 4 hinaus erst der Vergleich der Gruppen.
 
 Ein Klick auf ein Team öffnet die Detailansicht (Flagge, Platz, Status mit Begründung, Statistik, Form, mögliche Endplatzierung, Trainer, alle Spiele). Sie schließt mit `Esc`.
 
@@ -53,7 +53,7 @@ js/data.js                     Datenschicht: Snapshot laden, Live-Abgleich, Mode
 js/feeds.js                    Adapter UEFA- und ESPN-Feeds → Snapshot-Format (auch von Node genutzt)
 js/standings.js                Tabellenberechnung nach Art. 15 (direkter Vergleich usw.), Platzspannen
 js/zones.js                    Zonen nach Liga und Platz, Vergleich der Dritten und Vierten in Liga A
-js/stakes.js                   Topspiele je Gruppe und Entscheidungsspiele eines Spieltags
+js/stakes.js                   Topspiele je Gruppe und mögliche Entscheidungen eines Spieltags
 js/ui.js                       Hilfsfunktionen (Flaggen, Datum, Badges, Form)
 js/views/*.js                  Tabellen, Spieltage, K.-o./Play-offs, Teamdetails
 data/snapshot.json             Datenbestand (Gruppen, Teams, alle 156 Spiele)

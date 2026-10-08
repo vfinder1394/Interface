@@ -729,7 +729,7 @@ function bind() {
     else if (tipTarget) hideTip();
   });
   document.addEventListener('pointerdown', (e) => {
-    if (!e.target.closest('.data-status, .pos[data-tip], .xrank, .tie-mark, .zone-badge, .kpis [data-tip]')) hideTip();
+    if (!e.target.closest('.data-status, .pos[data-tip], .xrank, .tie-mark, .zone-badge, .kpis [data-tip], .md-summary [data-tip]')) hideTip();
   }, true);
   document.addEventListener('focusin', (e) => {
     let t = e.target.closest?.('[data-tip]');
@@ -739,7 +739,7 @@ function bind() {
     if (t && t.offsetParent && e.target.matches(':focus-visible')) showTip(t); else if (tipTarget) hideTip();
   });
   document.addEventListener('click', (e) => {
-    const t = e.target.closest('.data-status[data-tip], .pos[data-tip], .xrank[data-tip], .tie-mark[data-tip], .zone-badge[data-tip], .kpis [data-tip]');
+    const t = e.target.closest('.data-status[data-tip], .pos[data-tip], .xrank[data-tip], .tie-mark[data-tip], .zone-badge[data-tip], .kpis [data-tip], .md-summary [data-tip]');
     if (t && touchUi.matches && t.closest('.standings')) return; // Touch: Zeile öffnet das Panel (siehe oben)
     if (t && t !== tipTarget) { e.stopPropagation(); showTip(t); }
   }, true);
