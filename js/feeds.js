@@ -189,7 +189,9 @@ export function applyUefaMatches(snap, list) {
     if (kickoff) { target.kickoff = kickoff; target.date = berlinDate(kickoff); delete target.tentativeDate; }
     const stadium = m.stadium?.translations?.officialName?.DE ?? m.stadium?.translations?.name?.DE ?? null;
     const city = m.stadium?.city?.translations?.name?.DE ?? null;
+    // Einheitlich „Stadion, Stadt“; ohne Stadion nur die Stadt – nie das Land
     if (stadium) target.venue = city && !stadium.includes(city) ? `${stadium}, ${city}` : stadium;
+    else if (city) target.venue = city;
     applyResult(target, { status, hs, as, minute, warn });
     if (JSON.stringify(target) !== before) out.changed++;
   }

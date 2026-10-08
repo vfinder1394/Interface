@@ -144,3 +144,25 @@ export function crossRank(rows, names) {
     cmpDesc('pts', 'gd', 'gf', 'awayGf', 'w', 'awayW')(a, b) ||
     String(names?.[a.code] ?? a.code).localeCompare(String(names?.[b.code] ?? b.code), 'de'));
 }
+
+/**
+ * Markiert Punktgleichstände, die der direkte Vergleich (Art. 15, Kriterien 1–3) entscheidet.
+ * Setzt row.tieH2H = { below: code } am oberen Team, wenn es nur dank direktem Vergleich
+ * vor dem punktgleichen Team direkt darunter steht.
+ */
+export function annotateTies(table, matches) {
+  const scored = matches.filter(hasScore);
+  for (const r of table) delete r.tieH2H;
+  const blocks = partition(table, (r) => r.pts);
+  for (const block of blocks) {
+    if (block.length < 2) continue;
+    const codes = block.map((r) => r.code);
+    const set = new Set(codes);
+    const h2h = accumulate(codes, scored.filter((m) => set.has(m.home) && set.has(m.away)));
+    for (let i = 0; i < block.length - 1; i++) {
+      const a = h2h.get(block[i].code), b = h2h.get(block[i + 1].code);
+      if (a.pts !== b.pts || a.gd !== b.gd || a.gf !== b.gf) block[i].tieH2H = { below: block[i + 1].code };
+    }
+  }
+  return table;
+}

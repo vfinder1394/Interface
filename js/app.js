@@ -114,10 +114,11 @@ function render({ scrollTop = false } = {}) {
     positionGlider();
   } else positionGlider(true);
   observeSwitch();
-  if (focusTab) { state.focusTab = null; document.getElementById(`tab-${focusTab}`)?.focus(); }
+  if (focusTab) { state.focusTab = null; document.getElementById(`tab-${focusTab}`)?.focus({ preventScroll: true }); }
   if (scrollTop) window.scrollTo({ top: 0, behavior: 'auto' });
-  if (state.team && !panel.hidden) panel.innerHTML = renderTeam(m, state.team);
+  if (state.team && !panel.hidden) { panel.innerHTML = renderTeam(m, state.team); fitHeroName(); }
   fitNames();
+  markStuckHeads();
 }
 
 function renderHero(m) {
@@ -136,10 +137,12 @@ function renderHero(m) {
   const mdDone = mds.filter((x) => x.fin).length;
   const today = todayBerlin();
   const days = next ? Math.round((Date.parse(`${next.from}T00:00:00Z`) - Date.parse(`${today}T00:00:00Z`)) / 864e5) : null;
-  const rows = m.leagues.flatMap((l) => l.groups.flatMap((g) => g.table.map((r) => ({ ...r, league: l.id }))));
-  // Liga D steigt geschlossen auf – zählt nicht als „durch Ergebnisse entschieden“
-  const zoneRows = rows.filter((r) => r.league !== 'D');
-  const decided = zoneRows.filter((r) => r.locked).length;
+  // Viertelfinale: 8 Plätze (Liga A, Platz 1–2) – wie viele sind rechnerisch vergeben?
+  const leagueA = m.leagues.find((l) => l.id === 'A');
+  const qfRows = leagueA ? leagueA.groups.flatMap((g) => g.table.filter((r) => r.zone === 'ko')) : [];
+  const qfSafe = qfRows.filter((r) => r.locked);
+  const qfNames = qfSafe.map((r) => m.teams[r.code]?.name).filter(Boolean);
+  const qfTip = `Teams, die Platz 1 oder 2 ihrer Gruppe in Liga A rechnerisch sicher haben${qfNames.length ? `: ${qfNames.join(', ')}.` : ' – bisher noch keines.'}`;
   const phase = live ? `Live · ${live} ${live === 1 ? 'Spiel läuft' : 'Spiele laufen'}`
     : !next ? 'Ligaphase beendet'
     : next.part || days <= 0 ? `Ligaphase · Spieltag ${next.d} läuft`
@@ -154,9 +157,12 @@ function renderHero(m) {
       <p class="hero__lead">54 Nationen, 4 Ligen, 14 Gruppen: alle Tabellen und Spiele – und auf einen Blick, wer ins Viertelfinale einzieht, aufsteigt, in die Play-offs muss oder absteigt.</p>
     </div>
     <div class="hero__panel">
-      <div class="md-track" role="img" aria-label="${mdDone} von 6 Spieltagen der Ligaphase absolviert">
-        ${mds.map((x) => `<a class="md-track__seg${x.fin ? ' is-done' : x.part ? ' is-part' : ''}${next && x.d === next.d ? ' is-next' : ''}" href="#/spieltage/${x.d}" tabindex="-1" aria-hidden="true">
-          <span class="md-track__bar"></span><span class="md-track__label">ST ${x.d}</span></a>`).join('')}
+      <div class="md-track-wrap">
+        <p class="label md-track__caption" aria-hidden="true">Ligaphase · ${mdDone}/6 Spieltage</p>
+        <div class="md-track" role="img" aria-label="${mdDone} von 6 Spieltagen der Ligaphase absolviert">
+          ${mds.map((x) => `<a class="md-track__seg${x.fin ? ' is-done' : x.part ? ' is-part' : ''}${next && x.d === next.d ? ' is-next' : ''}" href="#/spieltage/${x.d}" tabindex="-1" aria-hidden="true">
+            <span class="md-track__bar"></span><span class="md-track__label">${x.d}</span></a>`).join('')}
+        </div>
       </div>
       ${next ? `<a class="hero__next" href="#/spieltage/${next.d}">
         <span class="hero__next-label">${next.part ? 'Aktueller' : 'Nächster'} Spieltag</span>
@@ -165,14 +171,21 @@ function renderHero(m) {
         <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg>
       </a>` : ''}
       <dl class="kpis">
-        <div><dt>Spieltag</dt><dd>${mdDone}<small>/6</small></dd></div>
         <div><dt>Spiele</dt><dd>${done.length}<small>/${total}</small></dd></div>
         <div><dt>Tore</dt><dd>${goals}</dd></div>
-        <div data-tip-title="Zonen rechnerisch fix" data-tip="Teams der Ligen A–C, deren Zone (Viertelfinale, Aufstieg, Play-off, Abstieg) durch die Ergebnisse bereits feststeht. Liga D ist nicht mitgezählt – dort steigen ohnehin alle sechs Teams auf." tabindex="0"><dt>Zonen fix</dt><dd>${decided}<small>/${zoneRows.length}</small></dd></div>
+        <div><dt>Tore/Spiel</dt><dd>${done.length ? (goals / done.length).toLocaleString('de-DE', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : '–'}</dd></div>
+        <div class="kpi--info" data-tip-title="Viertelfinale rechnerisch sicher" data-tip="${esc(qfTip)}" tabindex="0"><dt>VF sicher<svg class="kpi__info" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 11v5.5M12 7.6v.1"/></svg></dt><dd>${qfSafe.length}<small>/${qfRows.length || 8}</small></dd></div>
       </dl>
     </div>
   </div>`;
 }
+
+const NB = '\u00a0';
+/** Geschützte Leerzeichen, damit Tooltips nicht in „22:00 | Uhr“ oder „104/156 | Spiele“ umbrechen. */
+const keepTogether = (t) => String(t || '')
+  .replace(/(\d{1,2}:\d{2}) Uhr/g, `$1${NB}Uhr`)
+  .replace(/(\d+\/\d+) Spiele beendet/g, `$1${NB}Spiele${NB}beendet`)
+  .replace(/Spieltag (\d)/g, `Spieltag${NB}$1`);
 
 function renderStatus(m) {
   const el = $('#data-status');
@@ -193,17 +206,23 @@ function renderStatus(m) {
     const ageH = s.snapshotAt ? (Date.now() - Date.parse(s.snapshotAt)) / 36e5 : Infinity;
     const stale = ageH > 24;
     el.classList.toggle('is-stale', stale);
-    txt.innerHTML = `<b>Stand</b><span class="data-status__time"> · ${s.snapshotAt ? fmtShort(s.snapshotAt) : '–'}</span>${s.snapshotAt ? `<span class="data-status__clock"> ${fmtTime(s.snapshotAt)}</span>` : ''}`;
-    el.dataset.tipTitle = stale ? 'Datenstand älter als 24 Stunden' : 'Gespeicherter Datenstand';
+    // Quelle steht im Chip selbst – nicht erst im Tooltip. Schmal: von heute nur die Uhrzeit, von gestern „gestern“, sonst das Datum
+    const snapDay = s.snapshotAt ? new Date(s.snapshotAt).toLocaleDateString('sv-SE', { timeZone: 'Europe/Berlin' }) : null;
+    const today = todayBerlin();
+    const yesterday = new Date(Date.parse(`${today}T12:00:00Z`) - 864e5).toISOString().slice(0, 10);
+    const shortWhen = !s.snapshotAt ? '–' : snapDay === today ? `${fmtTime(s.snapshotAt)}${NB}Uhr` : snapDay === yesterday ? `gestern ${fmtTime(s.snapshotAt)}` : fmtShort(s.snapshotAt);
+    txt.innerHTML = `<b>UEFA</b><span class="data-status__long"> · Stand ${s.snapshotAt ? `${fmtShort(s.snapshotAt)}, ${fmtTime(s.snapshotAt)}${NB}Uhr` : '–'}</span><span class="data-status__short"><span class="data-status__sep"> · </span>${shortWhen}</span>`;
+    el.dataset.tipTitle = stale ? 'UEFA-Datenstand älter als 24 Stunden' : 'Gespeicherter UEFA-Datenstand';
     el.dataset.tip = [
       `Datenstand: ${m.asOf || 'UEFA-Daten'}`,
       `Quelle: UEFA-Snapshot, ${snapLong}`,
-      'Live-Abgleich: derzeit nicht erreichbar – neuer Versuch alle 10 Minuten',
-    ].join('\n');
+      s.idle ? 'Live-Abgleich: startet automatisch an Spieltagen' : 'Live-Abgleich: derzeit nicht erreichbar – neuer Versuch alle 10 Minuten',
+    ].map(keepTogether).join('\n');
   }
+  if (s.kind === 'live') el.dataset.tip = el.dataset.tip.split('\n').map(keepTogether).join('\n');
   el.setAttribute('aria-label', `${el.dataset.tipTitle}. ${el.dataset.tip.replaceAll('\n', '. ')}`);
   el.tabIndex = 0;
-  $('#footer-note').textContent = `Datenstand: ${m.asOf || snapLong}. Alle Angaben ohne Gewähr; Tabellen werden nach dem UEFA-Reglement (Art. 15) aus den Ergebnissen berechnet. Disziplinarpunkte sind nicht berücksichtigt.`;
+  $('#footer-asof').textContent = `${m.asOf || 'UEFA-Daten'} · ${snapLong}`;
 }
 
 /* ------------------------------------------------------------------ Team panel */
@@ -218,9 +237,11 @@ function openTeam(code, { fromRoute = false, opener = null } = {}) {
     state.pushedTeam = false;
   }
   clearTimeout(state.closeTimer);
+  state.cancelClose?.();
   state.team = code;
   panel.innerHTML = renderTeam(state.model, code);
   panel.classList.remove('is-closing');
+  scrim.classList.remove('is-closing');
   panel.style.transform = '';
   panel.hidden = false;
   scrim.hidden = false;
@@ -230,11 +251,16 @@ function openTeam(code, { fromRoute = false, opener = null } = {}) {
     panel.classList.add('is-open');
     scrim.classList.add('is-open');
   } else {
+    // Team-zu-Team-Wechsel: Kopf (Flagge, Name) blendet sichtbar über
+    panel.classList.remove('is-swap');
+    void panel.offsetWidth;
     panel.classList.add('is-open', 'is-swap');
-    setTimeout(() => panel.classList.remove('is-swap'), 50);
+    clearTimeout(state.swapTimer);
+    state.swapTimer = setTimeout(() => panel.classList.remove('is-swap'), 360);
   }
   panel.scrollTop = 0;
   fitNames(panel);
+  fitHeroName();
   onPanelScroll();
   panel.focus({ preventScroll: true });
   if (!fromRoute) {
@@ -250,17 +276,23 @@ function closeTeam({ fromRoute = false, navigate = null } = {}) {
   panel.classList.remove('is-open');
   panel.classList.add('is-closing');
   panel.style.transform = '';
+  // Hintergrund blendet im selben Takt wie das Panel aus; versteckt wird er erst in done()
+  scrim.classList.add('is-closing');
   scrim.classList.remove('is-open');
   document.body.classList.remove('has-panel');
   let finished = false;
   const done = () => {
     if (finished) return;
     finished = true;
+    state.cancelClose = null;
     panel.removeEventListener('transitionend', onEnd);
     panel.hidden = true; scrim.hidden = true; panel.innerHTML = '';
     panel.classList.remove('is-closing');
+    scrim.classList.remove('is-closing');
   };
   const onEnd = (e) => { if (e.target === panel && e.propertyName === 'transform') done(); };
+  // Wird das Panel während des Schließens erneut geöffnet, darf das alte Schließen nicht mehr greifen
+  state.cancelClose = () => { finished = true; panel.removeEventListener('transitionend', onEnd); state.cancelClose = null; };
   if (reducedMotion.matches) done();
   else { panel.addEventListener('transitionend', onEnd); state.closeTimer = setTimeout(done, 480); }
 
@@ -340,17 +372,22 @@ function showTip(target) {
   tipTarget = target;
   const title = target.dataset.tipTitle;
   tooltip.innerHTML = `${title ? `<b class="tooltip__title">${esc(title)}</b>` : ''}<span class="tooltip__body">${esc(text)}</span>`;
+  tooltip.classList.toggle('tooltip--wide', target.matches('.data-status'));
   tooltip.hidden = false;
   const r = target.getBoundingClientRect();
   const tw = tooltip.offsetWidth, th = tooltip.offsetHeight;
   const vw = document.documentElement.clientWidth;
   const headerH = $('#site-header').getBoundingClientRect().bottom;
+  // Innerhalb der Inhaltsspalte bleiben (max. 1320px), nicht bis an den Fensterrand laufen
+  const inPanel = Boolean(target.closest('#team-panel'));
+  const box = inPanel ? panel.getBoundingClientRect() : { left: Math.max(0, (vw - 1320) / 2), right: Math.min(vw, (vw + 1320) / 2) };
+  const minX = Math.max(12, box.left + 12), maxX = Math.min(vw - 12, box.right - 12);
   let x, y, side;
-  if (target.dataset.tipSide === 'right' && r.right + 12 + tw < vw - 8) {
+  if (target.dataset.tipSide === 'right' && r.right + 12 + tw < maxX) {
     // rechts neben dem Element – verdeckt keine Kopfzeilen
     x = r.right + 10; y = r.top + r.height / 2 - th / 2; side = 'right';
   } else {
-    x = Math.max(12, Math.min(r.left + r.width / 2 - tw / 2, vw - tw - 12));
+    x = Math.max(minX, Math.min(r.left + r.width / 2 - tw / 2, maxX - tw));
     y = r.bottom + 10; side = 'below';
     if (y + th > window.innerHeight - 8 && r.top - th - 10 > headerH) { y = r.top - th - 10; side = 'above'; }
   }
@@ -414,18 +451,95 @@ function observeSwitch() {
   switchObserver.observe(sentinel);
 }
 
-/** Lange Namen: auf den Kurznamen wechseln, sobald der volle Name abgeschnitten würde. */
+/** Bereiche, in denen ein Team überall gleich heißen soll (Tabelle + „Nächste Spiele“ derselben Karte usw.). */
+const NAME_SCOPES = '.group-card, .match-list, .fixture-list, .cross-card, .cmp, .chip-list, .md-summary';
+const NAME_LEVEL = ['', 'use-short', 'use-code'];
+
+/**
+ * Lange Namen: Kurzname, sobald der volle Name abgeschnitten würde; Kürzel nur als letzte Stufe.
+ * In der Spielliste brechen Namen lieber zweizeilig um, statt zu Kürzeln zu werden (keine Mischung aus „AZE“ und vollen Namen).
+ * Innerhalb eines Bereichs bekommt dasselbe Team überall dieselbe Stufe.
+ */
 function fitNames(root = document) {
   const over = (el) => el && el.offsetParent && el.scrollWidth > el.clientWidth + 1;
-  root.querySelectorAll('.tn').forEach((tn) => {
+  const tns = [...root.querySelectorAll('.tn')];
+  const levels = new Map();
+  // Vergleichs-Chips: entweder alle ausgeschrieben („Dritte 2/4“) oder alle kurz („D 2/4“) – nie gemischt
+  const xranks = [...document.querySelectorAll('.standings .xrank')];
+  if (xranks.length && (root === document || root.contains(xranks[0]))) {
+    for (const t of tns) t.classList.remove('use-short', 'use-code');
+    xranks.forEach((x) => x.classList.remove('xrank--compact'));
+    const tight = xranks.some((x) => over(x.closest('.c-team__in')?.querySelector('.tn__full')));
+    xranks.forEach((x) => x.classList.toggle('xrank--compact', tight));
+  }
+  for (const tn of tns) {
     tn.classList.remove('use-short', 'use-code');
-    if (!over(tn.querySelector('.tn__full'))) return;
-    if (tn.classList.contains('has-short')) {
-      tn.classList.add('use-short');
-      if (!over(tn.querySelector('.tn__short'))) return;
-      tn.classList.remove('use-short');
+    const wraps = Boolean(tn.closest('.match__team'));
+    if (wraps) tn.classList.add('is-measuring');
+    let lv = 0;
+    if (over(tn.querySelector('.tn__full'))) {
+      lv = 2;
+      if (tn.classList.contains('has-short')) {
+        tn.classList.add('use-short');
+        if (!over(tn.querySelector('.tn__short'))) lv = 1;
+        tn.classList.remove('use-short');
+      }
+      if (wraps && lv === 2) lv = 0; // umbrechen statt Kürzel
     }
-    tn.classList.add('use-code');
+    if (wraps) tn.classList.remove('is-measuring');
+    levels.set(tn, lv);
+  }
+  const scopeMax = new Map();
+  const key = (tn) => {
+    const scope = tn.closest(NAME_SCOPES);
+    return scope ? [scope, tn.dataset.code] : null;
+  };
+  for (const tn of tns) {
+    const k = key(tn);
+    if (!k) continue;
+    const m = scopeMax.get(k[0]) || new Map();
+    m.set(k[1], Math.max(m.get(k[1]) || 0, levels.get(tn)));
+    scopeMax.set(k[0], m);
+  }
+  for (const tn of tns) {
+    const k = key(tn);
+    let lv = levels.get(tn);
+    // Bereichsweit nur bis zum Kurznamen angleichen – Kürzel bleiben auf Stellen beschränkt, an denen nichts anderes passt
+    if (k) lv = Math.max(lv, Math.min(1, scopeMax.get(k[0]).get(k[1]) || 0));
+    if (lv === 2 && tn.closest('.match__team')) lv = tn.classList.contains('has-short') ? 1 : 0;
+    if (lv === 1 && !tn.classList.contains('has-short')) lv = 0;
+    levels.set(tn, lv);
+  }
+  // Kürzel nur tabellenweit: Braucht ein Team das Kürzel, zeigt die ganze Tabelle Kürzel (keine Mischung „GRE“ + volle Namen)
+  const codeTables = new Set(tns.filter((tn) => levels.get(tn) === 2).map((tn) => tn.closest('.standings, .cmp-table')).filter(Boolean));
+  for (const tn of tns) {
+    let lv = levels.get(tn);
+    if (codeTables.has(tn.closest('.standings, .cmp-table'))) lv = 2;
+    if (lv) tn.classList.add(NAME_LEVEL[lv]);
+  }
+}
+
+/** Großer Teamname im Panel: eine Zeile, bei Bedarf kleiner (bis 22px) statt mitten im Wort umzubrechen. */
+function fitHeroName(root = panel) {
+  const el = root.querySelector('.tp__name');
+  if (!el) return;
+  el.style.fontSize = '';
+  let size = parseFloat(getComputedStyle(el).fontSize);
+  while (el.scrollWidth > el.clientWidth + 1 && size > 22) {
+    size -= 1;
+    el.style.fontSize = `${size}px`;
+  }
+}
+
+/** Tageskopf der Spielliste: Linie/Schatten nur, solange er angeheftet ist. */
+function markStuckHeads() {
+  const heads = document.querySelectorAll('.day__head');
+  if (!heads.length) return;
+  const top = headerHeight();
+  heads.forEach((h) => {
+    const r = h.getBoundingClientRect();
+    const sec = h.parentElement.getBoundingClientRect();
+    h.classList.toggle('is-stuck', r.top <= top + 1 && sec.top < top - 1);
   });
 }
 
@@ -462,14 +576,17 @@ function updateThemeButton() {
   const btn = $('#theme-toggle');
   btn.setAttribute('aria-pressed', String(light));
   btn.setAttribute('aria-label', 'Helles Design');
-  btn.dataset.tip = light ? 'Zum dunklen Design wechseln' : 'Zum hellen Design wechseln';
+  // Fester Name + aria-pressed (an = helles Design); der Tooltip nennt die Funktion
+  btn.dataset.tip = 'Hell/Dunkel umschalten';
   document.querySelector('meta[name="theme-color"]')?.setAttribute('content', light ? '#f3f5fb' : '#050a1a');
 }
 
-function goLeague(id, { focus = true } = {}) {
+function goLeague(id) {
   const hash = `#/tabellen/${id}`;
   if (location.hash !== hash) history.pushState(null, '', hash);
-  if (focus) state.focusTab = id;
+  // Fokus folgt immer dem neuen Tab (auch nach Mausklick → Pfeiltasten funktionieren weiter);
+  // der sichtbare Ring erscheint per :focus-visible nur bei Tastaturbedienung
+  state.focusTab = id;
   onRoute();
   revealLeagueHead();
 }
@@ -501,7 +618,7 @@ function trackHeaderHeight() {
 
 function bind() {
   document.addEventListener('click', (e) => {
-    if (e.target.closest('.data-status')) return; // Tooltip statt Navigation
+    if (e.target.closest('.data-status, .tie-mark')) return; // Tooltip statt Navigation
     const closer = e.target.closest('[data-close-panel]');
     if (closer) {
       const link = closer.closest('a[href]');
@@ -512,7 +629,7 @@ function bind() {
     const leagueTab = e.target.closest('a.league-tab');
     if (leagueTab && !e.metaKey && !e.ctrlKey && !e.shiftKey && e.button === 0) {
       e.preventDefault();
-      goLeague(leagueTab.dataset.league, { focus: false });
+      goLeague(leagueTab.dataset.league);
       return;
     }
     const scrollTo = e.target.closest('[data-scroll-to]');
@@ -521,7 +638,7 @@ function bind() {
       return;
     }
     const teamBtn = e.target.closest('[data-team]');
-    if (teamBtn && !e.target.closest('a[href]:not([data-team])') && !e.target.closest('.xrank, .zone-badge')) {
+    if (teamBtn && !e.target.closest('a[href]:not([data-team])') && !e.target.closest('.xrank, .tie-mark, .zone-badge')) {
       e.preventDefault();
       hideTip();
       const opener = teamBtn.matches('button, a[href]') ? teamBtn : teamBtn.querySelector('button[data-team]') || null;
@@ -566,28 +683,36 @@ function bind() {
     else if (tipTarget) hideTip();
   });
   document.addEventListener('pointerdown', (e) => {
-    if (!e.target.closest('.data-status, .pos[data-tip], .xrank, .zone-badge, .kpis [data-tip]')) hideTip();
+    if (!e.target.closest('.data-status, .pos[data-tip], .xrank, .tie-mark, .zone-badge, .kpis [data-tip]')) hideTip();
   }, true);
   document.addEventListener('focusin', (e) => {
-    const t = e.target.closest?.('[data-tip]');
-    if (t && e.target.matches(':focus-visible')) showTip(t); else if (tipTarget) hideTip();
+    let t = e.target.closest?.('[data-tip]');
+    // Tastatur: Zonen-Erklärung der Zeile am Teamnamen zeigen, Tabellenführer am Liga-Tab
+    if (!t && e.target.matches?.('.standings .team-link')) t = e.target.closest('tr')?.querySelector('.pos[data-tip]');
+    if (!t && e.target.matches?.('.league-tab')) t = e.target.querySelector('.league-tab__aside[data-tip]');
+    if (t && t.offsetParent && e.target.matches(':focus-visible')) showTip(t); else if (tipTarget) hideTip();
   });
   document.addEventListener('click', (e) => {
-    const t = e.target.closest('.data-status[data-tip], .pos[data-tip], .xrank[data-tip], .zone-badge[data-tip], .kpis [data-tip]');
+    const t = e.target.closest('.data-status[data-tip], .pos[data-tip], .xrank[data-tip], .tie-mark[data-tip], .zone-badge[data-tip], .kpis [data-tip]');
     if (t && t !== tipTarget) { e.stopPropagation(); showTip(t); }
   }, true);
   window.addEventListener('scroll', () => tipTarget && hideTip(), { passive: true });
   let rz = null;
   window.addEventListener('resize', () => {
     positionGlider(true); hideTip();
-    cancelAnimationFrame(rz); rz = requestAnimationFrame(() => fitNames());
+    cancelAnimationFrame(rz); rz = requestAnimationFrame(() => { fitNames(); if (!panel.hidden) fitHeroName(); });
   });
   window.addEventListener('hashchange', onRoute);
   window.addEventListener('popstate', () => { if (!location.hash.startsWith('#/team/') && !panel.hidden) closeTeam({ fromRoute: true }); });
 
   // Header: transparent oben, beim Scrollen deckend mit Linie
   const header = $('#site-header');
-  const onScroll = () => header.classList.toggle('is-scrolled', window.scrollY > 4);
+  let stuckRaf = 0;
+  const onScroll = () => {
+    header.classList.toggle('is-scrolled', window.scrollY > 4);
+    cancelAnimationFrame(stuckRaf);
+    stuckRaf = requestAnimationFrame(markStuckHeads);
+  };
   window.addEventListener('scroll', onScroll, { passive: true });
   onScroll();
 }
@@ -613,7 +738,7 @@ async function main() {
     view.innerHTML = `<div class="error-box" role="alert"><h2>Daten konnten nicht geladen werden</h2><p>Bitte die Seite über einen Webserver öffnen (siehe README) und erneut laden.</p><p class="muted">${esc(e?.message || e)}</p><button type="button" class="ghost-btn" onclick="location.reload()">Erneut laden</button></div>`;
     $('#data-status .data-status__text').textContent = 'Offline';
   }
-  document.fonts?.ready.then(() => { positionGlider(true); fitNames(); });
+  document.fonts?.ready.then(() => { positionGlider(true); fitNames(); if (!panel.hidden) fitHeroName(); });
 }
 
 main();

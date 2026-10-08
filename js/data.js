@@ -1,6 +1,6 @@
 // Datenschicht: Snapshot (data/snapshot.json, per GitHub Action aus der UEFA-API aktualisiert)
 // + Live-Abgleich im Browser (ESPN mit offenem CORS; UEFA optional über Proxy).
-import { computeTable, positionRanges, hasScore } from './standings.js';
+import { computeTable, positionRanges, hasScore, annotateTies } from './standings.js';
 import { assignZones } from './zones.js';
 import { UEFA, ESPN, applyUefaMatches, applyEspnScoreboard, berlinDate } from './feeds.js';
 
@@ -41,6 +41,11 @@ function shiftDate(iso, days) {
 
 /* ---------------------------------------------------------------- Live-Anbieter */
 
+/** Kein Fehler: Es gibt gerade nichts abzugleichen (zwischen den Spieltagen). */
+class IdleError extends Error {
+  constructor() { super('idle'); this.idle = true; }
+}
+
 const providers = {
   async uefa(snap, cfg) {
     const wrap = (u) => (cfg.uefaProxy ? cfg.uefaProxy + encodeURIComponent(u) : u);
@@ -59,7 +64,7 @@ const providers = {
 
   async espn(snap) {
     const today = todayBerlin();
-    const dates = new Set([today]);
+    const dates = new Set();
     for (const l of snap.leagues) {
       for (const g of l.groups) {
         for (const m of g.matches) {
@@ -68,6 +73,8 @@ const providers = {
         }
       }
     }
+    // Kein Spiel im Fenster → keine Anfrage (spart Netz und vermeidet Konsolenfehler bei gesperrten Feeds)
+    if (!dates.size) throw new IdleError();
     let live = 0, ok = 0;
     for (const d of [...dates].sort().slice(-4)) {
       const json = await getJson(ESPN.scoreboardUrl(d.replaceAll('-', '')));
@@ -109,6 +116,7 @@ export function buildModel(snap, source) {
       if (off?.order?.length === codes.length && off.played === played && table.every((r) => off.points?.[r.code] === r.pts)) {
         table = off.order.map((c, i) => ({ ...table.find((r) => r.code === c), pos: i + 1 }));
       }
+      annotateTies(table, gm);
       const finished = gm.filter((m) => hasScore(m) && m.status !== 'LIVE');
       const mdPlayed = Math.max(0, ...finished.map((m) => m.md));
       return {
@@ -184,6 +192,7 @@ export function createStore(onData) {
       fetchedAt: liveState.at,
       snapshotAt: raw.updatedAt,
       error: liveState.error,
+      idle: Boolean(liveState.idle),
     }));
   }
 
@@ -202,7 +211,7 @@ export function createStore(onData) {
         };
         return;
       } catch (e) {
-        liveState = { ...liveState, ok: false, provider: null, live: false, error: String(e?.message || e), overlay: null };
+        liveState = { ...liveState, ok: false, provider: null, live: false, idle: Boolean(e?.idle), error: e?.idle ? null : String(e?.message || e), overlay: null };
       }
     }
   }
@@ -232,7 +241,7 @@ export function createStore(onData) {
       await loadSnapshot();
       emit(); // sofort aus Snapshot rendern
       await tryLive();
-      if (liveState.ok) emit();
+      if (liveState.ok || liveState.idle) emit(); // Status-Chip/Tooltip auf den tatsächlichen Live-Zustand bringen
       schedule();
     },
     refresh,

@@ -9,7 +9,6 @@
   <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link rel="preconnect" href="https://flagcdn.com" crossorigin>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,500..900&family=Inter:wght@400..700&display=swap">
   <link rel="stylesheet" href="css/styles.css">
   <script>
@@ -35,20 +34,20 @@
           <defs>
             <linearGradient id="bm" x1="0" y1="0" x2="1" y2="1">
               <stop offset="0" stop-color="var(--brand-1)"/>
-              <stop offset=".6" stop-color="var(--brand-2)"/>
-              <stop offset="1" stop-color="var(--brand-3)"/>
+              <stop offset="1" stop-color="var(--brand-2)"/>
             </linearGradient>
           </defs>
-          <path d="M20 2.8l14.6 5.1v10.6c0 9.3-6.2 15.9-14.6 18.7C11.6 34.4 5.4 27.8 5.4 18.5V7.9z" fill="url(#bm)" opacity=".16"/>
-          <path d="M20 2.8l14.6 5.1v10.6c0 9.3-6.2 15.9-14.6 18.7C11.6 34.4 5.4 27.8 5.4 18.5V7.9z" fill="none" stroke="url(#bm)" stroke-width="2.2" stroke-linejoin="round"/>
-          <rect x="11.5" y="11" width="17" height="3.6" rx="1.8" fill="url(#bm)"/>
-          <rect x="13.5" y="16.6" width="13" height="3.6" rx="1.8" fill="url(#bm)"/>
-          <rect x="15.5" y="22.2" width="9" height="3.6" rx="1.8" fill="url(#bm)"/>
-          <rect x="17.6" y="27.8" width="4.8" height="3.6" rx="1.8" fill="url(#bm)"/>
+          <!-- Neutrales Monitor-Symbol (kein Wappen): vier Ligen als Balken in einer abgerundeten Kachel -->
+          <rect x="3" y="3" width="34" height="34" rx="10" fill="url(#bm)" opacity=".14"/>
+          <rect x="3" y="3" width="34" height="34" rx="10" fill="none" stroke="url(#bm)" stroke-width="2"/>
+          <rect x="10" y="11" width="20" height="3.4" rx="1.7" fill="url(#bm)"/>
+          <rect x="10" y="16.6" width="15" height="3.4" rx="1.7" fill="url(#bm)"/>
+          <rect x="10" y="22.2" width="10" height="3.4" rx="1.7" fill="url(#bm)"/>
+          <rect x="10" y="27.8" width="5" height="3.4" rx="1.7" fill="url(#bm)"/>
         </svg>
         <span class="brand-text">
-          <strong>Nations League</strong>
-          <span>Tabellen &amp; Zonen</span>
+          <strong>NL Monitor</strong>
+          <span class="label"><span class="brand-sub--long">Inoffizieller Fan-Monitor</span><span class="brand-sub--short">Inoffiziell</span></span>
         </span>
       </a>
 
@@ -63,16 +62,16 @@
         </a>
         <a href="#/ko" data-nav="ko">
           <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3.5 5.5H8a2 2 0 0 1 2 2v2.5a2 2 0 0 0 2 2M3.5 18.5H8a2 2 0 0 0 2-2V14a2 2 0 0 1 2-2M12 12h4.5M19.5 9v6"/></svg>
-          <span class="lbl-long">K.-o. &amp; Play-offs</span><span class="lbl-short" aria-hidden="true">K.-o.</span>
+          <span class="lbl-long">K.-o. &amp; Play-offs</span><span class="lbl-short" aria-hidden="true">K.-o.-Runde</span>
         </a>
       </nav>
 
-      <div class="header-tools">
+      <div class="header-tools" role="group" aria-label="Datenstand und Darstellung">
         <div class="data-status" id="data-status" role="status" aria-live="polite">
           <span class="data-status__dot" aria-hidden="true"></span>
           <span class="data-status__text">Lädt …</span>
         </div>
-        <button class="icon-btn theme-toggle" id="theme-toggle" type="button" aria-label="Helles Design" aria-pressed="false">
+        <button class="icon-btn theme-toggle" id="theme-toggle" type="button" aria-label="Helles Design" aria-pressed="false" data-tip="Hell/Dunkel umschalten">
           <svg class="i-sun" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4.2"/><path d="M12 2.5v2.2M12 19.3v2.2M4.6 4.6l1.6 1.6M17.8 17.8l1.6 1.6M2.5 12h2.2M19.3 12h2.2M4.6 19.4l1.6-1.6M17.8 6.2l1.6-1.6"/></svg>
           <svg class="i-moon" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 14.5A8 8 0 1 1 9.5 4a6.5 6.5 0 0 0 10.5 10.5z"/></svg>
         </button>
@@ -91,9 +90,15 @@
 
   <footer class="site-footer">
     <div class="footer-inner">
-      <p><strong>Nations League Monitor</strong> – inoffizielle Fan-Übersicht, nicht mit der UEFA verbunden.</p>
-      <p id="footer-source">Daten: UEFA (über automatisierten Abgleich), Live-Abgleich: ESPN. Flaggen: flag-icons (MIT).</p>
-      <p class="footer-note" id="footer-note"></p>
+      <div class="footer-brand">
+        <p><strong>Nations League Monitor</strong></p>
+        <p>Inoffizielle Fan-Übersicht, nicht mit der UEFA verbunden.</p>
+      </div>
+      <div class="footer-meta">
+        <p class="footer-asof"><span class="footer-label">Datenstand</span><span id="footer-asof">–</span></p>
+        <p id="footer-source">Daten: UEFA (automatisierter Abgleich), Live-Abgleich an Spieltagen: ESPN. Flaggen: flag-icons (MIT).</p>
+        <p class="footer-note">Alle Angaben ohne Gewähr. Tabellen werden nach dem UEFA-Reglement (Art. 15) aus den Ergebnissen berechnet; Disziplinarpunkte sind nicht berücksichtigt.</p>
+      </div>
     </div>
   </footer>
 

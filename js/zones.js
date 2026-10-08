@@ -1,49 +1,14 @@
 // Statuszonen gemäß docs/regeln.md (Übergangssaison 2026/27)
 import { crossRank } from './standings.js';
 
+/** Zonen: ein Begriff (label) und eine Erklärung (desc). Kurzformen stehen in ZONE_ABBR, Icons in ui.js (ZONE_ICON). */
 export const ZONES = {
-  ko: {
-    label: 'Viertelfinale',
-    short: 'VF',
-    icon: '★',
-    legend: 'Viertelfinale · K.-o.-Phase',
-    desc: 'Gruppensieger und -zweite der Liga A spielen im März 2027 das Viertelfinale (Hin- und Rückspiel). Die vier Sieger erreichen das Finalturnier im Juni 2027.',
-  },
-  promotion: {
-    label: 'Aufstieg',
-    short: 'AUF',
-    icon: '▲',
-    legend: 'Direkter Aufstieg',
-    desc: 'Steigt direkt in die nächsthöhere Liga auf (Saison 2028/29).',
-  },
-  'playoff-up': {
-    label: 'Play-off',
-    short: 'PO',
-    icon: '△',
-    legend: 'Play-off um den Aufstieg',
-    desc: 'Spielt im März 2027 in Hin- und Rückspiel gegen ein Team der höheren Liga um den Aufstieg.',
-  },
-  'playoff-down': {
-    label: 'Play-off',
-    short: 'PO',
-    icon: '▽',
-    legend: 'Play-off um den Klassenerhalt',
-    desc: 'Muss im März 2027 in Hin- und Rückspiel gegen ein Team der tieferen Liga um den Verbleib spielen (Heimrecht im Rückspiel).',
-  },
-  relegation: {
-    label: 'Abstieg',
-    short: 'AB',
-    icon: '▼',
-    legend: 'Direkter Abstieg',
-    desc: 'Steigt direkt in die nächsttiefere Liga ab.',
-  },
-  safe: {
-    label: 'Klassenerhalt',
-    short: '–',
-    icon: '',
-    legend: 'Klassenerhalt',
-    desc: 'Bleibt in der aktuellen Liga.',
-  },
+  ko: { label: 'Viertelfinale', desc: 'Gruppensieger und -zweite der Liga A spielen im März 2027 das Viertelfinale (Hin- und Rückspiel). Die vier Sieger erreichen das Finalturnier im Juni 2027.' },
+  promotion: { label: 'Aufstieg', desc: 'Steigt direkt in die nächsthöhere Liga auf (Saison 2028/29).' },
+  'playoff-up': { label: 'Play-off', desc: 'Spielt im März 2027 in Hin- und Rückspiel gegen ein Team der höheren Liga um den Aufstieg.' },
+  'playoff-down': { label: 'Play-off', desc: 'Muss im März 2027 in Hin- und Rückspiel gegen ein Team der tieferen Liga um den Verbleib spielen (Heimrecht im Rückspiel).' },
+  relegation: { label: 'Abstieg', desc: 'Steigt direkt in die nächsttiefere Liga ab.' },
+  safe: { label: 'Klassenerhalt', desc: 'Bleibt in der aktuellen Liga.' },
 };
 
 /** Ein Begriff pro Zone – identisch in Legende, Status-Pill, Badge und Tooltip-Titel. */
@@ -65,7 +30,6 @@ export const LEAGUE_ZONES = {
 
 export const LEAGUE_INFO = {
   A: {
-    tagline: 'Elite · 16 Teams · Viertelfinale',
     rules: [
       'Platz 1 und 2: Viertelfinale (Gruppensieger mit Heimrecht im Rückspiel).',
       'Platz 3: Die zwei besten Gruppendritten bleiben in Liga A, die zwei schlechtesten müssen in das Play-off A/B.',
@@ -73,7 +37,6 @@ export const LEAGUE_INFO = {
     ],
   },
   B: {
-    tagline: '16 Teams · Aufstieg in Liga A',
     rules: [
       'Platz 1: direkter Aufstieg in Liga A.',
       'Platz 2: Play-off A/B um den Aufstieg.',
@@ -82,7 +45,6 @@ export const LEAGUE_INFO = {
     ],
   },
   C: {
-    tagline: '16 Teams · Aufstieg in Liga B',
     rules: [
       'Platz 1: direkter Aufstieg in Liga B.',
       'Platz 2: Play-off B/C um den Aufstieg.',
@@ -90,7 +52,6 @@ export const LEAGUE_INFO = {
     ],
   },
   D: {
-    tagline: '6 Teams · letzte Austragung',
     rules: [
       'Liga D wird nach dieser Saison aufgelöst: Alle sechs Teams spielen 2028/29 in Liga C.',
       'Gruppen mit drei Teams, jedes Team bestreitet vier Spiele.',
@@ -99,6 +60,46 @@ export const LEAGUE_INFO = {
 };
 
 const ordinal = (n) => `${n}.`;
+
+/** Kurzlabel je Zone für enge Stellen (Positionsleiste im Team-Panel) – einheitlich in Versalien. */
+export const ZONE_ABBR = { ko: 'VF', promotion: 'AUF', 'playoff-up': 'PO', 'playoff-down': 'PO', relegation: 'AB', safe: 'BLEIBT' };
+
+/**
+ * Status-Erklärung für das Team-Panel in einem Satz: Gegner, Termin und Heimrecht zusammen
+ * (statt Begründung + Zusatztext, die dasselbe zweimal sagen).
+ */
+export function zoneStatusText(row, league) {
+  const PO_DATE = 'Hin- und Rückspiel im März 2027';
+  const QF_END = ' Die vier Sieger erreichen das Finalturnier im Juni 2027.';
+  if (row.zone === 'ko') {
+    return row.pos === 1
+      ? `Als Gruppensieger im Viertelfinale gegen einen Gruppenzweiten, ${PO_DATE} (Rückspiel zu Hause).${QF_END}`
+      : `Als Gruppenzweiter im Viertelfinale gegen einen Gruppensieger, ${PO_DATE} (Rückspiel auswärts).${QF_END}`;
+  }
+  if (row.zone === 'playoff-up') {
+    return league === 'C'
+      ? `Play-off um den Aufstieg gegen einen Gruppenvierten aus Liga B, ${PO_DATE} (Rückspiel auswärts).`
+      : `Play-off um den Aufstieg gegen ein Team aus Liga A, ${PO_DATE} (Rückspiel auswärts).`;
+  }
+  if (row.zone === 'playoff-down') {
+    const vs = league === 'B'
+      ? `Play-off um den Verbleib gegen einen Gruppenzweiten aus Liga C, ${PO_DATE} (Rückspiel zu Hause).`
+      : `Play-off um den Verbleib gegen einen Gruppenzweiten aus Liga B, ${PO_DATE} (Rückspiel zu Hause).`;
+    return league === 'A' && row.crossPos ? `${row.zoneReason.split(' – ')[0]}. ${vs}` : vs;
+  }
+  return row.zoneReason || ZONES[row.zone]?.desc || '';
+}
+
+/**
+ * Mögliche Zonen eines Endplatzes (ohne aktuelle Ergebnisse).
+ * Liga A, Platz 3/4: hängt vom Vergleich der Gruppen ab → zwei Zonen.
+ */
+export function placeZones(league, pos) {
+  if (league === 'A' && pos === 3) return ['safe', 'playoff-down'];
+  if (league === 'A' && pos === 4) return ['playoff-down', 'relegation'];
+  const z = simpleZone(league, pos);
+  return z ? [z.zone] : ['safe'];
+}
 
 /**
  * Weist jeder Tabellenzeile Zone + Begründung zu. Erwartet model.leagues[].groups[].table.
@@ -148,7 +149,8 @@ export function assignZones(model) {
         if (!r || league.id === 'D') continue; // Liga D: alle steigen ohnehin auf
         const zones = new Set();
         for (let p = r.best; p <= r.worst; p++) zones.add(simpleZone(league.id, p)?.zone ?? 'split');
-        row.locked = zones.size === 1 && !zones.has('split') && !zones.has('safe');
+        // Auch der Klassenerhalt kann feststehen (z. B. Liga C, mögliche Plätze 3–4)
+        row.locked = zones.size === 1 && !zones.has('split');
       }
     }
   }
