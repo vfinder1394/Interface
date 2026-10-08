@@ -59,6 +59,8 @@
   --shadow: 0 1px 0 rgba(255, 255, 255, .03) inset, 0 20px 40px -24px rgba(0, 0, 0, .7);
   --shadow-lg: 0 30px 80px -20px rgba(0, 0, 0, .75);
   --info: #a7b4d6;
+  --stake: #ffc44d;
+  --star: #ffc44d;
 
   /* Eine Marken-Verlaufsfamilie für Logo und Headline – nur Blau, keine Zonenfarben */
   --brand-1: #9db8ff;
@@ -129,6 +131,8 @@
   --flag-line: rgba(10, 20, 60, .3);
   --shadow-lg: 0 30px 80px -20px rgba(10, 20, 60, .35);
   --info: #3d4a69;
+  --stake: #a86200;
+  --star: #c98a00;
 
   --z-ko: #6a45f0;
   --z-up: #12a159;
@@ -1253,6 +1257,47 @@ tbody > .row:last-child .c-pos::before { bottom: 4px; border-bottom-right-radius
 .match__venue svg { width: 14px; height: 14px; flex: none; fill: none; stroke: currentColor; stroke-width: 1.8; opacity: .7; }
 .match__note { grid-area: note; display: flex; align-items: center; justify-content: center; gap: 6px; padding: 0 0 4px; font-size: 12px; color: var(--info); }
 .match__note svg { width: 14px; height: 14px; flex: none; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; }
+.match__stake { display: block; padding: 0 8px 6px; font-size: 12.5px; line-height: 1.4; color: var(--text-2); text-align: center; }
+.match__stake svg { display: inline-block; vertical-align: -2px; margin-right: 5px; }
+.match__stake b { font-weight: 700; color: var(--stake); }
+.match__stake svg { width: 14px; height: 14px; fill: var(--stake); stroke: none; }
+.match__top { display: inline-flex; flex: none; color: var(--star); }
+.match__top svg, .tops__title svg { width: 14px; height: 14px; fill: currentColor; stroke: none; }
+
+/* Topspiele je Gruppe */
+.tops { margin-top: 16px; border-radius: var(--radius-lg); background: var(--surface); border: 1px solid var(--line); box-shadow: var(--shadow); overflow: hidden; }
+.tops__title { display: flex; align-items: center; gap: 8px; padding: 12px 18px; font-size: var(--label-size); font-weight: var(--label-weight); letter-spacing: var(--label-track); text-transform: uppercase; color: var(--text-2); border-bottom: 1px solid var(--line); }
+.tops__title svg { color: var(--star); }
+.tops__hint { margin-left: auto; font-weight: 550; letter-spacing: 0; text-transform: none; font-size: 12px; color: var(--text-3); }
+.tops__list { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.top { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; grid-template-areas: 'grp pair when' '. stake stake'; align-items: center; column-gap: 12px; row-gap: 2px; padding: 8px 18px; border-top: 1px solid var(--line); }
+.top:nth-child(-n+2) { border-top: 0; }
+.top:nth-child(even) { border-left: 1px solid var(--line); }
+.top .match__group { grid-area: grp; }
+.top__pair { grid-area: pair; display: flex; align-items: center; gap: 2px; min-width: 0; }
+.top__team { display: inline-flex; align-items: center; gap: 7px; min-width: 0; min-height: 36px; padding: 0 6px; border-radius: 8px; font-size: 14px; color: var(--text); }
+.top__team b { font-weight: 650; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.top__team small { flex: none; font-size: 11.5px; font-weight: 600; color: var(--text-3); font-variant-numeric: tabular-nums; }
+.top__team .flag { --fw: 20px; }
+.top__vs { flex: none; color: var(--text-3); }
+@media (hover: hover) and (pointer: fine) { .top__team:hover { background: var(--surface-hover); } }
+.top__team:focus-visible { outline: 2px solid var(--accent-2); outline-offset: -2px; }
+.top__when { grid-area: when; font-size: 12px; font-weight: 600; color: var(--text-2); white-space: nowrap; font-variant-numeric: tabular-nums; }
+.top__stake { grid-area: stake; display: flex; align-items: flex-start; gap: 6px; padding: 0 6px 2px; font-size: 12.5px; line-height: 1.35; color: var(--text-2); }
+.top__stake b { color: var(--stake); font-weight: 700; }
+.top__stake svg { width: 14px; height: 14px; flex: none; margin-top: 1px; fill: var(--stake); }
+@media (max-width: 900px) {
+  .tops__list { grid-template-columns: minmax(0, 1fr); }
+  .top:nth-child(2) { border-top: 1px solid var(--line); }
+  .top:nth-child(even) { border-left: 0; }
+}
+@media (max-width: 600px) {
+  .tops__title { padding: 10px 14px; }
+  .tops__hint { display: none; }
+  .top { grid-template-columns: auto minmax(0, 1fr); grid-template-areas: 'grp when' 'pair pair' 'stake stake'; padding: 8px 12px; }
+  .top__when { justify-self: end; }
+  .top__pair { margin-left: -6px; }
+}
 .empty { display: grid; gap: 8px; justify-items: center; padding: 32px; text-align: center; color: var(--text-2); border-radius: var(--radius); border: 1px dashed var(--line-2); }
 
 /* ---------- K.-o. & Play-offs -------------------------------------------- */
@@ -2021,3 +2066,18 @@ tbody > .row:last-child .c-pos::before { bottom: 4px; border-bottom-right-radius
   .site-header, .hero, .league-switch-wrap, .group-card__foot, .site-footer, .scrim, .team-panel { display: none !important; }
   body { background: #fff; color: #000; }
 }
+
+/* Vorschau eines Spieltags (Spiele · Entscheidungsspiele · Erster Anpfiff): schmal zwei Spalten, Anpfiff darunter über die volle Breite */
+@media (max-width: 720px) {
+  .md-summary--preview.md-summary--3 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .md-summary--preview.md-summary--3 .md-summary__cell { border-top: 0; }
+  .md-summary--preview.md-summary--3 .md-summary__cell:nth-child(2) { border-left: 1px solid var(--line); }
+  .md-summary--preview.md-summary--3 .md-summary__cell:nth-child(3) { grid-column: 1 / -1; border-left: 0; border-top: 1px solid var(--line); }
+}
+/* Topspiel-Stern sitzt im linken Innenabstand der Zeile – die Gruppenmarken bleiben bündig */
+@media (min-width: 721px) {
+  .match__top { position: absolute; left: 3px; top: 50%; transform: translateY(-50%); }
+  .match.has-note .match__top { top: 30px; }
+}
+.tops__key { display: inline-flex; align-items: center; gap: 4px; color: var(--stake); font-weight: 650; }
+.tops__key svg { width: 12px; height: 12px; fill: currentColor; }
