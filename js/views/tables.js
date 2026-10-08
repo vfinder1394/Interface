@@ -3,6 +3,12 @@ import { LEAGUE_ZONES, LEAGUE_INFO, zoneTerm } from '../zones.js';
 
 const LEAGUES = ['A', 'B', 'C', 'D'];
 
+/**
+ * Häkchen „rechnerisch sicher“ nur, wo etwas auf dem Spiel stand: In Liga C ist der Klassenerhalt für jedes Team
+ * garantiert (kein Abstieg) – ein Häkchen am Tabellenletzten würde Spannung vortäuschen.
+ */
+export const showLock = (r, league) => Boolean(r?.locked) && !(league === 'C' && (r.zone || 'safe') === 'safe');
+
 const UP = new Set(['ko', 'promotion', 'playoff-up']);
 
 export function renderTables(model, leagueId, state) {
@@ -26,8 +32,8 @@ export function renderTables(model, leagueId, state) {
           // Alle vier Links sind per Tab erreichbar (Navigation, keine Tabliste); Pfeiltasten sind nur eine Abkürzung
           return `<a class="league-tab${sel ? ' is-active' : ''}" href="#/tabellen/${id}" ${sel ? 'aria-current="page"' : ''} data-league="${id}" id="tab-${id}">
             <span class="league-tab__letter" aria-hidden="true">${id}</span>
-            <span class="league-tab__meta"><span class="league-tab__name">Liga ${id}</span><span class="league-tab__sub">${esc(TAB_SUB[id])}</span></span>
-            <span class="league-tab__aside" ${leaderTip}><span class="league-tab__aside-label" aria-hidden="true">Spitze</span><span class="league-tab__flags" aria-hidden="true">${leaders.map((t) => flag(t)).join('')}</span><span class="sr-only">, ${esc(TAB_SUB[id])}. Tabellenführer: ${esc(leaders.map((t) => t.name).join(', '))}</span></span>
+            <span class="league-tab__meta"><span class="league-tab__name"><span class="league-tab__liga">Liga </span>${id}</span><span class="league-tab__sub">${esc(TAB_SUB[id])}</span></span>
+            <span class="league-tab__aside" ${leaderTip}><span class="league-tab__flags" aria-hidden="true">${leaders.map((t) => flag(t)).join('')}</span><span class="sr-only">, ${esc(TAB_SUB[id])}. Tabellenführer: ${esc(leaders.map((t) => t.name).join(', '))}</span></span>
           </a>`;
         }).join('')}
         <span class="league-switch__glider" aria-hidden="true"></span>
@@ -39,6 +45,7 @@ export function renderTables(model, leagueId, state) {
         <div class="league-head__title">
           <p class="eyebrow">${esc(tagline)}</p>
           <h2 id="league-title" class="display">Liga ${league.id}</h2>
+          <p class="section-head__lead">${esc(LEAGUE_LEAD[league.id])}</p>
         </div>
       </header>
       ${renderLegend(league.id, league)}
@@ -62,36 +69,61 @@ export function renderTables(model, leagueId, state) {
 /** Unterzeile je Liga beantwortet immer dieselbe Frage: Worum geht es in dieser Liga? */
 const TAB_SUB = { A: 'Viertelfinale & Abstieg', B: 'Aufstieg in Liga A', C: 'Aufstieg in Liga B', D: 'Alle steigen auf' };
 
-/** Legende = dieselben Positions-Chips wie in der Tabelle (Ziffern der betroffenen Plätze). Hinweis nur, wo er etwas ergänzt. */
-const LEGEND = {
-  A: { ko: ['1–2', 'März 2027'], safe: ['3', '2 beste Dritte'], 'playoff-down': ['3–4', '2 schlechteste Dritte, 2 beste Vierte'], relegation: ['4', '2 schlechteste Vierte'] },
-  B: { promotion: ['1', 'in Liga A'], 'playoff-up': ['2', 'Aufstieg'], safe: ['3', ''], 'playoff-down': ['4', 'Verbleib'] },
-  C: { promotion: ['1', 'in Liga B'], 'playoff-up': ['2', 'Aufstieg'], safe: ['3–4', 'kein Abstieg'] },
-  D: { promotion: ['1–3', 'alle in Liga C'] },
+/** Die Frage der Liga als Unterzeile der Überschrift – ergänzt den Tab, statt ihn zu wiederholen. */
+const LEAGUE_LEAD = {
+  A: 'Platz 1 und 2 ziehen ins Viertelfinale ein. Bei den Dritten und Vierten entscheidet der Vergleich über alle vier Gruppen.',
+  B: 'Gruppensieger steigen direkt auf, Zweite spielen um den Aufstieg, Vierte um den Klassenerhalt.',
+  C: 'Gruppensieger steigen direkt auf, Zweite spielen um den Aufstieg. Absteigen kann in dieser Saison niemand.',
+  D: 'Letzte Saison der Liga D: Alle sechs Teams spielen 2028/29 in Liga C.',
 };
 
-/** Positions-Chip; „rechnerisch sicher“ als Häkchen im Chip (nichts ragt über den Rand). */
-export function posChip(pos, { locked = false, attrs = '' } = {}) {
-  return `<span class="pos${locked ? ' pos--locked' : ''}" ${attrs}>${pos}${locked ? `<span class="pos__lock" aria-hidden="true">${ZONE_ICON.lock}</span>` : ''}</span>`;
+/**
+ * Legende = dieselben Positions-Chips wie in der Tabelle (Ziffern der betroffenen Plätze) + ein kurzer Hinweis.
+ * Ein Wortschatz überall: „Klassenerhalt“; Liga A nennt die Ränge im Vergleich („Dritte 1–2“) wie die Chips in der Tabelle.
+ * Liga D hat keine Legende – das Aufstiegs-Banner sagt alles.
+ */
+const LEGEND = {
+  A: { ko: ['1–2', 'Gruppensieger & -zweite'], safe: ['3', 'Dritte 1–2'], 'playoff-down': ['3–4', 'Dritte 3–4, Vierte 1–2'], relegation: ['4', 'Vierte 3–4'] },
+  B: { promotion: ['1', 'in Liga A'], 'playoff-up': ['2', 'um den Aufstieg'], safe: ['3', 'bleibt in Liga B'], 'playoff-down': ['4', 'um den Klassenerhalt'] },
+  C: { promotion: ['1', 'in Liga B'], 'playoff-up': ['2', 'um den Aufstieg'], safe: ['3–4', 'kein Abstieg'] },
+  D: {},
+};
+
+/**
+ * Positions-Chip mit fester Breite: Ziffer + Zonen-Symbol (nie nur Farbe als Bedeutungsträger; Klassenerhalt ohne Symbol).
+ * „rechnerisch sicher“ als kleines Häkchen-Abzeichen an der Ecke (Ziffern bleiben in einer Flucht).
+ */
+export function posChip(pos, { locked = false, attrs = '', zone = null, sample = false } = {}) {
+  const icon = zone && zone !== 'safe' ? ZONE_ICON[zone] || '' : '';
+  return `<span class="pos pos--z${icon ? '' : ' pos--plain'}${locked ? ' pos--locked' : ''}${sample ? ' pos--sample' : ''}" ${attrs}><span class="pos__n">${pos}</span>${icon}${locked ? `<span class="pos__lock" aria-hidden="true">${ZONE_ICON.lock}</span>` : ''}</span>`;
 }
 
 export function renderLegend(leagueId, league) {
-  const zones = LEAGUE_ZONES[leagueId];
+  const zones = leagueId === 'D' ? [] : LEAGUE_ZONES[leagueId];
   const item = (z) => {
     const [pos, hint] = LEGEND[leagueId]?.[z] || ['', ''];
     return `<li class="legend-item zone-${z}">
-      <span class="pos pos--sample" aria-hidden="true">${pos}</span>
-      <span class="legend-item__label">${esc(zoneTerm(z, leagueId))}${hint ? `<span class="legend-item__sep" aria-hidden="true">·</span><span class="legend-item__hint">${esc(hint)}</span>` : ''}</span>
+      <span aria-hidden="true">${posChip(pos, { zone: z, sample: true })}</span>
+      <span class="legend-item__label"><span class="legend-item__term">${esc(zoneTerm(z, leagueId))}</span>${hint ? `<span class="legend-item__sep" aria-hidden="true">·</span><span class="legend-item__hint">${esc(hint)}</span>` : ''}</span>
       <span class="sr-only">: Platz ${pos}</span>
     </li>`;
   };
-  // „rechnerisch sicher“ neutral (gilt für jede Zone): gefüllter Chip mit Häkchen, ohne Zonenfarbe
-  const anyLocked = league?.groups.some((g) => g.table.some((r) => r.locked));
-  return `<div class="legend-wrap"><ul class="status-legend" aria-label="Legende der Tabellenzonen">
-    ${zones.map(item).join('')}
-    ${anyLocked ? `<li class="legend-item legend-item--lock"><span class="pos pos--sample pos--locked pos--neutral" aria-hidden="true">${ZONE_ICON.lock}</span><span class="legend-item__label">rechnerisch sicher</span></li>` : ''}
-    ${leagueId === 'A' ? '<li class="legend-item--link"><button type="button" class="legend-link" data-scroll-to="cross-title">Dritte &amp; Vierte im Vergleich<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M6 13l6 6 6-6"/></svg></button></li>' : ''}
-  </ul></div>`;
+  // Zweite, leisere Zeile: Zeichen in der Tabelle (Häkchen, Vergleichsrang, direkter Vergleich) + Link zum Vergleich
+  const rows = league?.groups.flatMap((g) => g.table) || [];
+  const lockRow = rows.find((r) => showLock(r, leagueId));
+  const formSample = '<span class="form form--sample" aria-hidden="true"><span class="form__pill form__pill--S">S</span><span class="form__pill form__pill--U">U</span><span class="form__pill form__pill--S is-latest">S</span></span>';
+  const keys = [
+    lockRow ? `<li class="legend-key"><span aria-hidden="true">${posChip(lockRow.pos, { zone: lockRow.zone, locked: true, sample: true }).replace('class="pos ', `class="pos zone-${lockRow.zone} `)}</span>rechnerisch sicher</li>` : '',
+    leagueId === 'A' ? '<li class="legend-key"><span class="xrank xrank--sample" aria-hidden="true"><span class="xrank__pool">Dritte</span>1<small>/4</small></span>Rang im Vergleich aller Dritten bzw. Vierten</li>' : '',
+    rows.some((r) => r.tieH2H) ? `<li class="legend-key"><span class="tie-mark tie-mark--sample" aria-hidden="true">${ZONE_ICON.h2h}</span>bei Punktgleichheit vorn dank direktem Vergleich</li>` : '',
+    `<li class="legend-key">${formSample}<span>Form: neuestes Ergebnis rechts, gefüllt<span class="legend-key__mobile"> · letzte 3</span></span></li>`,
+  ].filter(Boolean);
+  const link = leagueId === 'A' ? '<button type="button" class="legend-link" data-scroll-to="cross-title">Dritte &amp; Vierte im Vergleich<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M6 13l6 6 6-6"/></svg></button>' : '';
+  if (!zones.length && !keys.length && !link) return '';
+  return `<div class="legend-wrap">
+    ${zones.length ? `<ul class="status-legend" aria-label="Legende der Tabellenzonen">${zones.map(item).join('')}</ul>` : ''}
+    ${keys.length || link ? `<div class="legend-meta">${keys.length ? `<ul class="legend-keys" aria-label="Zeichen in der Tabelle">${keys.join('')}</ul>` : ''}${link}</div>` : ''}
+  </div>`;
 }
 
 function renderPromoBanner(model, league) {
@@ -116,13 +148,13 @@ export function renderGroupCard(model, g, state) {
   const [first, second] = g.table;
   const lead = first && second ? first.pts - second.pts : 0;
   const nameOf = (r) => esc(model.teams[r.code]?.name || r.code);
-  const nLocked = g.table.filter((r) => r.locked).length;
+  // Ein Muster für alle Gruppen (auch Liga D): „<Spitzenreiter> führt · +N Pkt“ bzw. „A und B punktgleich vorn“
   const leadText = !first?.p ? 'Noch keine Spiele'
-    : lead > 0 ? `${nameOf(first)} führt mit ${lead}&nbsp;Pkt Vorsprung`
+    : lead > 0 ? `${nameOf(first)} führt<span class="nowrap"> · +${lead}&nbsp;Pkt</span>`
     : `${nameOf(first)} und ${nameOf(second)} punktgleich vorn`;
   const sub = liveCount ? '<span class="live-tag"><span class="live-dot"></span>Live</span> · Spiele laufen'
-    : !upcoming.length ? 'Ligaphase beendet'
-    : `${leadText}${nLocked ? ` · ${nLocked}&nbsp;${nLocked === 1 ? 'Team' : 'Teams'} sicher` : ''}`;
+    : !upcoming.length ? `Ligaphase beendet · ${nameOf(first)} Gruppensieger`
+    : leadText;
   // Spieltag-Chip nur, wenn diese Gruppe vom Stand der Liga abweicht (sonst steht er schon im Liga-Kopf)
   const league = model.leagues.find((l) => l.id === g.league);
   const leagueMd = league ? Math.max(...league.groups.map((x) => x.mdPlayed)) : g.mdPlayed;
@@ -152,12 +184,12 @@ export function renderGroupCard(model, g, state) {
           <th scope="col" class="c-goals">Tore</th>
           <th scope="col" class="c-num c-gd"><abbr title="Tordifferenz">TD</abbr></th>
           <th scope="col" class="c-num c-pts"><abbr title="Punkte">Pkt</abbr></th>
-          <th scope="col" class="c-form"><abbr title="Alle Spiele der Ligaphase – neuestes Ergebnis rechts, leere Felder sind offene Spiele">Form</abbr></th>
-          <th scope="col" class="c-fm"><abbr title="Letzte drei Ergebnisse, neuestes rechts">Form</abbr></th>
+          <th scope="col" class="c-form"><abbr title="Ergebnisse, neuestes rechts (gefüllt); Punkte = offene Spiele">Form</abbr></th>
+          <th scope="col" class="c-fm"><abbr title="Letzte Ergebnisse (bis zu 3), neuestes rechts">Form</abbr></th>
         </tr>
       </thead>
       <tbody>
-        ${g.table.map((r, i) => renderRow(model, r, g.table[i + 1], g)).join('')}
+        ${g.table.map((r, i) => renderRow(model, r, g.table[i - 1], g)).join('')}
       </tbody>
     </table>
 
@@ -180,13 +212,16 @@ export function renderGroupCard(model, g, state) {
 
 const rangeText = (r) => (r ? (r.best === r.worst ? `${r.best}.` : `${r.best}.–${r.worst}.`) : '');
 
-function renderRow(model, r, next, g) {
+function renderRow(model, r, prev, g) {
   const t = model.teams[r.code];
   const zone = r.zone || 'safe';
   // Trennlinie an jedem Zonenwechsel (gleiche Regel wie im Gruppenvergleich), getönt in der „wichtigeren“ Zone:
-  // unter Aufwärts-Zonen in deren Farbe, sonst in der Farbe der Zone darunter
-  const nz = next ? next.zone || 'safe' : null;
-  const cutZone = nz && nz !== zone ? (UP.has(zone) ? zone : nz) : null;
+  // unter Aufwärts-Zonen in deren Farbe, sonst in der Farbe der Zone darunter. Gezeichnet als Innenschatten der
+  // unteren Zeile – so liegt sie über der Hover-Fläche und wirkt nicht wie ein Auswahlrahmen.
+  // Nur Trennlinien, die etwas bedeuten: zwischen zwei Aufwärts-Zonen (z. B. Aufstieg | Play-off) keine – sonst drei
+  // konkurrierende Farblinien in einer Vierergruppe. Getönt in der „wichtigeren“ Zone (oberhalb Aufwärts-Zonen, sonst darunter).
+  const pz = prev ? prev.zone || 'safe' : null;
+  const cutZone = pz && pz !== zone && !(UP.has(pz) && UP.has(zone)) ? (UP.has(pz) ? pz : zone) : null;
   const cut = cutZone ? ' has-cut' : '';
   const cutStyle = cutZone ? ` style="--cut: var(${ZONE_VAR[cutZone]})"` : '';
   const range = rangeText(r.range);
@@ -194,22 +229,23 @@ function renderRow(model, r, next, g) {
   const tieBelow = r.tieH2H ? model.teams[r.tieH2H.below] : null;
   const tieText = tieBelow ? `Punktgleich mit ${tieBelow.name} – ${t.name} steht dank direktem Vergleich (Art. 15) davor.` : '';
   const zoneName = r.zoneLabel || zoneTerm(zone, t.league);
-  const tipBody = `${r.zoneReason || ''}${r.locked ? ' Rechnerisch bereits sicher.' : ''}${range && !r.locked ? ` Mögliche Endplatzierung: ${range}` : ''}${tieText ? `\n${tieText}` : ''}`;
+  const lockShown = showLock(r, t.league);
+  const lockNote = r.locked ? (lockShown ? ' Rechnerisch bereits sicher.' : ` Die Plätze 1–2 sind nicht mehr erreichbar (mögliche Endplätze: ${range}).`) : '';
+  const tipBody = `${r.zoneReason || ''}${lockNote}${range && !r.locked ? ` Mögliche Endplatzierung: ${range}` : ''}${tieText ? `\n${tieText}` : ''}`;
   const pool = r.pos === 3 ? 'Dritte' : 'Vierte';
-  // Pool-Wort immer sichtbar: ausgeschrieben („Dritte 2/4“) oder – für die ganze Ansicht einheitlich – kurz („D 2/4“)
+  // Pool-Wort immer ausgeschrieben („Dritte 2/4“) – keine Abkürzungen, die mit „Liga D“ verwechselt werden
   const cross = r.crossPos && t.league === 'A'
-    ? `<span class="xrank" ${tipAttrs(`Vergleich der Gruppen${pool.toLowerCase()}n`, `Aktuell ${r.crossPos}. von 4 – ${r.pos === 3 ? 'die zwei besten Dritten bleiben in Liga A, die anderen spielen das Play-off A/B.' : 'die zwei besten Vierten spielen das Play-off A/B, die anderen steigen direkt ab.'}`)}><span class="xrank__pool"><span class="xrank__long">${pool}</span><span class="xrank__short" aria-hidden="true">${pool[0]}</span></span>${r.crossPos}<small>/4</small></span>`
+    ? `<span class="xrank" ${tipAttrs(`Vergleich der Gruppen${pool.toLowerCase()}n`, `Aktuell ${r.crossPos}. von 4 – ${r.pos === 3 ? 'die zwei besten Dritten bleiben in Liga A, die anderen spielen das Play-off A/B.' : 'die zwei besten Vierten spielen das Play-off A/B, die anderen steigen direkt ab.'}`)}><span class="xrank__pool">${pool}</span>${r.crossPos}<small>/4</small></span>`
     : '';
-  const tie = tieBelow ? `<span class="tie-mark" tabindex="0" ${tipAttrs('Direkter Vergleich', tieText)}><span aria-hidden="true">DV</span><span class="sr-only">${esc(tieText)}</span></span>` : '';
-  const total = (g.teams.length - 1) * 2;
+  const tie = tieBelow ? `<span class="tie-mark" tabindex="0" ${tipAttrs('Direkter Vergleich', tieText)}>${ZONE_ICON.h2h}<span class="sr-only">${esc(tieText)}</span></span>` : '';
   const reasonId = `zr-${esc(r.code)}`;
   return `<tr class="row zone-${zone}${cut}${r.locked ? ' is-locked' : ''}" data-team="${esc(r.code)}"${cutStyle}>
-    <td class="c-pos">${posChip(r.pos, { locked: r.locked, attrs: `data-tip-side="right" ${tipAttrs(r.locked ? `${zoneName} · sicher` : `Aktuell: ${zoneName}`, tipBody)}` })}</td>
+    <td class="c-pos">${posChip(r.pos, { zone, locked: lockShown, attrs: `data-tip-side="right" ${tipAttrs(r.locked ? `${zoneName} · sicher` : `Aktuell: ${zoneName}`, tipBody)}` })}</td>
     <th scope="row" class="c-team"><div class="c-team__in">
-      <button type="button" class="team-link" data-team="${esc(r.code)}" aria-label="${esc(t.name)}, Platz ${r.pos}, ${r.pts} Punkte, ${r.locked ? '' : 'aktuell '}${esc(zoneName)}${r.locked ? ' (rechnerisch sicher)' : ''} – Details öffnen" aria-describedby="${reasonId}">
+      <button type="button" class="team-link" data-team="${esc(r.code)}" aria-label="${esc(t.name)}, Platz ${r.pos}, ${r.pts} Punkte, ${r.locked ? '' : 'aktuell '}${esc(zoneName)}${lockShown ? ' (rechnerisch sicher)' : ''} – Details öffnen" aria-describedby="${reasonId}">
         ${flag(t)}${teamName(t)}
       </button>
-      ${cross}${tie}
+      ${cross || tie ? `<span class="c-team__tags${cross ? '' : ' c-team__tags--inline'}">${cross}${tie}</span>` : ''}
       <span class="sr-only" id="${reasonId}">${esc(tipBody)}</span>
     </div></th>
     <td class="c-num c-sec">${r.p}</td>
@@ -219,7 +255,7 @@ function renderRow(model, r, next, g) {
     <td class="c-num c-goals"><span class="goals"><span>${r.gf}</span><i>:</i><span>${r.ga}</span></span></td>
     <td class="c-num c-gd">${signed(r.gd)}</td>
     <td class="c-num c-pts">${r.pts}</td>
-    <td class="c-form">${formPills(r.form, { total })}</td>
+    <td class="c-form">${formPills(r.form, { total: (g.table.length - 1) * 2 })}</td>
     <td class="c-fm">${formDots(r.form)}</td>
   </tr>`;
 }
@@ -265,25 +301,34 @@ export function renderGroupMatches(model, g) {
 }
 
 export const CUT_LABELS = {
-  third: [['Bleiben in Liga A', 'safe'], ['Play-off A/B', 'playoff-down']],
-  fourth: [['Play-off A/B', 'playoff-down'], ['Abstieg in Liga B', 'relegation']],
+  third: [['Klassenerhalt', 'safe'], ['Play-off A/B', 'playoff-down']],
+  fourth: [['Play-off A/B', 'playoff-down'], ['Abstieg', 'relegation']],
 };
 
 function renderCrossPanel(model) {
+  return `<section class="cross-panel" aria-labelledby="cross-title">${crossSection(model)}</section>`;
+}
+
+/** Dritte & Vierte im Vergleich (Liga A) – ein Bauteil, eine Überschrift; in der K.-o.-Ansicht einklappbar. */
+export function crossSection(model, { collapsible = false, idPrefix = 'cross' } = {}) {
   const third = model.cross.third.map((r) => model.teams[r.code].row);
   const fourth = model.cross.fourth.map((r) => model.teams[r.code].row);
-  return `
-  <section class="cross-panel" aria-labelledby="cross-title">
-    <header class="section-head">
-      <p class="eyebrow">Gruppenübergreifend</p>
-      <h3 id="cross-title" class="display display--sm">Dritte &amp; Vierte im Vergleich</h3>
-      <p class="section-head__lead">In Liga A entscheidet der Vergleich über alle vier Gruppen, wer als Dritter in der Liga bleibt und wer als Vierter noch ins Play-off darf.</p>
-    </header>
-    <div class="cmp-grid">
+  const lead = 'In Liga A entscheidet der Vergleich über alle vier Gruppen, wer als Dritter in der Liga bleibt und wer als Vierter noch ins Play-off darf. Reihenfolge: Punkte, Tordifferenz, erzielte Tore, Auswärtstore, Siege, Auswärtssiege.';
+  const head = `<span class="dot dot--neutral" aria-hidden="true"></span>Dritte &amp; Vierte im Vergleich`;
+  const grid = `<div class="cmp-grid">
       ${cmpTable(model, 'Gruppendritte', third, CUT_LABELS.third)}
       ${cmpTable(model, 'Gruppenvierte', fourth, CUT_LABELS.fourth)}
-    </div>
-  </section>`;
+    </div>`;
+  if (collapsible) {
+    return `<details class="ko-block ko-block--fold">
+      <summary class="ko-block__head"><h3 id="${idPrefix}-title">${head}<svg class="chev" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></h3><span class="ko-block__lead">${lead}</span></summary>
+      ${grid}
+    </details>`;
+  }
+  return `<div class="ko-block">
+      <header class="ko-block__head"><h3 id="${idPrefix}-title">${head}</h3><p>${lead}</p></header>
+      ${grid}
+    </div>`;
 }
 
 /** Vergleich der Dritten/Vierten der Liga A – ein Bauteil für Tabellen- und K.-o.-Ansicht. */
@@ -291,13 +336,13 @@ export function cmpTable(model, title, rows, [topLabel, bottomLabel]) {
   return `<div class="cmp">
     <table class="cmp-table">
       <caption>${title}</caption>
-      <thead><tr><th scope="col" class="c-pos">#</th><th scope="col" class="c-team">Team</th><th scope="col"><abbr title="Gruppe">Gr.</abbr></th><th scope="col" class="c-num"><abbr title="Punkte">Pkt</abbr></th><th scope="col" class="c-num"><abbr title="Tordifferenz">TD</abbr></th><th scope="col" class="c-num"><abbr title="Erzielte Tore">T</abbr></th><th scope="col" class="c-badge"><span class="sr-only">Status</span></th></tr></thead>
+      <thead><tr><th scope="col" class="c-pos c-rank">Rang</th><th scope="col" class="c-team">Team</th><th scope="col"><abbr title="Gruppe">Gr.</abbr></th><th scope="col" class="c-num"><abbr title="Punkte">Pkt</abbr></th><th scope="col" class="c-num"><abbr title="Tordifferenz">TD</abbr></th><th scope="col" class="c-num"><abbr title="Erzielte Tore">T</abbr></th><th scope="col" class="c-badge"><span class="sr-only">Status</span></th></tr></thead>
       <tbody>
         ${rows.map((r, i) => {
           const t = model.teams[r.code];
           return `${i === 2 ? `<tr class="cmp-cut" aria-hidden="true" style="--cut: var(${ZONE_VAR[bottomLabel[1]]})"><td colspan="7">${zoneCut(topLabel, bottomLabel)}</td></tr>` : ''}
           <tr class="row zone-${r.zone}">
-            <td class="c-pos"><span class="pos">${i + 1}</span></td>
+            <td class="c-pos c-rank">${i + 1}.</td>
             <th scope="row" class="c-team"><button type="button" class="team-link" data-team="${esc(t.code)}">${flag(t)}${teamName(t)}</button></th>
             <td class="c-grp">${t.group}</td>
             <td class="c-num c-pts">${r.pts}</td>

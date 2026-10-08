@@ -14,6 +14,8 @@ const panel = $('#team-panel');
 const scrim = $('#scrim');
 const tooltip = $('#tooltip');
 const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)');
+/** Touch ohne Maus: keine Hover-Tooltips in Tabellenzellen. */
+const touchUi = matchMedia('(hover: none), (pointer: coarse)');
 
 const state = {
   model: null,
@@ -119,6 +121,15 @@ function render({ scrollTop = false } = {}) {
   if (state.team && !panel.hidden) { panel.innerHTML = renderTeam(m, state.team); fitHeroName(); }
   fitNames();
   markStuckHeads();
+  centerActiveMatchday();
+}
+
+/** Spieltag-Leiste (mobil waagerecht scrollbar): gewählten Spieltag in die Mitte holen, ohne die Seite zu scrollen. */
+function centerActiveMatchday() {
+  const strip = $('.md-strip');
+  const active = strip?.querySelector('.md-tab.is-active');
+  if (!strip || !active || strip.scrollWidth <= strip.clientWidth) return;
+  strip.scrollLeft = Math.max(0, active.offsetLeft - (strip.clientWidth - active.offsetWidth) / 2);
 }
 
 function renderHero(m) {
@@ -206,12 +217,19 @@ function renderStatus(m) {
     const ageH = s.snapshotAt ? (Date.now() - Date.parse(s.snapshotAt)) / 36e5 : Infinity;
     const stale = ageH > 24;
     el.classList.toggle('is-stale', stale);
-    // Quelle steht im Chip selbst – nicht erst im Tooltip. Schmal: von heute nur die Uhrzeit, von gestern „gestern“, sonst das Datum
+    // Quelle steht im Chip selbst – nicht erst im Tooltip. Ein Wortlaut für alle Breiten: relativ („heute, 02:44 Uhr“),
+    // ältere Stände mit Datum („06.10. · 02:44 Uhr“). Sehr schmal nur „Stand …“ (Quelle im Tooltip und in der Fußzeile).
     const snapDay = s.snapshotAt ? new Date(s.snapshotAt).toLocaleDateString('sv-SE', { timeZone: 'Europe/Berlin' }) : null;
     const today = todayBerlin();
     const yesterday = new Date(Date.parse(`${today}T12:00:00Z`) - 864e5).toISOString().slice(0, 10);
-    const shortWhen = !s.snapshotAt ? '–' : snapDay === today ? `${fmtTime(s.snapshotAt)}${NB}Uhr` : snapDay === yesterday ? `gestern ${fmtTime(s.snapshotAt)}` : fmtShort(s.snapshotAt);
-    txt.innerHTML = `<b>UEFA</b><span class="data-status__long"> · Stand ${s.snapshotAt ? `${fmtShort(s.snapshotAt)}, ${fmtTime(s.snapshotAt)}${NB}Uhr` : '–'}</span><span class="data-status__short"><span class="data-status__sep"> · </span>${shortWhen}</span>`;
+    const t = s.snapshotAt ? fmtTime(s.snapshotAt) : '';
+    const rel = !s.snapshotAt ? null : snapDay === today ? 'heute' : snapDay === yesterday ? 'gestern' : null;
+    const when = !s.snapshotAt ? '–' : rel ? `${rel}, ${t}` : `${fmtShort(s.snapshotAt)} · ${t}`;
+    const tiny = !s.snapshotAt ? '–' : snapDay === today ? t : rel || fmtShort(s.snapshotAt);
+    // Langform und Kurzform als vollständige Textknoten (kein „UEFA - Daten“ durch geteilte Spans)
+    txt.innerHTML = `<span class="data-status__src"><b class="data-status__long">UEFA-Daten</b><b class="data-status__short">UEFA</b><span class="data-status__sep"> · </span></span>` +
+      `<span class="data-status__when">${when}<span class="data-status__long">&nbsp;Uhr</span></span>` +
+      `<span class="data-status__tiny">Stand ${tiny}</span>`;
     el.dataset.tipTitle = stale ? 'UEFA-Datenstand älter als 24 Stunden' : 'Gespeicherter UEFA-Datenstand';
     el.dataset.tip = [
       `Datenstand: ${m.asOf || 'UEFA-Daten'}`,
@@ -457,34 +475,42 @@ const NAME_LEVEL = ['', 'use-short', 'use-code'];
 
 /**
  * Lange Namen: Kurzname, sobald der volle Name abgeschnitten würde; Kürzel nur als letzte Stufe.
- * In der Spielliste brechen Namen lieber zweizeilig um, statt zu Kürzeln zu werden (keine Mischung aus „AZE“ und vollen Namen).
- * Innerhalb eines Bereichs bekommt dasselbe Team überall dieselbe Stufe.
+ * Spiellisten und (schmal) Gruppentabellen brechen Namen lieber zweizeilig um, statt zu Kürzeln zu werden –
+ * in Gruppentabellen gibt es nie Kürzel. Innerhalb eines Bereichs bekommt dasselbe Team überall dieselbe Stufe.
  */
 function fitNames(root = document) {
   const over = (el) => el && el.offsetParent && el.scrollWidth > el.clientWidth + 1;
   const tns = [...root.querySelectorAll('.tn')];
   const levels = new Map();
-  // Vergleichs-Chips: entweder alle ausgeschrieben („Dritte 2/4“) oder alle kurz („D 2/4“) – nie gemischt
-  const xranks = [...document.querySelectorAll('.standings .xrank')];
-  if (xranks.length && (root === document || root.contains(xranks[0]))) {
+  const narrow = matchMedia('(max-width: 600px)').matches;
+  // Sehr schmal (≤ 370px): Zeilen bleiben einzeilig – zu lange Namen nehmen Kurzform bzw. Kürzel (AZE, LIE) statt umzubrechen
+  const tiny = matchMedia('(max-width: 370px)').matches;
+  // Vergleichs-Chips („Dritte 2/4“): je Ansicht entweder alle neben dem Namen oder – wenn ein Name nicht passt – alle darunter
+  const grid = document.querySelector('.group-grid');
+  if (grid && (root === document || root.contains(grid))) {
+    grid.classList.remove('tags-below');
     for (const t of tns) t.classList.remove('use-short', 'use-code');
-    xranks.forEach((x) => x.classList.remove('xrank--compact'));
-    const tight = xranks.some((x) => over(x.closest('.c-team__in')?.querySelector('.tn__full')));
-    xranks.forEach((x) => x.classList.toggle('xrank--compact', tight));
+    const tight = !narrow && [...grid.querySelectorAll('.standings .c-team__tags')].some((x) => over(x.closest('.c-team__in')?.querySelector('.tn__full')));
+    grid.classList.toggle('tags-below', tight);
   }
+  const wrapsAt = (tn) => !tiny && Boolean(tn.closest('.match__team, .mini-match__team') || (narrow && tn.closest('.standings')));
+  // Gruppenkarten (Tabelle + nächste Spiele): lieber zweizeilig umbrechen als Kurzformen; Spielliste: lieber Kurzform
+  const prefersWrap = (tn) => Boolean(tn.closest('.group-card'));
   for (const tn of tns) {
     tn.classList.remove('use-short', 'use-code');
-    const wraps = Boolean(tn.closest('.match__team'));
+    const wraps = wrapsAt(tn);
     if (wraps) tn.classList.add('is-measuring');
     let lv = 0;
     if (over(tn.querySelector('.tn__full'))) {
       lv = 2;
-      if (tn.classList.contains('has-short')) {
+      if (tn.classList.contains('has-short') && !(wraps && prefersWrap(tn))) {
         tn.classList.add('use-short');
         if (!over(tn.querySelector('.tn__short'))) lv = 1;
         tn.classList.remove('use-short');
       }
-      if (wraps && lv === 2) lv = 0; // umbrechen statt Kürzel
+      // umbrechen statt Kürzel; schmale Gruppentabellen brechen immer um (keine Kurzformen neben vollen Namen)
+      if (wraps && (lv === 2 || tn.closest('.standings'))) lv = 0;
+      if (lv === 2 && tn.closest('.standings') && !tiny) lv = tn.classList.contains('has-short') ? 1 : 0;
     }
     if (wraps) tn.classList.remove('is-measuring');
     levels.set(tn, lv);
@@ -506,15 +532,15 @@ function fitNames(root = document) {
     let lv = levels.get(tn);
     // Bereichsweit nur bis zum Kurznamen angleichen – Kürzel bleiben auf Stellen beschränkt, an denen nichts anderes passt
     if (k) lv = Math.max(lv, Math.min(1, scopeMax.get(k[0]).get(k[1]) || 0));
-    if (lv === 2 && tn.closest('.match__team')) lv = tn.classList.contains('has-short') ? 1 : 0;
+    if (lv === 2 && tn.closest('.match__team, .mini-match__team, .standings') && !(tiny && tn.closest('.standings, .mini-match__team'))) lv = tn.classList.contains('has-short') ? 1 : 0;
     if (lv === 1 && !tn.classList.contains('has-short')) lv = 0;
     levels.set(tn, lv);
   }
-  // Kürzel nur tabellenweit: Braucht ein Team das Kürzel, zeigt die ganze Tabelle Kürzel (keine Mischung „GRE“ + volle Namen)
-  const codeTables = new Set(tns.filter((tn) => levels.get(tn) === 2).map((tn) => tn.closest('.standings, .cmp-table')).filter(Boolean));
+  // Kürzel nur tabellenweit (Vergleichstabellen): Braucht ein Team das Kürzel, zeigt die ganze Tabelle Kürzel
+  const codeTables = new Set(tns.filter((tn) => levels.get(tn) === 2).map((tn) => tn.closest('.cmp-table')).filter(Boolean));
   for (const tn of tns) {
     let lv = levels.get(tn);
-    if (codeTables.has(tn.closest('.standings, .cmp-table'))) lv = 2;
+    if (codeTables.has(tn.closest('.cmp-table'))) lv = 2;
     if (lv) tn.classList.add(NAME_LEVEL[lv]);
   }
 }
@@ -535,8 +561,9 @@ function fitHeroName(root = panel) {
 function markStuckHeads() {
   const heads = document.querySelectorAll('.day__head');
   if (!heads.length) return;
-  const top = headerHeight();
   heads.forEach((h) => {
+    // Tatsächliche Haftkante (Kopf, ggf. + angeheftete Spieltag-Leiste)
+    const top = parseFloat(getComputedStyle(h).top) || headerBottom();
     const r = h.getBoundingClientRect();
     const sec = h.parentElement.getBoundingClientRect();
     h.classList.toggle('is-stuck', r.top <= top + 1 && sec.top < top - 1);
@@ -560,24 +587,37 @@ function toggleGroup(id, btn) {
   }
 }
 
-function setTheme(t) {
+/** Design-Wahl: System (folgt dem Gerät) → Hell → Dunkel → System. Das Symbol zeigt die aktuelle Wahl. */
+const THEME_ORDER = ['system', 'light', 'dark'];
+const THEME_NAME = { system: 'System', light: 'Hell', dark: 'Dunkel' };
+const systemLight = matchMedia('(prefers-color-scheme: light)');
+const themePref = () => (THEME_ORDER.includes(document.documentElement.dataset.themePref) ? document.documentElement.dataset.themePref : 'system');
+
+function applyTheme(pref, { animate = true } = {}) {
   const root = document.documentElement;
-  if (!reducedMotion.matches) {
+  const t = pref === 'system' ? (systemLight.matches ? 'light' : 'dark') : pref;
+  if (animate && !reducedMotion.matches && root.dataset.theme !== t) {
     root.classList.add('theme-anim');
-    clearTimeout(setTheme.timer);
-    setTheme.timer = setTimeout(() => root.classList.remove('theme-anim'), 320);
+    clearTimeout(applyTheme.timer);
+    applyTheme.timer = setTimeout(() => root.classList.remove('theme-anim'), 320);
   }
   root.dataset.theme = t;
-  try { localStorage.setItem('nl-theme', t); } catch { /* egal */ }
+  root.dataset.themePref = pref;
   updateThemeButton();
 }
+function setTheme(pref) {
+  try { if (pref === 'system') localStorage.removeItem('nl-theme'); else localStorage.setItem('nl-theme', pref); } catch { /* egal */ }
+  applyTheme(pref);
+}
 function updateThemeButton() {
+  const pref = themePref();
   const light = document.documentElement.dataset.theme === 'light';
+  const next = THEME_ORDER[(THEME_ORDER.indexOf(pref) + 1) % THEME_ORDER.length];
   const btn = $('#theme-toggle');
-  btn.setAttribute('aria-pressed', String(light));
-  btn.setAttribute('aria-label', 'Helles Design');
-  // Fester Name + aria-pressed (an = helles Design); der Tooltip nennt die Funktion
-  btn.dataset.tip = 'Hell/Dunkel umschalten';
+  const now = pref === 'system' ? `System (${light ? 'hell' : 'dunkel'})` : THEME_NAME[pref];
+  btn.setAttribute('aria-label', `Design: ${now}. Wechseln zu ${THEME_NAME[next]}`);
+  btn.dataset.tipTitle = `Design: ${now}`;
+  btn.dataset.tip = `Klicken für ${THEME_NAME[next]}`;
   document.querySelector('meta[name="theme-color"]')?.setAttribute('content', light ? '#f3f5fb' : '#050a1a');
 }
 
@@ -596,11 +636,13 @@ function revealLeagueHead() {
   const wrap = $('.league-switch-wrap');
   const sentinel = $('.league-switch-sentinel');
   if (!wrap?.classList.contains('is-stuck') || !sentinel) return;
-  const top = sentinel.getBoundingClientRect().top + window.scrollY - headerHeight();
+  const top = sentinel.getBoundingClientRect().top + window.scrollY - headerBottom();
   window.scrollTo({ top: Math.max(0, top), behavior: reducedMotion.matches ? 'auto' : 'smooth' });
 }
 
 const headerHeight = () => Math.round($('#site-header').getBoundingClientRect().height);
+/** Sichtbare Unterkante des Kopfs (berücksichtigt die eingeklappte Markenzeile). */
+const headerBottom = () => Math.max(0, Math.round($('#site-header').getBoundingClientRect().bottom));
 
 /** --header-h folgt der tatsächlichen Header-Höhe → angeheftete Leisten schließen nahtlos an. */
 function trackHeaderHeight() {
@@ -618,7 +660,10 @@ function trackHeaderHeight() {
 
 function bind() {
   document.addEventListener('click', (e) => {
-    if (e.target.closest('.data-status, .tie-mark')) return; // Tooltip statt Navigation
+    // Touch: Erklär-Zeichen in der Tabelle (Platz-Chip, Vergleichsrang, ⇅) öffnen wie die ganze Zeile das Team-Panel –
+    // die Erklärung steht dort; kleine Tooltip-Ziele konkurrieren nicht mit dem Zeilen-Tipp
+    const touchRow = touchUi.matches && e.target.closest('.standings tbody tr');
+    if (e.target.closest('.data-status') || (!touchRow && e.target.closest('.tie-mark'))) return; // Tooltip statt Navigation
     const closer = e.target.closest('[data-close-panel]');
     if (closer) {
       const link = closer.closest('a[href]');
@@ -638,7 +683,7 @@ function bind() {
       return;
     }
     const teamBtn = e.target.closest('[data-team]');
-    if (teamBtn && !e.target.closest('a[href]:not([data-team])') && !e.target.closest('.xrank, .tie-mark, .zone-badge')) {
+    if (teamBtn && !e.target.closest('a[href]:not([data-team])') && (touchRow || !e.target.closest('.xrank, .tie-mark, .zone-badge'))) {
       e.preventDefault();
       hideTip();
       const opener = teamBtn.matches('button, a[href]') ? teamBtn : teamBtn.querySelector('button[data-team]') || null;
@@ -669,8 +714,9 @@ function bind() {
   toggle.addEventListener('click', () => {
     toggle.dataset.tipMuted = '1'; // Tooltip erst nach erneutem Überfahren wieder zeigen
     hideTip();
-    setTheme(document.documentElement.dataset.theme === 'light' ? 'dark' : 'light');
+    setTheme(THEME_ORDER[(THEME_ORDER.indexOf(themePref()) + 1) % THEME_ORDER.length]);
   });
+  systemLight.addEventListener?.('change', () => { if (themePref() === 'system') applyTheme('system'); });
 
   // Tooltips: Maus mit kurzer Verzögerung, Tastatur sofort, Touch per Tipp
   document.addEventListener('pointerover', (e) => {
@@ -694,6 +740,7 @@ function bind() {
   });
   document.addEventListener('click', (e) => {
     const t = e.target.closest('.data-status[data-tip], .pos[data-tip], .xrank[data-tip], .tie-mark[data-tip], .zone-badge[data-tip], .kpis [data-tip]');
+    if (t && touchUi.matches && t.closest('.standings')) return; // Touch: Zeile öffnet das Panel (siehe oben)
     if (t && t !== tipTarget) { e.stopPropagation(); showTip(t); }
   }, true);
   window.addEventListener('scroll', () => tipTarget && hideTip(), { passive: true });
@@ -708,8 +755,25 @@ function bind() {
   // Header: transparent oben, beim Scrollen deckend mit Linie
   const header = $('#site-header');
   let stuckRaf = 0;
+  // Schmal (zweizeiliger Kopf): beim Herunterscrollen weicht die Markenzeile, die Tabs bleiben; beim Hochscrollen kehrt sie zurück
+  const twoRow = matchMedia('(max-width: 960px)');
+  let lastY = window.scrollY;
+  const setShift = (on) => {
+    const nav = header.querySelector('.main-nav');
+    const shift = on && nav ? Math.round(nav.getBoundingClientRect().top - header.getBoundingClientRect().top + (header.classList.contains('is-condensed') ? parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--header-shift')) || 0 : 0)) : 0;
+    header.classList.toggle('is-condensed', Boolean(shift));
+    document.documentElement.style.setProperty('--header-shift', `${shift}px`);
+  };
+  twoRow.addEventListener?.('change', () => setShift(false));
   const onScroll = () => {
-    header.classList.toggle('is-scrolled', window.scrollY > 4);
+    const y = window.scrollY;
+    header.classList.toggle('is-scrolled', y > 4);
+    if (twoRow.matches && !document.body.classList.contains('has-panel')) {
+      const dy = y - lastY;
+      if (y < 120 || dy < -6) { if (header.classList.contains('is-condensed')) setShift(false); }
+      else if (dy > 6 && !header.classList.contains('is-condensed')) { hideTip(); setShift(true); }
+      if (Math.abs(dy) > 6 || y < 120) lastY = y;
+    } else lastY = y;
     cancelAnimationFrame(stuckRaf);
     stuckRaf = requestAnimationFrame(markStuckHeads);
   };

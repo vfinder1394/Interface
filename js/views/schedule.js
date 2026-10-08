@@ -22,6 +22,8 @@ export function renderSchedule(model, md, leagueFilter) {
     byDate.get(m.date).push(m);
   }
   const scope = leagueFilter === 'alle' ? '' : ` (Liga ${leagueFilter})`;
+  // Die Vorschau-Kopfzeile nennt den Abstand („in 35 Tagen“) bereits – dann keine Wiederholung am Tageskopf
+  const summaryHasWhen = list.length > 0 && list.every((m) => m.status === 'UPCOMING');
 
   return `
   <section class="section" aria-labelledby="sched-title">
@@ -58,20 +60,23 @@ export function renderSchedule(model, md, leagueFilter) {
 
     ${summary(model, list, scope)}
 
-    ${list.length ? [...byDate.entries()].sort((a, b) => a[0].localeCompare(b[0])).map(([date, ms]) => {
+    ${list.length ? [...byDate.entries()].sort((a, b) => a[0].localeCompare(b[0])).map(([date, ms], di, dayList) => {
       const allDone = ms.every((m) => m.status === 'FINISHED');
       const anyLive = ms.some((m) => m.status === 'LIVE');
       const days = Math.round((Date.parse(`${date}T00:00:00Z`) - Date.parse(`${todayBerlin()}T00:00:00Z`)) / 864e5);
       const when = days > 1 ? `in ${days} Tagen` : days === 1 ? 'morgen' : days === 0 ? 'heute' : 'ausstehend';
-      // Jeder Tageskopf trägt einen Status in derselben Form: Endstände · Live · in n Tagen
+      // Status-Pill nur, wo sie etwas sagt (Live, offene Tage); beendete Tage sind am Ergebnis erkennbar
+      const mixed = !allDone && ms.some((m) => m.status === 'FINISHED');
+      const firstOpen = dayList.findIndex(([, x]) => x.some((m) => m.status !== 'FINISHED')) === di;
       const pill = anyLive ? '<span class="day__pill day__pill--live"><span class="live-dot" aria-hidden="true"></span>Live</span>'
-        : allDone ? `<span class="day__pill day__pill--final">${CHECK}Endstände</span>`
-        : `<span class="day__pill day__pill--upcoming">${when}</span>`;
+        : allDone ? ''
+        : mixed ? `<span class="day__pill day__pill--upcoming">${CHECK}teils beendet</span>`
+        : firstOpen && !summaryHasWhen ? `<span class="day__pill day__pill--when">${when}</span>` : '';
       // Spielort-Spalte nur, wenn er für mindestens die Hälfte der Spiele des Tages bekannt ist (keine halb leere Spalte)
       const withVenue = ms.filter((m) => m.venue).length * 2 >= ms.length;
       return `
       <section class="day" aria-label="${esc(fmtDay(date))}">
-        <h3 class="day__head"><span class="day__date"><b><span class="day__date-long">${esc(fmtDay(date))}</span><span class="day__date-short" aria-hidden="true">${esc(fmtDayShort(date))}</span></b></span><span class="day__count">${ms.length}&nbsp;${ms.length === 1 ? 'Spiel' : 'Spiele'}${pill}</span></h3>
+        <h3 class="day__head"><span class="day__date"><b><span class="day__date-long">${esc(fmtDay(date))}</span><span class="day__date-short" aria-hidden="true">${esc(fmtDayShort(date))}</span></b></span><span class="day__count">${pill}<span class="day__pill day__pill--count">${ms.length}&nbsp;${ms.length === 1 ? 'Spiel' : 'Spiele'}</span></span></h3>
         <ul class="match-list${withVenue ? ' has-venue' : ''}">
           ${ms.map((m) => matchRow(model, m, { venue: withVenue })).join('')}
         </ul>
@@ -99,27 +104,31 @@ function summary(model, list, scope) {
     const th = model.teams[top.home], ta = model.teams[top.away];
     const when = days > 1 ? `in ${days} Tagen` : days === 1 ? 'morgen' : days === 0 ? 'heute' : '';
     const leagues = new Set(list.map((m) => m.league)).size;
-    const at = (m) => `${fmtWeekShort(m.date)} ${fmtShort(m.date)}${m.kickoff ? ` · ${fmtTime(m.kickoff)}&nbsp;Uhr` : ''}`;
+    // Datum und Uhrzeit als eigene, nicht umbrechende Teile (kein hängender Trennpunkt)
+    const at = (m) => `<span class="nowrap">${fmtWeekShort(m.date)} ${fmtShort(m.date)}</span>${m.kickoff ? `<span class="md-summary__sep" aria-hidden="true"> · </span><span class="nowrap">${fmtTime(m.kickoff)}</span>` : ''}`;
+    const topWhen = `${fmtWeekShort(top.date)} ${fmtShort(top.date)}${top.kickoff ? ` · ${fmtTime(top.kickoff)} Uhr` : ''}`;
     return `<div class="md-summary md-summary--preview">
-      <div><b>${list.length}</b><span>${scope ? `Spiele${scope}` : `Spiele in ${leagues} ${leagues === 1 ? 'Liga' : 'Ligen'}`}</span></div>
-      <div class="md-summary__top">
-        <span class="md-summary__pair">
+      <div class="md-summary__cell"><b class="md-summary__val">${list.length}</b><span class="md-summary__cap">${scope ? `Spiele${scope}` : `Spiele in ${leagues} ${leagues === 1 ? 'Liga' : 'Ligen'}`}</span></div>
+      <div class="md-summary__cell md-summary__top">
+        <span class="md-summary__val md-summary__pair">
           <button type="button" class="md-summary__team" data-team="${esc(th.code)}" aria-label="${esc(th.name)} – Details öffnen">${flag(th)}<b>${esc(th.name)}</b></button>
           <small aria-hidden="true">–</small>
-          <button type="button" class="md-summary__team" data-team="${esc(ta.code)}" aria-label="${esc(ta.name)} – Details öffnen"><b>${esc(ta.name)}</b>${flag(ta)}</button>
+          <button type="button" class="md-summary__team" data-team="${esc(ta.code)}" aria-label="${esc(ta.name)} – Details öffnen">${flag(ta)}<b>${esc(ta.name)}</b></button>
         </span>
-        <span>Topspiel · Gruppe ${esc(top.group)} · ${at(top)}</span>
+        <span class="md-summary__cap" title="Das Duell mit den meisten Punkten beider Teams in der höchsten Liga">Spitzenspiel nach Tabelle · ${esc(top.group)} · <span class="nowrap">${esc(topWhen)}</span></span>
       </div>
-      <div><b class="md-summary__when">${at(first)}</b><span>Anpfiff${when ? ` ${when}` : ''}</span></div>
+      <div class="md-summary__cell"><b class="md-summary__val md-summary__when">${at(first)}</b><span class="md-summary__cap">Erster Anpfiff${when ? `<span class="md-summary__pill">${when}</span>` : ''}</span></div>
     </div>`;
   }
   const goals = [...done, ...live].reduce((s, m) => s + m.hs + m.as, 0);
   const n = done.length + live.length;
-  return `<div class="md-summary">
-    <div><b>${list.length}</b><span>Spiele${scope}</span></div>
-    <div><b>${done.length}</b><span>beendet</span></div>
-    <div><b>${goals}</b><span>Tore</span></div>
-    <div><b>${n ? (goals / n).toLocaleString('de-DE', { maximumFractionDigits: 2, minimumFractionDigits: 1 }) : '–'}</b><span>Tore/Spiel</span></div>
+  // „beendet“ nur, wenn es etwas Neues sagt (nicht alle Spiele gespielt); mobil eine Zeile
+  const partial = done.length !== list.length;
+  return `<div class="md-summary md-summary--stats${partial ? '' : ' md-summary--3'}">
+    <div class="md-summary__cell"><b class="md-summary__val">${list.length}</b><span class="md-summary__cap">Spiele${scope}</span></div>
+    ${partial ? `<div class="md-summary__cell"><b class="md-summary__val">${done.length}</b><span class="md-summary__cap">beendet</span></div>` : ''}
+    <div class="md-summary__cell"><b class="md-summary__val">${goals}</b><span class="md-summary__cap">Tore</span></div>
+    <div class="md-summary__cell"><b class="md-summary__val">${n ? (goals / n).toLocaleString('de-DE', { maximumFractionDigits: 2, minimumFractionDigits: 1 }) : '–'}</b><span class="md-summary__cap">pro Spiel</span></div>
   </div>`;
 }
 
@@ -129,10 +138,10 @@ function emptyState(model, md, leagueFilter) {
     ${next ? `<p><a class="link-btn" href="#/spieltage/${next.md}/${leagueFilter}">Zu Spieltag ${next.md} →</a></p>` : ''}</div>`;
 }
 
-/** Spielort in zwei Teilen: Stadion (darf gekürzt werden) und Stadt (bleibt immer stehen). */
+/** Spielort in zwei Teilen: Stadion (darf gekürzt werden) und Stadt (bleibt immer stehen). Ohne Stadt: nur Stadion. */
 function venueParts(v) {
   const i = v.lastIndexOf(', ');
-  return i > 0 ? [v.slice(0, i), v.slice(i + 2)] : ['', v];
+  return i > 0 ? [v.slice(0, i).trim(), v.slice(i + 2).trim()] : [v.trim(), ''];
 }
 
 export function matchRow(model, m, { showGroup = true, venue = false } = {}) {
@@ -145,11 +154,17 @@ export function matchRow(model, m, { showGroup = true, venue = false } = {}) {
   };
   const live = m.status === 'LIVE';
   const [stadium, city] = m.venue ? venueParts(m.venue) : ['', ''];
-  // Anstoß: bei offenen Spielen in der Mitte (statt Ergebnis), bei beendeten leise neben der Gruppe
-  return `<li class="match${live ? ' is-live' : ''}${done ? ' is-done' : ''}${m.note ? ' has-note' : ''}">
+  // Raster: Meta links (Gruppe, Anstoß) | Heim | Ergebnis/Anstoß | Gast | Spielort – mobil Meta unter dem Ergebnis
+  const venueHtml = m.venue
+    ? `<span class="match__venue" title="${esc(m.venue)}">${PIN}<span class="match__venue-text">${stadium ? `<span class="match__venue-stadium">${esc(stadium)}</span>` : ''}${stadium && city ? '<span class="match__venue-comma">,&nbsp;</span>' : ''}${city ? `<span class="match__venue-city">${esc(city)}</span>` : ''}</span></span>`
+    : '<span class="match__venue" aria-hidden="true"></span>';
+  return `<li class="match${live ? ' is-live' : ''}${done ? ' is-done' : ' is-open'}${m.note ? ' has-note' : ''}">
     <span class="match__meta">
-      ${showGroup ? `<a class="match__group" href="#/tabellen/${m.league}/${m.group}" aria-label="Tabelle Gruppe ${m.group}">${m.group}</a>` : ''}
-      ${live ? '<span class="match__time is-live"><span class="live-dot"></span>Live</span>' : done && m.kickoff ? `<span class="match__time"><span class="match__sep" aria-hidden="true">·</span>${fmtTime(m.kickoff)}<span class="sr-only">&nbsp;Uhr Anstoß</span></span>` : ''}
+      ${showGroup ? `<a class="match__group match__group--${m.league}" href="#/tabellen/${m.league}/${m.group}" aria-label="Tabelle Gruppe ${m.group}"><span>${m.group[0]}</span>${m.group.slice(1)}</a>` : ''}
+      ${live ? '<span class="match__time is-live"><span class="live-dot"></span>Live</span>'
+        : done && m.kickoff ? `<span class="match__time"><span class="match__sep" aria-hidden="true">·</span>${fmtTime(m.kickoff)}<span class="sr-only">&nbsp;Uhr Anstoß</span></span>`
+        : `<span class="match__time match__time--day"><span class="match__sep" aria-hidden="true">·</span>${fmtWeekShort(m.date)}</span>`}
+      ${venue && m.venue ? `<span class="match__meta-venue"><span class="match__sep" aria-hidden="true">·</span>${esc(city || stadium)}</span>` : ''}
     </span>
     <button type="button" class="match__team match__team--h${res('h')}" data-team="${esc(h.code)}">
       ${teamName(h)}${flag(h)}
@@ -158,7 +173,7 @@ export function matchRow(model, m, { showGroup = true, venue = false } = {}) {
     <button type="button" class="match__team match__team--a${res('a')}" data-team="${esc(a.code)}">
       ${flag(a)}${teamName(a)}
     </button>
-    ${venue ? (m.venue ? `<span class="match__venue" title="Spielort: ${esc(m.venue)}">${PIN}${stadium ? `<span class="match__venue-stadium">${esc(stadium)},&nbsp;</span>` : ''}<span class="match__venue-city">${esc(city)}</span></span>` : '<span class="match__venue" aria-hidden="true"></span>') : ''}
+    ${venue ? venueHtml : ''}
     ${m.note ? `<span class="match__note">${INFO}${esc(m.note)}</span>` : ''}
   </li>`;
 }

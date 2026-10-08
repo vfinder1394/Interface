@@ -1,5 +1,5 @@
 import { esc, flag, ZONE_ICON } from '../ui.js';
-import { CUT_LABELS, cmpTable } from './tables.js';
+import { crossSection, showLock } from './tables.js';
 
 const rowAt = (model, groupId, pos) => {
   for (const l of model.leagues) for (const g of l.groups) if (g.id === groupId) return g.table.find((r) => r.pos === pos);
@@ -18,7 +18,7 @@ function chip(model, r, { note = '', zone = null } = {}) {
         <span class="team-chip__name">${esc(t.name)}</span>
         <span class="team-chip__meta">${esc(note || `${r.pos}. Gruppe ${t.group}`)} · ${r.pts} Pkt</span>
       </span>
-      ${r.locked ? `<span class="team-chip__lock" title="Rechnerisch sicher">${ZONE_ICON.lock}<span class="sr-only"> rechnerisch sicher</span></span>` : ''}
+      ${showLock(r, t.league) ? `<span class="team-chip__lock" title="Rechnerisch sicher">${ZONE_ICON.lock}<span class="sr-only"> rechnerisch sicher</span></span>` : ''}
     </button>
   </li>`;
 }
@@ -49,10 +49,10 @@ export function renderKnockout(model) {
       <ol class="road__steps" aria-label="Zeitplan der Endrunde">
         <li class="road__step ${lpDone ? 'road__step--done' : 'road__step--now'}"${lpDone ? '' : ' aria-current="step"'}><span class="road__when">24.09.–17.11.2026</span><span class="road__what">Ligaphase</span><span class="road__how">${lpDone ? 'abgeschlossen' : `läuft · ${played}/${model.matches.length} Spiele`}</span></li>
         <li class="road__step ${lpDone ? 'road__step--now' : 'road__step--next'}"${lpDone ? ' aria-current="step"' : ''}><span class="road__when">25.–30.03.2027</span><span class="road__what">Viertelfinale</span><span class="road__how">Hin- und Rückspiel</span></li>
-        <li class="road__step"><span class="road__when">09./10.06.2027</span><span class="road__what">Halbfinale</span><span class="road__how">Finalturnier</span></li>
-        <li class="road__step"><span class="road__when">13.06.2027</span><span class="road__what">Finale</span><span class="road__how">+ Spiel um Platz 3</span></li>
+        <li class="road__step road__step--later"><span class="road__when">09./10.06.2027</span><span class="road__what">Halbfinale</span><span class="road__how">Finalturnier</span></li>
+        <li class="road__step road__step--later"><span class="road__when">13.06.2027</span><span class="road__what">Finale</span><span class="road__how">+ Spiel um Platz 3</span></li>
       </ol>
-      <p class="road__holder">Titelverteidiger: <button type="button" class="link-btn" data-team="POR">${flag(model.teams.POR)} Portugal</button></p>
+      <p class="road__holder"><span class="road__holder-label">Titelverteidiger</span><button type="button" class="holder-chip" data-team="POR">${flag(model.teams.POR)}<span>Portugal</span></button></p>
     </div>
 
     <section class="ko-block" aria-labelledby="qf-title">
@@ -79,7 +79,7 @@ export function renderKnockout(model) {
       </div>
       <div class="versus">
         <div class="versus__side">
-          <p class="versus__label">Aus Liga A · kämpfen um den Verbleib</p>
+          <p class="versus__label">Aus Liga A · kämpfen um den Klassenerhalt</p>
           <ul class="chip-list">${poA.map((r) => chip(model, r, { note: `${r.pos}. Gruppe ${model.teams[r.code].group}` })).join('')}</ul>
         </div>
         <div class="versus__vs"><span class="versus__vs-badge" aria-hidden="true">vs</span><span class="versus__vs-note">Paarungen werden ausgelost</span></div>
@@ -97,7 +97,7 @@ export function renderKnockout(model) {
       </div>
       <div class="versus">
         <div class="versus__side">
-          <p class="versus__label">Aus Liga B · kämpfen um den Verbleib</p>
+          <p class="versus__label">Aus Liga B · kämpfen um den Klassenerhalt</p>
           <ul class="chip-list">${poB4.map((r) => chip(model, r)).join('')}</ul>
         </div>
         <div class="versus__vs"><span class="versus__vs-badge" aria-hidden="true">vs</span><span class="versus__vs-note">Paarungen werden ausgelost</span></div>
@@ -121,15 +121,8 @@ export function renderKnockout(model) {
       </div>
     </section>
 
-    <section class="ko-block" aria-labelledby="cmp-title">
-      <div class="ko-block__head">
-        <h3 id="cmp-title"><span class="dot dot--neutral" aria-hidden="true"></span>Liga A: Vergleich der Dritten und Vierten</h3>
-        <p>Reihenfolge nach Punkten, Tordifferenz, erzielten Toren, Auswärtstoren, Siegen und Auswärtssiegen.</p>
-      </div>
-      <div class="cmp-grid">
-        ${cmpTable(model, 'Gruppendritte', third, CUT_LABELS.third)}
-        ${cmpTable(model, 'Gruppenvierte', fourth, CUT_LABELS.fourth)}
-      </div>
+    <section aria-labelledby="cmp-title">
+      ${crossSection(model, { collapsible: true, idPrefix: 'cmp' })}
     </section>
   </section>`;
 }

@@ -215,7 +215,7 @@
        "away": "FRA",
        "hs": 0,
        "as": 1,
-       "venue": "Kocaeli Stadium"
+       "venue": "Kocaeli Stadyumu, İzmit"
       },
       {
        "id": "2047989",
@@ -227,7 +227,7 @@
        "away": "FRA",
        "hs": 0,
        "as": 1,
-       "venue": "King Baudouin Stadium, Brüssel"
+       "venue": "Koning-Boudewijnstadion, Brüssel"
       },
       {
        "id": "2047990",
@@ -311,7 +311,7 @@
        "away": "BEL",
        "hs": null,
        "as": null,
-       "venue": "Gürsel Aksel Stadium, Izmir"
+       "venue": "Gürsel Aksel Stadyumu, İzmir"
       },
       {
        "id": "2047900",
@@ -323,7 +323,7 @@
        "away": "ITA",
        "hs": null,
        "as": null,
-       "venue": "King Baudouin Stadium, Brüssel"
+       "venue": "Koning-Boudewijnstadion, Brüssel"
       },
       {
        "id": "2047898",
@@ -335,7 +335,7 @@
        "away": "TUR",
        "hs": null,
        "as": null,
-       "venue": "Stade de Bordeaux"
+       "venue": "Stade de Bordeaux, Bordeaux"
       }
      ],
      "table": [
@@ -480,7 +480,7 @@
        "away": "GRE",
        "hs": 0,
        "as": 1,
-       "venue": "Augsburg Arena"
+       "venue": "Augsburg Arena, Augsburg"
       },
       {
        "id": "2047981",
@@ -504,7 +504,7 @@
        "away": "NED",
        "hs": 2,
        "as": 2,
-       "venue": "Toumba Stadium, Thessaloniki"
+       "venue": "Toumba-Stadion, Thessaloniki"
       },
       {
        "id": "2047954",
@@ -516,7 +516,7 @@
        "away": "SRB",
        "hs": 2,
        "as": 0,
-       "venue": "Fußball Arena München"
+       "venue": "Fußball Arena, München"
       },
       {
        "id": "2047926",
@@ -528,7 +528,7 @@
        "away": "GER",
        "hs": 0,
        "as": 0,
-       "venue": "Toumba Stadium, Thessaloniki"
+       "venue": "Toumba-Stadion, Thessaloniki"
       },
       {
        "id": "2047925",
@@ -757,7 +757,7 @@
        "away": "ENG",
        "hs": 0,
        "as": 7,
-       "venue": "Stadion HNK Rijeka",
+       "venue": "Stadion Rujevica, Rijeka",
        "note": "Unter Ausschluss der Öffentlichkeit (UEFA-Sanktion)"
       },
       {
@@ -1023,7 +1023,7 @@
        "away": "NOR",
        "hs": 2,
        "as": 1,
-       "venue": "Cardiff City Stadium"
+       "venue": "Cardiff City Stadium, Cardiff"
       },
       {
        "id": "2047924",
@@ -1047,7 +1047,7 @@
        "away": "DEN",
        "hs": 0,
        "as": 1,
-       "venue": "Cardiff City Stadium"
+       "venue": "Cardiff City Stadium, Cardiff"
       },
       {
        "id": "2047893",
@@ -1071,7 +1071,7 @@
        "away": "DEN",
        "hs": null,
        "as": null,
-       "venue": "Estádio Municipal de Braga"
+       "venue": "Estádio Municipal, Braga"
       },
       {
        "id": "2047919",
@@ -1095,7 +1095,7 @@
        "away": "POR",
        "hs": null,
        "as": null,
-       "venue": "Cardiff City Stadium"
+       "venue": "Cardiff City Stadium, Cardiff"
       }
      ],
      "table": [
@@ -1234,7 +1234,7 @@
        "away": "SUI",
        "hs": 0,
        "as": 3,
-       "venue": "National Arena Todor Proeski , Skopje"
+       "venue": "Toše-Proeski-Arena, Skopje"
       },
       {
        "id": "2048001",
@@ -1270,7 +1270,7 @@
        "away": "SCO",
        "hs": 0,
        "as": 2,
-       "venue": "National Arena Todor Proeski , Skopje"
+       "venue": "Toše-Proeski-Arena, Skopje"
       },
       {
        "id": "2047972",
@@ -1282,7 +1282,7 @@
        "away": "SVN",
        "hs": 2,
        "as": 1,
-       "venue": "Luzern Arena"
+       "venue": "Luzern Arena, Luzern"
       },
       {
        "id": "2047948",
@@ -1306,7 +1306,7 @@
        "away": "MKD",
        "hs": 3,
        "as": 0,
-       "venue": "Luzern Arena"
+       "venue": "Luzern Arena, Luzern"
       },
       {
        "id": "2047888",
@@ -1354,7 +1354,7 @@
        "away": "SVN",
        "hs": null,
        "as": null,
-       "venue": "National Arena Todor Proeski , Skopje"
+       "venue": "Toše-Proeski-Arena, Skopje"
       }
      ],
      "table": [
@@ -1475,7 +1475,7 @@
        "away": "NIR",
        "hs": 0,
        "as": 1,
-       "venue": "Boris Paichadze National Stadium Dinamo Arena, Tiflis"
+       "venue": "Boris-Paitschadse-Stadion, Tiflis"
       },
       {
        "id": "2048012",
@@ -1499,7 +1499,7 @@
        "away": "UKR",
        "hs": 0,
        "as": 0,
-       "venue": "Boris Paichadze National Stadium Dinamo Arena, Tiflis"
+       "venue": "Boris-Paitschadse-Stadion, Tiflis"
       },
       {
        "id": "2047986",
@@ -1511,7 +1511,7 @@
        "away": "HUN",
        "hs": 0,
        "as": 0,
-       "venue": "National Football Stadium at Windsor Park, Belfast"
+       "venue": "Windsor Park, Belfast"
       },
       {
        "id": "2047962",
@@ -1547,7 +1547,7 @@
        "away": "GEO",
        "hs": 0,
        "as": 0,
-       "venue": "National Football Stadium at Windsor Park, Belfast"
+       "venue": "Windsor Park, Belfast"
       },
       {
        "id": "2047932",
@@ -1571,7 +1571,7 @@
        "away": "HUN",
        "hs": null,
        "as": null,
-       "venue": "Boris Paichadze National Stadium Dinamo Arena, Tiflis"
+       "venue": "Boris-Paitschadse-Stadion, Tiflis"
       },
       {
        "id": "2047897",
@@ -1583,7 +1583,7 @@
        "away": "UKR",
        "hs": null,
        "as": null,
-       "venue": "National Football Stadium at Windsor Park, Belfast"
+       "venue": "Windsor Park, Belfast"
       },
       {
        "id": "2047921",
@@ -2005,7 +2005,7 @@
        "away": "BIH",
        "hs": 2,
        "as": 4,
-       "venue": "National Arena Bucharest, Bukarest"
+       "venue": "Arena Națională, Bukarest"
       },
       {
        "id": "2047985",
@@ -2065,7 +2065,7 @@
        "away": "SWE",
        "hs": 0,
        "as": 1,
-       "venue": "National Arena Bucharest, Bukarest"
+       "venue": "Arena Națională, Bukarest"
       },
       {
        "id": "2047891",
@@ -2077,7 +2077,7 @@
        "away": "POL",
        "hs": null,
        "as": null,
-       "venue": "National Arena Bucharest, Bukarest"
+       "venue": "Arena Națională, Bukarest"
       },
       {
        "id": "2047890",
@@ -2113,7 +2113,7 @@
        "away": "SWE",
        "hs": null,
        "as": null,
-       "venue": "Stadion Miejski we Wrocławiu, Wroclaw"
+       "venue": "Stadion Miejski, Breslau"
       }
      ],
      "table": [
@@ -2276,7 +2276,7 @@
        "away": "BLR",
        "hs": 0,
        "as": 0,
-       "venue": "Helsinki Olympic Stadium"
+       "venue": "Olympiastadion, Helsinki"
       },
       {
        "id": "2047970",
@@ -2288,7 +2288,7 @@
        "away": "ALB",
        "hs": 2,
        "as": 1,
-       "venue": "Helsinki Olympic Stadium"
+       "venue": "Olympiastadion, Helsinki"
       },
       {
        "id": "2047973",
@@ -2372,7 +2372,7 @@
        "away": "SMR",
        "hs": null,
        "as": null,
-       "venue": "Helsinki Football Stadium"
+       "venue": "Bolt Arena, Helsinki"
       }
      ],
      "table": [
@@ -2493,7 +2493,7 @@
        "away": "LVA",
        "hs": 2,
        "as": 0,
-       "venue": "Republican Stadium after Vazgen Sargsyan, Yerevan"
+       "venue": "Republikanisches Stadion, Jerewan"
       },
       {
        "id": "2048016",
@@ -2505,7 +2505,7 @@
        "away": "CYP",
        "hs": 2,
        "as": 1,
-       "venue": "Gradski Stadion Podgorica"
+       "venue": "Gradski Stadion, Podgorica"
       },
       {
        "id": "2047987",
@@ -2517,7 +2517,7 @@
        "away": "MNE",
        "hs": 2,
        "as": 3,
-       "venue": "Republican Stadium after Vazgen Sargsyan, Yerevan"
+       "venue": "Republikanisches Stadion, Jerewan"
       },
       {
        "id": "2047988",
@@ -2541,7 +2541,7 @@
        "away": "ARM",
        "hs": 2,
        "as": 0,
-       "venue": "GSP, Nikosia"
+       "venue": "GSP-Stadion, Nikosia"
       },
       {
        "id": "2047958",
@@ -2565,7 +2565,7 @@
        "away": "LVA",
        "hs": 2,
        "as": 1,
-       "venue": "GSP, Nikosia"
+       "venue": "GSP-Stadion, Nikosia"
       },
       {
        "id": "2047935",
@@ -2577,7 +2577,7 @@
        "away": "ARM",
        "hs": 0,
        "as": 0,
-       "venue": "Gradski Stadion Podgorica"
+       "venue": "Gradski Stadion, Podgorica"
       },
       {
        "id": "2047876",
@@ -2589,7 +2589,7 @@
        "away": "CYP",
        "hs": null,
        "as": null,
-       "venue": "Republican Stadium after Vazgen Sargsyan, Yerevan"
+       "venue": "Republikanisches Stadion, Jerewan"
       },
       {
        "id": "2047875",
@@ -2601,7 +2601,7 @@
        "away": "LVA",
        "hs": null,
        "as": null,
-       "venue": "Gradski Stadion Podgorica"
+       "venue": "Gradski Stadion, Podgorica"
       },
       {
        "id": "2047903",
@@ -2613,7 +2613,7 @@
        "away": "MNE",
        "hs": null,
        "as": null,
-       "venue": "Limassol Stadium"
+       "venue": "Limassol-Stadion, Limassol"
       },
       {
        "id": "2047899",
@@ -2758,7 +2758,7 @@
        "away": "MDA",
        "hs": 2,
        "as": 0,
-       "venue": "Tatran, Prešov"
+       "venue": "Tatran-Stadion, Prešov"
       },
       {
        "id": "2047994",
@@ -2806,7 +2806,7 @@
        "away": "MDA",
        "hs": 1,
        "as": 2,
-       "venue": "Astana Arena, Nur–Sultan"
+       "venue": "Astana Arena, Astana"
       },
       {
        "id": "2047949",
@@ -2818,7 +2818,7 @@
        "away": "FRO",
        "hs": 2,
        "as": 2,
-       "venue": "Astana Arena, Nur–Sultan"
+       "venue": "Astana Arena, Astana"
       },
       {
        "id": "2047944",
@@ -2878,7 +2878,7 @@
        "away": "SVK",
        "hs": null,
        "as": null,
-       "venue": "Astana Arena, Nur–Sultan"
+       "venue": "Astana Arena, Astana"
       }
      ],
      "table": [
@@ -2999,7 +2999,7 @@
        "away": "LUX",
        "hs": 1,
        "as": 2,
-       "venue": "Hristo Botev Stadium, Plovdiv"
+       "venue": "Christo-Botew-Stadion, Plowdiw"
       },
       {
        "id": "2048019",
@@ -3023,7 +3023,7 @@
        "away": "EST",
        "hs": 0,
        "as": 0,
-       "venue": "Hristo Botev Stadium, Plovdiv"
+       "venue": "Christo-Botew-Stadion, Plowdiw"
       },
       {
        "id": "2047998",
@@ -3047,7 +3047,7 @@
        "away": "LUX",
        "hs": 1,
        "as": 0,
-       "venue": "Lilleküla Stadium, Tallinn"
+       "venue": "Lilleküla staadion, Tallinn"
       },
       {
        "id": "2047969",
@@ -3071,7 +3071,7 @@
        "away": "ISL",
        "hs": 0,
        "as": 0,
-       "venue": "Lilleküla Stadium, Tallinn"
+       "venue": "Lilleküla staadion, Tallinn"
       },
       {
        "id": "2047943",
@@ -3095,7 +3095,7 @@
        "away": "ISL",
        "hs": null,
        "as": null,
-       "venue": "Hristo Botev Stadium, Plovdiv"
+       "venue": "Christo-Botew-Stadion, Plowdiw"
       },
       {
        "id": "2047881",
@@ -3119,7 +3119,7 @@
        "away": "BUL",
        "hs": null,
        "as": null,
-       "venue": "Lilleküla Stadium, Tallinn"
+       "venue": "Lilleküla staadion, Tallinn"
       },
       {
        "id": "2047906",
@@ -3431,7 +3431,7 @@
        "away": "LIE",
        "hs": 0,
        "as": 0,
-       "venue": "Tofiq Bahramov Republican Stadium, Baku"
+       "venue": "Tofiq-Bəhramov-Stadion, Baku"
       },
       {
        "id": "2047931",
@@ -3443,7 +3443,7 @@
        "away": "LTU",
        "hs": 1,
        "as": 0,
-       "venue": "8 KM Stadium, Baku"
+       "venue": "8-km-Stadion, Baku"
       },
       {
        "id": "2047885",

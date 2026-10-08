@@ -12,12 +12,14 @@
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,500..900&family=Inter:wght@400..700&display=swap">
   <link rel="stylesheet" href="css/styles.css">
   <script>
-    // Theme vor dem ersten Paint setzen (kein Aufblitzen): gespeicherte Wahl, sonst Systemeinstellung
+    // Theme vor dem ersten Paint setzen (kein Aufblitzen): gespeicherte Wahl (Hell/Dunkel), sonst Systemeinstellung
     (function () {
-      var t = null;
-      try { t = localStorage.getItem('nl-theme'); } catch (e) {}
-      if (t !== 'light' && t !== 'dark') t = window.matchMedia && matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
+      var p = null;
+      try { p = localStorage.getItem('nl-theme'); } catch (e) {}
+      if (p !== 'light' && p !== 'dark') p = 'system';
+      var t = p === 'system' ? (window.matchMedia && matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark') : p;
       document.documentElement.dataset.theme = t;
+      document.documentElement.dataset.themePref = p;
       var m = document.querySelector('meta[name="theme-color"]');
       if (m) m.setAttribute('content', t === 'light' ? '#f3f5fb' : '#050a1a');
     })();
@@ -47,7 +49,7 @@
         </svg>
         <span class="brand-text">
           <strong>NL Monitor</strong>
-          <span class="label"><span class="brand-sub--long">Inoffizieller Fan-Monitor</span><span class="brand-sub--short">Inoffiziell</span></span>
+          <span class="label"><span class="brand-sub--long">Inoffizielle Fan-Übersicht</span><span class="brand-sub--short">Inoffiziell</span></span>
         </span>
       </a>
 
@@ -61,7 +63,7 @@
           <span>Spieltage</span>
         </a>
         <a href="#/ko" data-nav="ko">
-          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3.5 5.5H8a2 2 0 0 1 2 2v2.5a2 2 0 0 0 2 2M3.5 18.5H8a2 2 0 0 0 2-2V14a2 2 0 0 1 2-2M12 12h4.5M19.5 9v6"/></svg>
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5.5h5.5v13H4M9.5 12h5"/><circle cx="17.5" cy="12" r="2.6"/></svg>
           <span class="lbl-long">K.-o. &amp; Play-offs</span><span class="lbl-short" aria-hidden="true">K.-o.-Runde</span>
         </a>
       </nav>
@@ -71,7 +73,8 @@
           <span class="data-status__dot" aria-hidden="true"></span>
           <span class="data-status__text">Lädt …</span>
         </div>
-        <button class="icon-btn theme-toggle" id="theme-toggle" type="button" aria-label="Helles Design" aria-pressed="false" data-tip="Hell/Dunkel umschalten">
+        <button class="icon-btn theme-toggle" id="theme-toggle" type="button" aria-label="Design: System. Wechseln zu Hell" data-tip-title="Design: System" data-tip="Klicken: Hell · Dunkel · System">
+          <svg class="i-system" viewBox="0 0 24 24" aria-hidden="true"><rect x="3.5" y="4.5" width="17" height="11.5" rx="2.2"/><path d="M9 20h6M12 16v4"/><path class="i-system__half" d="M12 6.8a3.6 3.6 0 0 1 0 7.2z"/></svg>
           <svg class="i-sun" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4.2"/><path d="M12 2.5v2.2M12 19.3v2.2M4.6 4.6l1.6 1.6M17.8 17.8l1.6 1.6M2.5 12h2.2M19.3 12h2.2M4.6 19.4l1.6-1.6M17.8 6.2l1.6-1.6"/></svg>
           <svg class="i-moon" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 14.5A8 8 0 1 1 9.5 4a6.5 6.5 0 0 0 10.5 10.5z"/></svg>
         </button>

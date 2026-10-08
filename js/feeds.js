@@ -75,6 +75,48 @@ export function teamIndex(snap) {
 }
 
 /** Kalenderdatum in Europe/Berlin (YYYY-MM-DD). */
+/**
+ * Spielorte einheitlich als „Stadion, Stadt“ (kurzer Stadionname, deutsche Stadt). Stadionnamen: offizieller Name in der
+ * Landessprache (lateinische Schrift), sonst deutsche Transkription – keine englischen Namen für nicht-englischsprachige Länder. Die UEFA liefert teils
+ * überlange Namen oder Namen ohne Stadt – diese werden hier vereinheitlicht (auch beim Snapshot-Update).
+ */
+const VENUE_FIX = {
+  'Augsburg Arena': 'Augsburg Arena, Augsburg',
+  'Astana Arena, Nur–Sultan': 'Astana Arena, Astana',
+  'Boris Paichadze National Stadium Dinamo Arena, Tiflis': 'Boris-Paitschadse-Stadion, Tiflis',
+  'Cardiff City Stadium': 'Cardiff City Stadium, Cardiff',
+  'Estádio Municipal de Braga': 'Estádio Municipal, Braga',
+  'Fußball Arena München': 'Fußball Arena, München',
+  'GSP, Nikosia': 'GSP-Stadion, Nikosia',
+  'Gradski Stadion Podgorica': 'Gradski Stadion, Podgorica',
+  'Helsinki Football Stadium': 'Bolt Arena, Helsinki',
+  'Helsinki Olympic Stadium': 'Olympiastadion, Helsinki',
+  'Kocaeli Stadium': 'Kocaeli Stadyumu, İzmit',
+  'Limassol Stadium': 'Limassol Stadium, Limassol',
+  'Luzern Arena': 'Luzern Arena, Luzern',
+  'National Arena Bucharest, Bukarest': 'Arena Națională, Bukarest',
+  'National Arena Todor Proeski , Skopje': 'Toše-Proeski-Arena, Skopje',
+  'National Football Stadium at Windsor Park, Belfast': 'Windsor Park, Belfast',
+  'Republican Stadium after Vazgen Sargsyan, Yerevan': 'Republikanisches Stadion, Jerewan',
+  'Stade de Bordeaux': 'Stade de Bordeaux, Bordeaux',
+  'Stadion HNK Rijeka': 'Stadion Rujevica, Rijeka',
+  'Stadion Miejski we Wrocławiu, Wroclaw': 'Stadion Miejski, Breslau',
+  'Tatran, Prešov': 'Tatran-Stadion, Prešov',
+  'Tofiq Bahramov Republican Stadium, Baku': 'Tofiq-Bəhramov-Stadion, Baku',
+  // Englische Namen für Stadien in nicht-englischsprachigen Ländern → Landessprache bzw. deutsche Transkription
+  'King Baudouin Stadium, Brüssel': 'Koning-Boudewijnstadion, Brüssel',
+  'King Baudouin Stadium, Brussels': 'Koning-Boudewijnstadion, Brüssel',
+  'Gürsel Aksel Stadium, Izmir': 'Gürsel Aksel Stadyumu, İzmir',
+  'Toumba Stadium, Thessaloniki': 'Toumba-Stadion, Thessaloniki',
+  'Republican Stadium, Jerewan': 'Republikanisches Stadion, Jerewan',
+  'Limassol Stadium': 'Limassol-Stadion, Limassol',
+  'Limassol Stadium, Limassol': 'Limassol-Stadion, Limassol',
+  'Hristo Botev Stadium, Plovdiv': 'Christo-Botew-Stadion, Plowdiw',
+  'Lilleküla Stadium, Tallinn': 'Lilleküla staadion, Tallinn',
+  '8 KM Stadium, Baku': '8-km-Stadion, Baku',
+};
+export const normalizeVenue = (v) => (v ? VENUE_FIX[v] ?? VENUE_FIX[v.trim()] ?? v.replace(/\s+,/g, ',').trim() : v);
+
 export function berlinDate(iso) {
   const d = new Date(iso);
   if (Number.isNaN(d.getTime())) return null;
@@ -190,7 +232,7 @@ export function applyUefaMatches(snap, list) {
     const stadium = m.stadium?.translations?.officialName?.DE ?? m.stadium?.translations?.name?.DE ?? null;
     const city = m.stadium?.city?.translations?.name?.DE ?? null;
     // Einheitlich „Stadion, Stadt“; ohne Stadion nur die Stadt – nie das Land
-    if (stadium) target.venue = city && !stadium.includes(city) ? `${stadium}, ${city}` : stadium;
+    if (stadium) target.venue = normalizeVenue(city && !stadium.includes(city) ? `${stadium}, ${city}` : stadium);
     else if (city) target.venue = city;
     applyResult(target, { status, hs, as, minute, warn });
     if (JSON.stringify(target) !== before) out.changed++;

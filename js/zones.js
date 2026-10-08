@@ -6,7 +6,7 @@ export const ZONES = {
   ko: { label: 'Viertelfinale', desc: 'Gruppensieger und -zweite der Liga A spielen im März 2027 das Viertelfinale (Hin- und Rückspiel). Die vier Sieger erreichen das Finalturnier im Juni 2027.' },
   promotion: { label: 'Aufstieg', desc: 'Steigt direkt in die nächsthöhere Liga auf (Saison 2028/29).' },
   'playoff-up': { label: 'Play-off', desc: 'Spielt im März 2027 in Hin- und Rückspiel gegen ein Team der höheren Liga um den Aufstieg.' },
-  'playoff-down': { label: 'Play-off', desc: 'Muss im März 2027 in Hin- und Rückspiel gegen ein Team der tieferen Liga um den Verbleib spielen (Heimrecht im Rückspiel).' },
+  'playoff-down': { label: 'Play-off', desc: 'Muss im März 2027 in Hin- und Rückspiel gegen ein Team der tieferen Liga um den Klassenerhalt spielen (Heimrecht im Rückspiel).' },
   relegation: { label: 'Abstieg', desc: 'Steigt direkt in die nächsttiefere Liga ab.' },
   safe: { label: 'Klassenerhalt', desc: 'Bleibt in der aktuellen Liga.' },
 };
@@ -40,7 +40,7 @@ export const LEAGUE_INFO = {
     rules: [
       'Platz 1: direkter Aufstieg in Liga A.',
       'Platz 2: Play-off A/B um den Aufstieg.',
-      'Platz 3: Verbleib in Liga B.',
+      'Platz 3: Klassenerhalt in Liga B.',
       'Platz 4: Play-off B/C um den Klassenerhalt (kein direkter Abstieg).',
     ],
   },
@@ -48,7 +48,7 @@ export const LEAGUE_INFO = {
     rules: [
       'Platz 1: direkter Aufstieg in Liga B.',
       'Platz 2: Play-off B/C um den Aufstieg.',
-      'Platz 3 und 4: Verbleib in Liga C – in dieser Übergangssaison gibt es keinen Abstieg aus Liga C.',
+      'Platz 3 und 4: Klassenerhalt in Liga C – in dieser Übergangssaison gibt es keinen Abstieg aus Liga C.',
     ],
   },
   D: {
@@ -61,8 +61,8 @@ export const LEAGUE_INFO = {
 
 const ordinal = (n) => `${n}.`;
 
-/** Kurzlabel je Zone für enge Stellen (Positionsleiste im Team-Panel) – einheitlich in Versalien. */
-export const ZONE_ABBR = { ko: 'VF', promotion: 'AUF', 'playoff-up': 'PO', 'playoff-down': 'PO', relegation: 'AB', safe: 'BLEIBT' };
+/** Kurzlabel je Zone für enge Stellen (Positionsleiste im Team-Panel) – einheitlich, mit Legende darunter. */
+export const ZONE_ABBR = { ko: 'VF', promotion: 'AUF', 'playoff-up': 'PO', 'playoff-down': 'PO', relegation: 'AB', safe: 'KE' };
 
 /**
  * Status-Erklärung für das Team-Panel in einem Satz: Gegner, Termin und Heimrecht zusammen
@@ -83,8 +83,8 @@ export function zoneStatusText(row, league) {
   }
   if (row.zone === 'playoff-down') {
     const vs = league === 'B'
-      ? `Play-off um den Verbleib gegen einen Gruppenzweiten aus Liga C, ${PO_DATE} (Rückspiel zu Hause).`
-      : `Play-off um den Verbleib gegen einen Gruppenzweiten aus Liga B, ${PO_DATE} (Rückspiel zu Hause).`;
+      ? `Play-off um den Klassenerhalt gegen einen Gruppenzweiten aus Liga C, ${PO_DATE} (Rückspiel zu Hause).`
+      : `Play-off um den Klassenerhalt gegen einen Gruppenzweiten aus Liga B, ${PO_DATE} (Rückspiel zu Hause).`;
     return league === 'A' && row.crossPos ? `${row.zoneReason.split(' – ')[0]}. ${vs}` : vs;
   }
   return row.zoneReason || ZONES[row.zone]?.desc || '';
@@ -161,7 +161,7 @@ function simpleZone(league, pos) {
   // Begründung ohne „Platz n –“-Präfix: Die Folge (Zone) steht immer davor, die Begründung ergänzt sie.
   const m = {
     A: { 1: ['ko', 'Als Gruppensieger – mit Heimrecht im Rückspiel.'], 2: ['ko', 'Als Gruppenzweiter gegen einen Gruppensieger einer anderen Gruppe.'] },
-    B: { 1: ['promotion', 'Der Gruppensieger steigt direkt in Liga A auf.'], 2: ['playoff-up', 'Der Gruppenzweite spielt gegen ein Team aus Liga A um den Aufstieg.'], 3: ['safe', 'Der Gruppendritte bleibt in Liga B.'], 4: ['playoff-down', 'Der Gruppenvierte spielt gegen einen Gruppenzweiten der Liga C um den Verbleib in Liga B.'] },
+    B: { 1: ['promotion', 'Der Gruppensieger steigt direkt in Liga A auf.'], 2: ['playoff-up', 'Der Gruppenzweite spielt gegen ein Team aus Liga A um den Aufstieg.'], 3: ['safe', 'Der Gruppendritte bleibt in Liga B.'], 4: ['playoff-down', 'Der Gruppenvierte spielt gegen einen Gruppenzweiten der Liga C um den Klassenerhalt in Liga B.'] },
     C: { 1: ['promotion', 'Der Gruppensieger steigt direkt in Liga B auf.'], 2: ['playoff-up', 'Der Gruppenzweite spielt gegen einen Gruppenvierten der Liga B um den Aufstieg.'], 3: ['safe', 'Der Gruppendritte bleibt in Liga C.'], 4: ['safe', 'Auch der Gruppenvierte bleibt in Liga C – in dieser Übergangssaison gibt es keinen Abstieg.'] },
     D: { 1: ['promotion', 'Liga D wird aufgelöst – alle Teams spielen 2028/29 in Liga C.'], 2: ['promotion', 'Liga D wird aufgelöst – alle Teams spielen 2028/29 in Liga C.'], 3: ['promotion', 'Liga D wird aufgelöst – alle Teams spielen 2028/29 in Liga C.'] },
   }[league]?.[pos];
