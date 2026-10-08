@@ -1,5 +1,7 @@
 # Nations League Monitor 2026/27
 
+**Live:** https://vfinder1394.github.io/nations-league-monitor/
+
 Statische Website, mit der man die **UEFA Nations League 2026/27** durchsuchen kann: alle vier Ligen (A–D), alle 14 Gruppen mit vollständigen Tabellen, sämtliche Spiele und Ergebnisse sowie eine Detailansicht für jede der 54 Nationalmannschaften.
 
 Für jedes Team zeigt die Seite jederzeit an, ob es
@@ -113,7 +115,7 @@ Die Veröffentlichung übernimmt der Workflow `.github/workflows/pages.yml`.
 
 1. Einmalig unter *Settings → Pages → Build and deployment* als Quelle **GitHub Actions** wählen.
 2. Der Workflow veröffentlicht die Seite bei jedem Push auf `claude/getting-started-jcwiow`, nach jedem erfolgreichen Lauf von „Daten aktualisieren“ und manuell über *Actions → GitHub Pages → Run workflow*.
-3. Die Seite ist dann unter `https://vfinder1394.github.io/Interface/` erreichbar. Alle Pfade sind relativ, deshalb funktioniert sie auch in diesem Unterordner.
+3. Die Seite ist dann unter `https://vfinder1394.github.io/nations-league-monitor/` erreichbar. Alle Pfade sind relativ, deshalb funktioniert sie auch in diesem Unterordner.
 
 ## Barrierefreiheit und Design
 
