@@ -103,10 +103,11 @@ Unter *Settings → Actions → General → Workflow permissions* muss **Read an
 
 ## Deployment auf GitHub Pages
 
-1. Repository auf GitHub pushen.
-2. *Settings → Pages → Build and deployment*: Quelle **Deploy from a branch**, Branch z. B. `main`, Ordner `/ (root)`.
-3. Nach kurzer Zeit ist die Seite unter `https://<user>.github.io/<repo>/` erreichbar. Alle Pfade sind relativ, deshalb funktioniert die Seite auch in einem Unterordner.
-4. Jeder Daten-Commit der Action löst automatisch ein neues Pages-Deployment aus.
+Die Veröffentlichung übernimmt der Workflow `.github/workflows/pages.yml`.
+
+1. Einmalig unter *Settings → Pages → Build and deployment* als Quelle **GitHub Actions** wählen.
+2. Der Workflow veröffentlicht die Seite bei jedem Push auf `claude/getting-started-jcwiow`, nach jedem erfolgreichen Lauf von „Daten aktualisieren“ und manuell über *Actions → GitHub Pages → Run workflow*.
+3. Die Seite ist dann unter `https://vfinder1394.github.io/Interface/` erreichbar. Alle Pfade sind relativ, deshalb funktioniert sie auch in diesem Unterordner.
 
 ## Barrierefreiheit und Design
 
